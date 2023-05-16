@@ -1,0 +1,14 @@
+packages:
+  - apps/email-templates-preview
+  - apps/email-templates-preview/.react-email
+  - apps/expo
+  - apps/nextjs
+  - apps/ui-docs-nextjs
+  - apps/ui-docs-expo
+  - packages/api
+  - packages/auth
+  - packages/db
+  - packages/ui
+  - packages/email-templates
+  - packages/modules/*
+  - packages/config/*

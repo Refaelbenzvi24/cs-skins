@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+    "types": ["unplugin-icons/types/react"],
+  },
+  "extends":         "../../tsconfig.json",
+  "include":         ["src"]
+}

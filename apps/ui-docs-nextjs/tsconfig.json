@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths":   {
+      "~/*": ["./src/*"]
+    },
+    "types":   ["unplugin-icons/types/react"]
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.cjs", "**/*.mjs"],
+  "exclude": ["node_modules"]
+}

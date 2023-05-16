@@ -1,0 +1,36 @@
+admin:
+  login:
+    labels:
+      email: דוא"ל
+      password: סיסמא
+    errors:
+      emailRequired: יש להזין דוא"ל
+      validEmail: יש להזין דוא"ל תקין
+      passwordRequired: יש להזין סיסמא
+  settings:
+    emailDestination:
+      labels:
+        email: דוא"ל
+        password: סיסמה
+      errors:
+        emailRequired: יש להזין דוא"ל
+        validEmail: יש להזין דוא"ל תקין
+        passwordRequired: יש להזין סיסמה
+contact:
+  errors:
+    nameRequired: יש להזין שם
+    emailRequired: יש להזין דוא"ל
+    validEmail: יש להזין דוא"ל תקין
+    phoneNumberRequired: יש להזין מספר טלפון
+    validPhoneNumber: יש להזין מספר טלפון תקין
+    messageRequired: יש להזין הודעה
+  labels:
+    name: השם שלך
+    email: המייל שלך
+    phone: המספר שלך
+    message: ההודעה שלך
+  send: שלח
+  toast:
+    emailSending: שליחה מתבצעת...
+    emailSent: הודעתך נשלחה בהצלחה
+    sendingError: אירעה שגיאה בעת שליחת ההודעה

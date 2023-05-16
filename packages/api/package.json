@@ -1,0 +1,33 @@
+{
+  "name": "@acme/api",
+  "version": "0.1.0",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules",
+    "lint": "eslint .",
+    "lint:fix": "pnpm lint --fix",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@acme/auth": "*",
+    "@acme/db": "*",
+    "@acme/email-templates": "*",
+    "@acme/validations": "*",
+    "@trpc/client": "^10.12.0",
+    "@trpc/server": "^10.12.0",
+    "nodemailer": "^6.9.1",
+    "nodemailer-smtp-transport": "^2.7.4",
+    "superjson": "1.12.2",
+    "zod": "^3.20.6"
+  },
+  "devDependencies": {
+    "@types/nodemailer": "^6.4.7",
+    "@types/nodemailer-smtp-transport": "^2.7.5",
+    "@types/preview-email": "^3.0.0",
+    "eslint": "^8.34.0",
+    "eslint-config-acme": "*",
+    "preview-email": "^3.0.10",
+    "typescript": "^5.0.0"
+  }
+}

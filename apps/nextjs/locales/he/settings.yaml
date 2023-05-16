@@ -1,0 +1,12 @@
+admin:
+  title: הגדרות
+  sections:
+    email: דוא"ל
+  email:
+    title: הגדרות מייל
+    emailDestination:
+      title: יעד דוא"ל
+      form:
+        email: דוא"ל
+        password: סיסמה
+

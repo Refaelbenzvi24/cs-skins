@@ -1,0 +1,7 @@
+.sb-show-main.main-bg-color {
+    background-color: #FAFCFE !important;
+}
+
+.dark .sb-show-main.main-bg-color {
+    background-color: #2A2A36 !important;
+}
