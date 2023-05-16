@@ -20,7 +20,6 @@ const server = z.object({
     DATABASE_URL:    z.string().url(),
     NODE_ENV:        z.enum(["development", "test", "production"]),
     NEXTAUTH_SECRET: optionalInDevelopment(z.string().min(1)),
-    SECRET:          optionalInDevelopment(z.string().min(1)),
     NEXTAUTH_URL:    z.preprocess(
         // This makes Vercel deployments not fail if you don't set NEXTAUTH_URL
         // Since NextAuth.js automatically uses the VERCEL_URL if present.
@@ -29,13 +28,13 @@ const server = z.object({
         process.env.VERCEL ? z.string() : z.string().url(),
     ),
     // Add `.min(1) on ID and SECRET if you want to make sure they're not empty
-    DISCORD_CLIENT_ID:     z.string(),
-    DISCORD_CLIENT_SECRET: z.string(),
-    EMAIL_PORT:            optionalInDevelopment(z.string()),
-    EMAIL_HOST:            optionalInDevelopment(z.string()),
-    EMAIL_SERVICE:         optionalInDevelopment(z.string()),
-    EMAIL_USER:            optionalInDevelopment(z.string()),
-    EMAIL_PASSWORD:        optionalInDevelopment(z.string()),
+    // DISCORD_CLIENT_ID:     z.string(),
+    // DISCORD_CLIENT_SECRET: z.string(),
+    EMAIL_PORT:     optionalInDevelopment(z.string()),
+    EMAIL_HOST:     optionalInDevelopment(z.string()),
+    EMAIL_SERVICE:  optionalInDevelopment(z.string()),
+    EMAIL_USER:     optionalInDevelopment(z.string()),
+    EMAIL_PASSWORD: optionalInDevelopment(z.string()),
 });
 
 /**
@@ -53,18 +52,17 @@ const client = z.object({
  * @type {Record<keyof z.infer<typeof server> | keyof z.infer<typeof client>, string | undefined>}
  */
 const processEnv = {
-    DATABASE_URL:          process.env.DATABASE_URL,
-    NODE_ENV:              process.env.NODE_ENV,
-    NEXTAUTH_SECRET:       process.env.NEXTAUTH_SECRET,
-    NEXTAUTH_URL:          process.env.NEXTAUTH_URL,
-    DISCORD_CLIENT_ID:     process.env.DISCORD_CLIENT_ID,
-    DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
-    EMAIL_PORT:            process.env.EMAIL_PORT,
-    EMAIL_SERVICE:         process.env.EMAIL_SERVICE,
-    EMAIL_HOST:            process.env.EMAIL_HOST,
-    EMAIL_USER:            process.env.EMAIL_USER,
-    EMAIL_PASSWORD:        process.env.EMAIL_PASSWORD,
-    SECRET:                process.env.SECRET,
+    DATABASE_URL:    process.env.DATABASE_URL,
+    NODE_ENV:        process.env.NODE_ENV,
+    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
+    NEXTAUTH_URL:    process.env.NEXTAUTH_URL,
+    // DISCORD_CLIENT_ID:     process.env.DISCORD_CLIENT_ID,
+    // DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
+    EMAIL_PORT:     process.env.EMAIL_PORT,
+    EMAIL_SERVICE:  process.env.EMAIL_SERVICE,
+    EMAIL_HOST:     process.env.EMAIL_HOST,
+    EMAIL_USER:     process.env.EMAIL_USER,
+    EMAIL_PASSWORD: process.env.EMAIL_PASSWORD,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 };
 
