@@ -37,7 +37,7 @@ const Page = () => {
             height: ${windowHeight ? `${windowHeight - appBarOpts.height}px` : `calc(100% - ${appBarOpts.height}px)`} !important;
 
             @media (max-width: 500px) {
-	            height: auto;
+	            height: auto !important;
               width: 100% !important;
             }
 
