@@ -12,16 +12,6 @@ import useTranslation from "next-translate/useTranslation"
 const Page = () => {
 	const {windowWidth} = useDimensions()
 	const {appBarOpts} = useMain()
-	const {t} = useTranslation()
-	
-	const homeData = {
-		name: t('common:companyName'),
-		secondaryTitle: t('home:secondaryTitle'),
-		description: <>
-			{'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat'}
-		</>,
-		resumeLink: 'https://drive.google.com/file/d/13Ka8Ii_-iuz22BqavhnzsT9oC-y509cs/view?usp=sharing',
-	} as const
 	
 	return (
 		<Col
@@ -37,7 +27,7 @@ const Page = () => {
         ${tw`w-full`};
         height: calc(100% - ${appBarOpts.height}px);
 			`}>
-				<Home {...homeData}/>
+				<Home/>
 			</div>
 		</Col>
 	)

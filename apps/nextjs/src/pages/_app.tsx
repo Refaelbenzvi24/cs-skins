@@ -8,7 +8,7 @@ import {SessionProvider} from "next-auth/react"
 import type {AppContextType} from "next/dist/shared/lib/utils"
 
 import {api} from "~/utils/api"
-import {MainProvider, ThemeProvider, useDimensions} from "@acme/ui"
+import {MainProvider, ThemeProvider} from "@acme/ui"
 import {getCookie} from "cookies-next"
 import type {ThemeOptions} from "@acme/ui/src/nextjs/components/Theme/types"
 import ToastifyContainer from "~/components/ToastifyContainer"
@@ -16,6 +16,10 @@ import type {NextComponentType, NextPage} from "next";
 import type {ReactNode} from "react";
 import type {AppInitialProps, NextPageContext} from "next/dist/shared/lib/utils";
 import type {NextRouter} from "next/dist/shared/lib/router/router";
+
+// TODO: fix pages changing language
+// TODO: add lazy loading for the images?
+// TODO: fix hebrew font missing
 
 const getInitialProps = ({ctx}: AppContextType) => {
 	const theme = getCookie('theme', ctx) as ThemeOptions | undefined | null

@@ -1,5 +1,3 @@
-import {useState, type ReactNode} from "react"
-
 import {css} from "@emotion/css"
 import tw from "twin.macro"
 
@@ -10,16 +8,7 @@ import Image from "next/image"
 import SocialLinks from "~/components/SocialLinks";
 import useTranslation from "next-translate/useTranslation"
 
-
-interface HomeProps {
-	name: string
-	secondaryTitle: string
-	description: ReactNode
-}
-
-const Home = (props: HomeProps) => {
-	const {name, secondaryTitle, description} = props
-	
+const Home = () => {
 	const {appBarOpts} = useMain()
 	const {windowWidth, windowHeight} = useDimensions()
 	const isDark = useIsDark()
@@ -47,7 +36,7 @@ const Home = (props: HomeProps) => {
 						size={(windowWidth && windowWidth > 1300) ? '' : interpolate(windowWidth, [2, 4], [375, 1300])}
 						darkColor={theme.colorScheme.light}
 						color={theme.colorScheme.header1}>
-						{name}
+						{t('common:companyName')}
 					</Typography>
 				</div>
 				
@@ -56,7 +45,7 @@ const Home = (props: HomeProps) => {
 					            variant="h1"
 					            size={(windowWidth && windowWidth > 1300) ? '' : interpolate(windowWidth, [1.6, 4], [200, 1300])}
 					            color={theme.colorScheme.secondary}>
-						{secondaryTitle}
+						{t('home:secondaryTitle')}
 					</Typography>
 				</div>
 				
@@ -78,7 +67,7 @@ const Home = (props: HomeProps) => {
 						size={(windowWidth && windowWidth > 1300) ? '' : interpolate(windowWidth, [0.84, 1], [375, 1300])}
 						color={theme.colorScheme.subtitle1}
 						darkColor={theme.colorScheme.subtitle2}>
-						{description}
+						{t('home:description')}
 					</Typography>
 				</div>
 				
