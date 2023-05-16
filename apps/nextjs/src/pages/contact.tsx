@@ -21,7 +21,7 @@ const Page = () => {
 	
 	return (
 		<Col className="h-full">
-			<div className="flex flex-row-reverse h-full max-[1000px]:px-[40px] max-[600px]:px-[30px] max-[400px]:px-[20px]">
+			<div className="flex flex-row-reverse h-full px-[120px] max-[1000px]:px-[40px] max-[600px]:px-[30px] max-[400px]:px-[20px]">
 				<Image
 					className={css`
             ${tw`
