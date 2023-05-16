@@ -17,7 +17,6 @@ import type {ReactNode} from "react";
 import type {AppInitialProps, NextPageContext} from "next/dist/shared/lib/utils";
 import type {NextRouter} from "next/dist/shared/lib/router/router";
 
-// TODO: fix pages changing language
 // TODO: add lazy loading for the images?
 // TODO: fix hebrew font missing
 

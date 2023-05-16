@@ -5,7 +5,7 @@ module.exports = {
     pages:           {
         '*':             ['common', 'forms', 'settings', 'toasts'],
         '/':             ['home'],
-        '/contact':      ['contact'],
+        '/contact':      ['home'],
         '/admin/lead/*': ['admin-lead'],
         '/admin':        ['admin']
     },
