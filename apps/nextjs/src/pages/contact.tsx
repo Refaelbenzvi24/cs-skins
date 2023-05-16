@@ -21,11 +21,7 @@ const Page = () => {
 	
 	return (
 		<Col className="h-full">
-			<div className={css`
-        ${tw`flex flex-row-reverse h-full`};
-        padding-left: ${interpolate(windowWidth, [160, 20], [1300, 200])}px;
-        padding-right: ${interpolate(windowWidth, [160, 20], [1300, 200])}px;
-			`}>
+			<div className="flex flex-row-reverse h-full max-[1000px]:px-[40px] max-[600px]:px-[30px] max-[400px]:px-[20px]">
 				<Image
 					className={css`
             ${tw`
@@ -35,9 +31,10 @@ const Page = () => {
               z-[-1]
             `};
             height: ${windowHeight ? `${windowHeight - appBarOpts.height}px` : `calc(100% - ${appBarOpts.height}px)`} !important;
+            object-position: bottom left !important;
 
             @media (max-width: 500px) {
-	            height: auto !important;
+	            height: 100% !important;
               width: 100% !important;
             }
 
