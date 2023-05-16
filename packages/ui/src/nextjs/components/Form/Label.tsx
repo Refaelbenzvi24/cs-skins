@@ -34,7 +34,7 @@ const Label = styled(motion.span, {
 	
 	dir === "ltr" && tw`text-left`,
 	
-	tw`text-sm !w-fit px-[2px]`,
+	tw`whitespace-nowrap text-sm !w-fit px-[2px]`,
 	
 	hasBackground && css`
     ${tw`flex py-0.5 px-2 ml-2`};

@@ -125,7 +125,7 @@ const ContactForm = () => {
 					
 					<Row className="w-full max-[800px]:justify-center">
 						<Button
-							className="mt-4 flex items-center justify-center"
+							className="flex items-center justify-center"
 							type="submit"
 							width="200px"
 							height="40px"

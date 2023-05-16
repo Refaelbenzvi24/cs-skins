@@ -37,7 +37,7 @@ const Page = () => {
             height: ${windowHeight ? `${windowHeight - appBarOpts.height}px` : `calc(100% - ${appBarOpts.height}px)`} !important;
 
             @media (max-width: 500px) {
-              height: unset !important;
+	            height: auto;
               width: 100% !important;
             }
 
@@ -46,7 +46,9 @@ const Page = () => {
               transform: scale(-1, 1);
             }
 					`}
-					src={building} alt={'logo'}
+					src={building}
+					alt={''}
+					loading={"lazy"}
 					layout='fill'
 					objectFit='contain'/>
 				

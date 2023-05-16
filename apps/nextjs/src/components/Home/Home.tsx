@@ -112,7 +112,9 @@ const Home = () => {
 				${isDark ? css`
           filter: brightness(85%) contrast(115%) saturate(110%);
 				` : ''}`}
-				src={building} alt={'logo'}
+				src={building}
+				alt={''}
+				loading={"lazy"}
 				layout='fill'
 				objectFit='contain'/>
 		</Row>

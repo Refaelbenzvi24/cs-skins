@@ -14,6 +14,7 @@ const Document: NextComponentType<NextPageContext, DocumentInitialProps, Documen
 			className={pageProps.theme === 'dark' ? 'dark' : ''}>
 			<Head>
 				<link href='https://fonts.googleapis.com/css?family=Work Sans' rel='stylesheet'/>
+				<link href='https://fonts.googleapis.com/css?family=Heebo' rel='stylesheet'/>
 			</Head>
 			<body>
 			<div id="portals-root"></div>
