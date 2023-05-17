@@ -1,4 +1,3 @@
-
 import {AppBar, ATagButton, Navigation, NavigationItem, Row, theme, ThemeToggle, Tooltip, Typography} from "@acme/ui"
 import {useRouter} from "next/router"
 import Image from "next/image";
@@ -70,7 +69,8 @@ const MainLayoutAppBar = (props: MainLayoutAppBarProps & Partial<ComponentProps<
             [dir=rtl] & {
               ${tw`flex-row-reverse`};
             }
-					`} text>
+					`}
+					text>
 					<IconCarbonPhoneFilled/>
 					
 					<Typography variant={'preTitle'}>

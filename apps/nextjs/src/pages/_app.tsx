@@ -21,9 +21,10 @@ import type {NextRouter} from "next/dist/shared/lib/router/router";
 // TODO: fix hebrew font missing
 
 const getInitialProps = ({ctx}: AppContextType) => {
-	const theme = getCookie('theme', ctx) as ThemeOptions | undefined | null
+	const defaultTheme = 'light' as const
+	const theme = (getCookie('theme', ctx) as ThemeOptions | undefined | null) || defaultTheme
 	
-	return {pageProps: {theme}}
+	return {pageProps: {theme, defaultTheme}}
 }
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
@@ -41,7 +42,15 @@ export declare type AppPropsType<Router extends NextRouter = NextRouter, PagePro
 export type AppType<P = object> = NextComponentType<AppContextType, P, AppPropsType<any, P>>
 
 const MyApp: AppType<{ session: Session | null } & ReturnType<typeof getInitialProps>['pageProps']> = (props) => {
-	const {Component, pageProps: {session, theme, ...pageProps}} = props
+	const {
+		Component,
+		pageProps: {
+			session,
+			theme,
+			defaultTheme,
+			...pageProps
+		}
+	} = props
 	
 	const getLayout = Component.getLayout ?? ((page) => page)
 	const getTransition = Component.getTransition ?? ((page) => page)
@@ -50,7 +59,7 @@ const MyApp: AppType<{ session: Session | null } & ReturnType<typeof getInitialP
 		<div className="h-full">
 			<ThemeProvider
 				initialTheme={theme}
-				defaultTheme={'light'}>
+				defaultTheme={defaultTheme}>
 				<MainProvider defaults={{isAnimationsActive: false}}>
 					<SessionProvider session={session}>
 						<ToastifyContainer/>

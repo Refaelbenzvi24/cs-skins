@@ -12,7 +12,13 @@ import {default as withNextTranslate} from "next-translate-plugin"
 const config = withTwin(withNextTranslate({
     reactStrictMode: true,
     swcMinify:       true,
-    webpack:         (config) => {
+
+    // @ts-ignore-next-line
+    i18n: {
+        localeDetection: false,
+    },
+
+    webpack: (config) => {
         config.plugins.push(
             Icons({
                 compiler: 'jsx',

@@ -1,6 +1,6 @@
 import {Col, Divider, Row, theme, Typography, useDimensions, useMain} from "@acme/ui"
+import Head from "next/head"
 import {type ReactElement} from "react";
-import {interpolate} from "~/utils/utils";
 import {css} from "@emotion/css"
 import tw from "twin.macro"
 import ContactForm from "~/components/Contact/ContactForm";
@@ -15,71 +15,80 @@ import useTranslation from "next-translate/useTranslation"
 
 
 const Page = () => {
-	const {windowWidth, windowHeight} = useDimensions()
+	const {windowHeight} = useDimensions()
 	const {appBarOpts} = useMain()
 	const {t} = useTranslation()
 	
 	return (
-		<Col className="h-full">
-			<div className="flex flex-row-reverse h-full px-[120px] max-[1000px]:px-[40px] max-[600px]:px-[30px] max-[400px]:px-[20px]">
-				<Image
-					className={css`
-            ${tw`
+		<>
+			<Head>
+				<title>YAM | Contact</title>
+				<meta name="description" content={`ים - סוכנות נדל"ן`}/>
+			</Head>
+			
+			<main className="h-full">
+				<Col className="h-full">
+					<div className="flex flex-row-reverse h-full px-[120px] max-[1000px]:px-[40px] max-[600px]:px-[30px] max-[400px]:px-[20px]">
+						<Image
+							className={css`
+                ${tw`
               !w-[unset]
               !bottom-0
               !top-[unset]
               z-[-1]
             `};
-            height: ${windowHeight ? `${windowHeight - appBarOpts.height}px` : `calc(100% - ${appBarOpts.height}px)`} !important;
-            object-position: bottom left !important;
+                height: ${windowHeight ? `${windowHeight - appBarOpts.height}px` : `calc(100% - ${appBarOpts.height}px)`} !important;
+                object-position: bottom left !important;
 
-            @media (max-width: 500px) {
-	            height: 100% !important;
-              width: 100% !important;
-            }
+                @media (max-width: 500px) {
+                  height: 100% !important;
+                  width: 100% !important;
+                }
 
-            [dir="rtl"] & {
-              ${tw`!left-[unset] !right-0`};
-              transform: scale(-1, 1);
-            }
-					`}
-					src={building}
-					alt={''}
-					loading={"lazy"}
-					layout='fill'
-					objectFit='contain'/>
-				
-				<Col className="w-[700px] h-full">
-					<Row
-						className="items-center justify-center w-[100%] max-[800px]:pt-0">
-						<Typography className={`whitespace-nowrap max-[1000px]:w-fit max-[1000px]:text-inherit`}
-						            variant="h2"
-						            color={theme.colorScheme.primary}>
-							{t('common:contact')}
-						</Typography>
+                [dir="rtl"] & {
+                  ${tw`!left-[unset] !right-0`};
+                  transform: scale(-1, 1);
+                }
+							`}
+							src={building}
+							alt={''}
+							loading={"lazy"}
+							layout='fill'
+							objectFit='contain'/>
 						
-						<Divider className="ml-[16px] rtl:mr-[16px] mt-[6px] min-[1000px]:mr-[140px] min-[1000px]:rtl:ml-[140px]"
-						         color={theme.colorScheme.primary}/>
-					</Row>
+						<Col className="w-[700px] h-full">
+							<Row
+								className="items-center justify-center w-[100%] max-[800px]:pt-0">
+								<Typography className={`whitespace-nowrap max-[1000px]:w-fit max-[1000px]:text-inherit`}
+								            variant="h2"
+								            color={theme.colorScheme.primary}>
+									{t('common:contact')}
+								</Typography>
+								
+								<Divider className="ml-[16px] rtl:mr-[16px] mt-[6px] min-[1000px]:mr-[140px] min-[1000px]:rtl:ml-[140px]"
+								         color={theme.colorScheme.primary}/>
+							</Row>
+							
+							<ContactForm/>
+							
+							<Row tw="items-center justify-center max-[800px]:hidden">
+								<Row className="pt-[14px] pb-[24px] justify-center space-x-[18px] rtl:space-x-reverse items-center w-[60%]">
+									<Divider className="max-[800px]:hidden"
+									         thickness={'2px'}/>
+									<SocialLinks/>
+									<Divider className="max-[800px]:hidden"
+									         thickness={'2px'}/>
+								</Row>
+							</Row>
+						</Col>
+					</div>
 					
-					<ContactForm/>
-					
-					<Row tw="items-center justify-center max-[800px]:hidden">
-						<Row className="pt-[14px] pb-[24px] justify-center space-x-[18px] rtl:space-x-reverse items-center w-[60%]">
-							<Divider className="max-[800px]:hidden"
-							         thickness={'2px'}/>
-							<SocialLinks/>
-							<Divider className="max-[800px]:hidden"
-							         thickness={'2px'}/>
-						</Row>
-					</Row>
+					<ContactBottomSheet tw="justify-center min-[800px]:hidden py-[6px]">
+						<SocialLinks className="w-[60%] justify-around"/>
+					</ContactBottomSheet>
 				</Col>
-			</div>
-			
-			<ContactBottomSheet tw="justify-center min-[800px]:hidden py-[6px]">
-				<SocialLinks className="w-[60%] justify-around"/>
-			</ContactBottomSheet>
-		</Col>
+			</main>
+		</>
 	)
 }
 

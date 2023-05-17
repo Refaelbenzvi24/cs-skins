@@ -1,4 +1,5 @@
 import type {GetServerSideProps} from "next"
+import Head from "next/head"
 import {signIn, useSession} from "next-auth/react"
 import {Button, Col, Divider, Row, TextField, theme, Typography} from "@acme/ui"
 import {type SubmitHandler, useForm} from "react-hook-form"
@@ -11,6 +12,7 @@ import {z} from "zod"
 import {useRouter} from "next/router"
 import AdminLayout from "~/layouts/AdminLayout"
 import {getProxySSGHelpers} from "~/utils/ssg";
+import {getServerSession} from "@acme/auth";
 
 
 const loginValidation = z.object(authValidations.loginObject)
@@ -18,6 +20,17 @@ const loginValidation = z.object(authValidations.loginObject)
 type LoginValidationSchema = z.infer<typeof loginValidation>
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+	const session = await getServerSession(context)
+	
+	if (session && session.user) {
+		return {
+			redirect: {
+				permanent: false,
+				destination: '/admin'
+			}
+		}
+	}
+	
 	const ssg = await getProxySSGHelpers(context)
 	
 	await ssg.auth.getSession.prefetch()
@@ -62,54 +75,63 @@ const Page = () => {
 	}, [status])
 	
 	return (
-		<Col className="h-full justify-center items-center mx-auto min-[600px]:w-[580px] px-[30px]">
-			<Row className="items-center justify-center space-x-[18px] rtl:space-x-reverse w-full px-[24px] pb-[120px]">
-				<Divider className="max-[800px]:hidden"
-				         thickness={'2px'}/>
-				<Typography className="whitespace-nowrap"
-				            variant="h2"
-				            color={theme.colorScheme.primary}>
-					{t('common:login')}
-				</Typography>
-				<Divider className="max-[800px]:hidden"
-				         thickness={'2px'}/>
-			</Row>
+		<>
+			<Head>
+				<title>YAM | Login</title>
+				<meta name="description" content={`ים - סוכנות נדל"ן`}/>
+			</Head>
 			
-			<form className="flex flex-col w-full items-center justify-center"
-			      onSubmit={(event) => {
-				      if (!formHasSubmitted) setFormHasSubmitted(() => true)
-				      void handleSubmit(onSubmit)(event)
-			      }}>
-				<Col className="space-y-1 w-full pb-[60px]">
-					<TextField
-						{...register('email')}
-						id="email"
-						disabled={isSubmitting}
-						label={t('forms:admin.login.labels.email')}
-						error={!!errors.email}
-						helperText={errors.email?.message ? t(errors.email?.message) : ""}/>
+			<main className="h-full">
+				<Col className="h-full justify-center items-center mx-auto min-[600px]:w-[580px] px-[30px]">
+					<Row className="items-center justify-center space-x-[18px] rtl:space-x-reverse w-full px-[24px] pb-[120px]">
+						<Divider className="max-[800px]:hidden"
+						         thickness={'2px'}/>
+						<Typography className="whitespace-nowrap"
+						            variant="h2"
+						            color={theme.colorScheme.primary}>
+							{t('common:login')}
+						</Typography>
+						<Divider className="max-[800px]:hidden"
+						         thickness={'2px'}/>
+					</Row>
 					
-					<TextField
-						{...register('password')}
-						type="password"
-						id="password"
-						disabled={isSubmitting}
-						label={t('forms:admin.login.labels.password')}
-						error={!!errors.password}
-						helperText={errors.password?.message ? t(errors.password?.message) : ""}/>
+					<form className="flex flex-col w-full items-center justify-center"
+					      onSubmit={(event) => {
+						      if (!formHasSubmitted) setFormHasSubmitted(() => true)
+						      void handleSubmit(onSubmit)(event)
+					      }}>
+						<Col className="space-y-1 w-full pb-[60px]">
+							<TextField
+								{...register('email')}
+								id="email"
+								disabled={isSubmitting}
+								label={t('forms:admin.login.labels.email')}
+								error={!!errors.email}
+								helperText={errors.email?.message ? t(errors.email?.message) : ""}/>
+							
+							<TextField
+								{...register('password')}
+								type="password"
+								id="password"
+								disabled={isSubmitting}
+								label={t('forms:admin.login.labels.password')}
+								error={!!errors.password}
+								helperText={errors.password?.message ? t(errors.password?.message) : ""}/>
+						</Col>
+						
+						<Button
+							type="submit"
+							width="200px"
+							height="40px"
+							disabled={formHasSubmitted ? isSubmitting || !isDirty || !isValid : false}>
+							<Typography variant={'bold'} color={theme.colorScheme.light}>
+								{t('common:login')}
+							</Typography>
+						</Button>
+					</form>
 				</Col>
-				
-				<Button
-					type="submit"
-					width="200px"
-					height="40px"
-					disabled={formHasSubmitted ? isSubmitting || !isDirty || !isValid : false}>
-					<Typography variant={'bold'} color={theme.colorScheme.light}>
-						{t('common:login')}
-					</Typography>
-				</Button>
-			</form>
-		</Col>
+			</main>
+		</>
 	)
 }
 

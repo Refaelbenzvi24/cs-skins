@@ -1,4 +1,5 @@
 import {Col, useDimensions, useMain} from "@acme/ui"
+import Head from "next/head"
 import {type ReactElement} from "react"
 import {interpolate} from "~/utils/utils"
 import {css} from "@emotion/css"
@@ -13,23 +14,33 @@ const Page = () => {
 	const {windowWidth} = useDimensions()
 	const {appBarOpts} = useMain()
 	
+	
 	return (
-		<Col
-			className={`z-[10] h-full mx-auto ${css`
-        padding-left: ${interpolate(windowWidth, [160, 20], [1300, 200])}px;
-        padding-right: ${interpolate(windowWidth, [160, 20], [1300, 200])}px;
-			`}`}
-			transition={{
-				delay: 1.5,
-				duration: 0.5,
-			}}>
-			<div className={css`
-        ${tw`w-full`};
-        height: calc(100% - ${appBarOpts.height}px);
-			`}>
-				<Home/>
-			</div>
-		</Col>
+		<>
+			<Head>
+				<title>YAM</title>
+				<meta name="description" content={`ים - סוכנות נדל"ן`}/>
+			</Head>
+			
+			<main className="h-full">
+				<Col
+					className={`z-[10] h-full mx-auto ${css`
+            padding-left: ${interpolate(windowWidth, [160, 20], [1300, 200])}px;
+            padding-right: ${interpolate(windowWidth, [160, 20], [1300, 200])}px;
+					`}`}
+					transition={{
+						delay: 1.5,
+						duration: 0.5,
+					}}>
+					<div className={css`
+            ${tw`w-full`};
+            height: calc(100% - ${appBarOpts.height}px);
+					`}>
+						<Home/>
+					</div>
+				</Col>
+			</main>
+		</>
 	)
 }
 

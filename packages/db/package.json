@@ -8,7 +8,7 @@
     "db:generate":       "pnpm with-env prisma generate",
     "db:push":           "pnpm with-env prisma db push --skip-generate",
     "db:migrate-dev":    "pnpm with-env prisma migrate dev --skip-generate",
-    "db:migrate-deploy": "pnpm with-env prisma migrate deploy --skip-generate",
+    "db:migrate-deploy": "pnpm with-env prisma migrate deploy",
     "db:migrate-reset":  "pnpm with-env prisma migrate reset",
     "dev":               "pnpm with-env prisma studio --port 5556",
     "with-env":          "dotenv -e ../../.env --"
