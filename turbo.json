@@ -20,7 +20,7 @@
     },
     "build":       {
       "dependsOn": ["^build", "^db:generate"],
-      "outputs":   [".next/**", ".expo/**"]
+      "outputs":   [".next/**", ".expo/**", "storybook-static/**"]
     },
     "lint":        {},
     "lint:fix":    {},

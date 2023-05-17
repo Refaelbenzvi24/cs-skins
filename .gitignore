@@ -12,6 +12,9 @@ coverage
 prisma/db.sqlite
 prisma/db.sqlite-journal
 
+# storbook
+storybook-static
+
 # next.js
 .next/
 out/
