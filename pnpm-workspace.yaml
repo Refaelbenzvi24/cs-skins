@@ -1,6 +1,8 @@
 packages:
   - apps/email-templates-preview
   - apps/email-templates-preview/.react-email
+  - apps/cronjobs
+  - apps/scraper
   - apps/expo
   - apps/nextjs
   - apps/ui-docs-nextjs
@@ -10,5 +12,6 @@ packages:
   - packages/db
   - packages/ui
   - packages/email-templates
+  - packages/message-broker
   - packages/modules/*
   - packages/config/*

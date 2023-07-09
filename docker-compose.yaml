@@ -28,6 +28,49 @@ services:
     depends_on:
       - postgres
 
+  message_broker:
+    container_name: rabbitmq.jobs_seeker_container
+    image: rabbitmq:3-management
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - main_network
+    ports:
+      - 5672:5672
+      - 15672:15672
+    restart: unless-stopped
+
+  cronjobs_service:
+    container_name: cronjobs.jobs_seeker_container
+    environment:
+      DATABASE_URL: ${DB_DATABASE:-postgres://root:1234@localhost/jobs_seeker}
+      MESSAGE_BROKER_HOST: ${MESSAGE_BROKER_HOST:-localhost}
+      MESSAGE_BROKER_USER: ${MESSAGE_BROKER_USER:-guest}
+      MESSAGE_BROKER_PASSWORD: ${MESSAGE_BROKER_PASSWORD:-guest}
+      MESSAGE_BROKER_PROTOCOL: ${MESSAGE_BROKER_PROTOCOL:-amqp}
+    build:
+      context: .
+      dockerfile: ./apps/cronjobs/Dockerfile
+    restart: unless-stopped
+    networks:
+      - main_network
+
+  scraper_service:
+    container_name: scraper.jobs_seeker_container
+    environment:
+      DATABASE_URL: ${DB_DATABASE:-postgres://root:1234@localhost/jobs_seeker}
+      MESSAGE_BROKER_HOST: ${MESSAGE_BROKER_HOST:-localhost}
+      MESSAGE_BROKER_USER: ${MESSAGE_BROKER_USER:-guest}
+      MESSAGE_BROKER_PASSWORD: ${MESSAGE_BROKER_PASSWORD:-guest}
+      MESSAGE_BROKER_PROTOCOL: ${MESSAGE_BROKER_PROTOCOL:-amqp}
+    build:
+      context: .
+      dockerfile: apps/scraper/Dockerfile
+    restart: unless-stopped
+    networks:
+      - main_network
+
 networks:
   main_network:
     driver: bridge
