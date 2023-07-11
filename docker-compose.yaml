@@ -1,12 +1,12 @@
 services:
   postgres:
-    container_name: postgres.t3-super-turbo_container
+    container_name: postgres.cs-skins_container
     image: postgres
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: 1234
       PGDATA: /data/postgres
-      POSTGRES_DB: ${DB_DATABASE:-t3-super-turbo}
+      POSTGRES_DB: ${DB_DATABASE:-cs-skins}
     volumes:
       - postgres:/data/postgres
     ports:
@@ -14,7 +14,7 @@ services:
     restart: unless-stopped
 
   pgadmin:
-    container_name: pgadmin.t3-super-turbo_container
+    container_name: pgadmin.cs-skins_container
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
@@ -29,7 +29,7 @@ services:
       - postgres
 
   message_broker:
-    container_name: rabbitmq.jobs_seeker_container
+    container_name: rabbitmq.cs-skins_container
     image: rabbitmq:3-management
     environment:
       RABBITMQ_DEFAULT_USER: guest
@@ -42,9 +42,9 @@ services:
     restart: unless-stopped
 
   cronjobs_service:
-    container_name: cronjobs.jobs_seeker_container
+    container_name: cronjobs.cs-skins_container
     environment:
-      DATABASE_URL: ${DB_DATABASE:-postgres://root:1234@localhost/jobs_seeker}
+      DATABASE_URL: ${DB_DATABASE:-postgres://root:1234@localhost/cs-skins}
       MESSAGE_BROKER_HOST: ${MESSAGE_BROKER_HOST:-localhost}
       MESSAGE_BROKER_USER: ${MESSAGE_BROKER_USER:-guest}
       MESSAGE_BROKER_PASSWORD: ${MESSAGE_BROKER_PASSWORD:-guest}
@@ -57,9 +57,9 @@ services:
       - main_network
 
   scraper_service:
-    container_name: scraper.jobs_seeker_container
+    container_name: scraper.cs-skins_container
     environment:
-      DATABASE_URL: ${DB_DATABASE:-postgres://root:1234@localhost/jobs_seeker}
+      DATABASE_URL: ${DB_DATABASE:-postgres://root:1234@localhost/cs-skins}
       MESSAGE_BROKER_HOST: ${MESSAGE_BROKER_HOST:-localhost}
       MESSAGE_BROKER_USER: ${MESSAGE_BROKER_USER:-guest}
       MESSAGE_BROKER_PASSWORD: ${MESSAGE_BROKER_PASSWORD:-guest}
