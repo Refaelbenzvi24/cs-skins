@@ -12,6 +12,7 @@
   "dependencies": {
     "@acme/auth": "*",
     "@acme/db": "*",
+    "@acme/message-broker": "*",
     "@acme/email-templates": "*",
     "@acme/validations": "*",
     "@trpc/client": "^10.12.0",

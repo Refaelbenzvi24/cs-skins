@@ -416,6 +416,7 @@ importers:
       '@acme/auth': '*'
       '@acme/db': '*'
       '@acme/email-templates': '*'
+      '@acme/message-broker': '*'
       '@acme/validations': '*'
       '@trpc/client': ^10.12.0
       '@trpc/server': ^10.12.0
@@ -434,6 +435,7 @@ importers:
       '@acme/auth': link:../auth
       '@acme/db': link:../db
       '@acme/email-templates': link:../email-templates
+      '@acme/message-broker': link:../message-broker
       '@acme/validations': link:../modules/validations
       '@trpc/client': 10.18.0_@trpc+server@10.18.0
       '@trpc/server': 10.18.0

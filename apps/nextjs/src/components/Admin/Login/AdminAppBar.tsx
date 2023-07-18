@@ -61,7 +61,7 @@ const AdminAppBar = (props: AdminAppBarProps) => {
 				{...restProps}
 				className={`justify-between px-16 max-[700px]:pl-8 max-[700px]:pr-4 ${clsx(className)}`}>
 				<Row className="items-center">
-					<Image src={"/Logo.svg"} alt={'logo'} width={38} height={45}/>
+					{/*<Image src={"/Logo.svg"} alt={'logo'} width={38} height={45}/>*/}
 				</Row>
 				
 				<Row className="space-s-2">

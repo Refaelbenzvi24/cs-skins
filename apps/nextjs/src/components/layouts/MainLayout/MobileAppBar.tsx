@@ -71,25 +71,25 @@ const MainLayoutMobileAppBar = (props: MainLayoutMobileAppBarProps & ComponentPr
         }
 			`} ${clsx(className)}`}>
 			
-			<Image
-				className={css`
-          [dir="ltr"] & {
-            margin-left: 60px;
-            @media screen and (max-width: 1200px) {
-              margin-left: 20px;
-            }
-          }
-
-          [dir="rtl"] & {
-            margin-right: 60px;
-            @media screen and (max-width: 1200px) {
-              margin-right: 20px;
-            }
-          }
-				`}
-				src={"/Logo.svg"}
-				alt={'YAM'}
-				width={38} height={45}/>
+			{/*<Image*/}
+			{/*	className={css`*/}
+      {/*    [dir="ltr"] & {*/}
+      {/*      margin-left: 60px;*/}
+      {/*      @media screen and (max-width: 1200px) {*/}
+      {/*        margin-left: 20px;*/}
+      {/*      }*/}
+      {/*    }*/}
+			
+      {/*    [dir="rtl"] & {*/}
+      {/*      margin-right: 60px;*/}
+      {/*      @media screen and (max-width: 1200px) {*/}
+      {/*        margin-right: 20px;*/}
+      {/*      }*/}
+      {/*    }*/}
+			{/*	`}*/}
+			{/*	src={"/Logo.svg"}*/}
+			{/*	alt={'YAM'}*/}
+			{/*	width={38} height={45}/>*/}
 			
 			<HamburgerSideBar
 				className="overflow-hidden"

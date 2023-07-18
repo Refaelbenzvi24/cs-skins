@@ -30,11 +30,12 @@ const server = z.object({
     // Add `.min(1) on ID and SECRET if you want to make sure they're not empty
     // DISCORD_CLIENT_ID:     z.string(),
     // DISCORD_CLIENT_SECRET: z.string(),
-    EMAIL_PORT:     optionalInDevelopment(z.string()),
-    EMAIL_HOST:     optionalInDevelopment(z.string()),
-    EMAIL_SERVICE:  optionalInDevelopment(z.string()),
-    EMAIL_USER:     optionalInDevelopment(z.string()),
-    EMAIL_PASSWORD: optionalInDevelopment(z.string()),
+    SKIN_SEARCH_INTERVAL_TIME_IN_MINUTES: z.number().int().min(1).max(60),
+    EMAIL_PORT:                           optionalInDevelopment(z.string()),
+    EMAIL_HOST:                           optionalInDevelopment(z.string()),
+    EMAIL_SERVICE:                        optionalInDevelopment(z.string()),
+    EMAIL_USER:                           optionalInDevelopment(z.string()),
+    EMAIL_PASSWORD:                       optionalInDevelopment(z.string()),
 });
 
 /**

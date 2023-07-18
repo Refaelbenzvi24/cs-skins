@@ -1,9 +1,9 @@
 import {authRouter} from "./router/auth"
 import {createTRPCRouter} from "./trpc"
-import {leadsRouter} from "./router/leads"
+import {skinRouter} from "./router/skin"
 
 export const appRouter = createTRPCRouter({
-	leads: leadsRouter,
+	skin: skinRouter,
 	auth: authRouter,
 })
 

@@ -28,7 +28,7 @@ declare module "next-auth" {
 
 const hashPassword = (password: string) => {
 	return sha256(password).toString();
-};
+}
 
 /**
  * Options for NextAuth.js used to configure
@@ -49,6 +49,7 @@ export const authOptions: NextAuthOptions = {
 	secret: process.env.NEXTAUTH_SECRET,
 	pages: {
 		signIn: "/en/admin/login",
+		
 	},
 	session: {strategy: "jwt"},
 	

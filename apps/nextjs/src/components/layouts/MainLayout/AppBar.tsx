@@ -40,7 +40,7 @@ const MainLayoutAppBar = (props: MainLayoutAppBarProps & Partial<ComponentProps<
 			{...restProps}
 			className={`justify-between px-16 ${clsx(className)}`}>
 			<Row className="items-center">
-				<Image src={"/Logo.svg"} alt={'logo'} width={38} height={45}/>
+				{/*<Image src={"/Logo.svg"} alt={'logo'} width={38} height={45}/>*/}
 				
 				<Navigation
 					className="ltr:pl-[184px] rtl:pr-[184px]"
@@ -57,27 +57,6 @@ const MainLayoutAppBar = (props: MainLayoutAppBarProps & Partial<ComponentProps<
 			</Row>
 			
 			<Row className="space-x-2">
-				<ATagButton
-					href={'tel:052418018'}
-					className={css`
-            ${tw`flex justify-center items-center space-x-1`};
-
-            svg {
-              font-size: 15px;
-            }
-
-            [dir=rtl] & {
-              ${tw`flex-row-reverse`};
-            }
-					`}
-					text>
-					<IconCarbonPhoneFilled/>
-					
-					<Typography variant={'preTitle'}>
-						054-241-8018
-					</Typography>
-				</ATagButton>
-				
 				<Row className="ltr:pl-2 rtl:pr-2">
 					<Tooltip tooltip={t('common:language')}
 					         color={theme.colorScheme.overlaysDark}

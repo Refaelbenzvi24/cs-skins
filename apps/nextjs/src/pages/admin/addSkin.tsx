@@ -1,11 +1,11 @@
 import type {GetServerSideProps} from "next"
 import Head from "next/head"
-import {signIn, useSession} from "next-auth/react"
+import {useSession} from "next-auth/react"
 import {Button, Col, Divider, Row, TextField, theme, Typography} from "@acme/ui"
 import {type SubmitHandler, useForm} from "react-hook-form"
 import useTranslation from "next-translate/useTranslation"
-import {ReactElement, useEffect, useState} from "react"
-import {authValidations} from "@acme/validations"
+import {ReactElement, useState} from "react"
+import {skinValidations} from "@acme/validations"
 import {zodResolver} from "@hookform/resolvers/zod"
 
 import {z} from "zod"
@@ -13,20 +13,21 @@ import {useRouter} from "next/router"
 import AdminLayout from "~/layouts/AdminLayout"
 import {getProxySSGHelpers} from "~/utils/ssg";
 import {getServerSession} from "@acme/auth";
+import {api} from "~/utils/api";
 
 
-const loginValidation = z.object(authValidations.loginObject)
+const createSkinValidation = z.object(skinValidations.createSkin)
 
-type LoginValidationSchema = z.infer<typeof loginValidation>
+type createSkinValidationSchema = z.infer<typeof createSkinValidation>
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
 	const session = await getServerSession(context)
 	
-	if (session && session.user) {
+	if (!session || !session.user) {
 		return {
 			redirect: {
 				permanent: false,
-				destination: '/admin'
+				destination: '/admin/login'
 			}
 		}
 	}
@@ -43,6 +44,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 }
 
 const Page = () => {
+	const submitFormMutation = api.skin.create.useMutation()
 	const router = useRouter()
 	
 	const {t} = useTranslation()
@@ -55,30 +57,21 @@ const Page = () => {
 		reset,
 		formState: {errors, isSubmitting, isDirty, isValid},
 		register
-	} = useForm<LoginValidationSchema>({
-		resolver: zodResolver(loginValidation),
+	} = useForm<createSkinValidationSchema>({
+		resolver: zodResolver(createSkinValidation),
 		mode: "onChange"
 	})
 	
-	const onSubmit: SubmitHandler<LoginValidationSchema> = async (data) => {
-		await signIn('credentials', {
-			redirect: false,
-			username: data.email,
-			...data
-		})
+	const onSubmit: SubmitHandler<createSkinValidationSchema> = async (data) => {
+		submitFormMutation.mutate(data)
 		reset()
 	}
-	
-	
-	useEffect(() => {
-		if (status === 'authenticated') void router.push('/admin')
-	}, [status])
 	
 	return (
 		<>
 			<Head>
-				<title>CS Skins | Login</title>
-				<meta name="description" content={`ים - סוכנות נדל"ן`}/>
+				<title>CS Skin | Add Skin</title>
+				<meta name="description" content=""/>
 			</Head>
 			
 			<main className="h-full">
@@ -89,7 +82,7 @@ const Page = () => {
 						<Typography className="whitespace-nowrap"
 						            variant="h2"
 						            color={theme.colorScheme.primary}>
-							{t('common:login')}
+							Add Skin
 						</Typography>
 						<Divider className="max-[800px]:hidden"
 						         thickness={'2px'}/>
@@ -102,21 +95,12 @@ const Page = () => {
 					      }}>
 						<Col className="space-y-1 w-full pb-[60px]">
 							<TextField
-								{...register('email')}
-								id="email"
+								{...register('url')}
+								id="url"
 								disabled={isSubmitting}
-								label={t('forms:admin.login.labels.email')}
-								error={!!errors.email}
-								helperText={errors.email?.message ? t(errors.email?.message) : ""}/>
-							
-							<TextField
-								{...register('password')}
-								type="password"
-								id="password"
-								disabled={isSubmitting}
-								label={t('forms:admin.login.labels.password')}
-								error={!!errors.password}
-								helperText={errors.password?.message ? t(errors.password?.message) : ""}/>
+								label={'Url'}
+								error={!!errors.url}
+								helperText={errors.url?.message ? t(errors.url?.message) : ""}/>
 						</Col>
 						
 						<Button
@@ -125,7 +109,7 @@ const Page = () => {
 							height="40px"
 							disabled={formHasSubmitted ? isSubmitting || !isDirty || !isValid : false}>
 							<Typography variant={'bold'} color={theme.colorScheme.light}>
-								{t('common:login')}
+								Add
 							</Typography>
 						</Button>
 					</form>
@@ -136,10 +120,7 @@ const Page = () => {
 }
 
 Page.getLayout = (page: ReactElement) => (
-	<AdminLayout adminAppBarProps={{
-		removeLogoutButton: true,
-		removeSettingsButton: true
-	}}>
+	<AdminLayout>
 		{page}
 	</AdminLayout>
 )

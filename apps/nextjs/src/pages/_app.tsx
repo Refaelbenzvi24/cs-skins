@@ -17,9 +17,6 @@ import type {ReactNode} from "react";
 import type {AppInitialProps, NextPageContext} from "next/dist/shared/lib/utils";
 import type {NextRouter} from "next/dist/shared/lib/router/router";
 
-// TODO: add lazy loading for the images?
-// TODO: fix hebrew font missing
-
 const getInitialProps = ({ctx}: AppContextType) => {
 	const defaultTheme = 'light' as const
 	const theme = (getCookie('theme', ctx) as ThemeOptions | undefined | null) || defaultTheme

@@ -1,9 +1,9 @@
-import leadsValidations from "./contact"
+import skinValidations from "./skin"
 import authValidations from "./auth"
 import adminSettingsValidations from "./adminSettingsValidations"
 
 export {
-	leadsValidations,
+	skinValidations,
 	authValidations,
 	adminSettingsValidations
 }

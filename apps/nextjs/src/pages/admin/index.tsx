@@ -4,15 +4,13 @@ import {Card, Col, Row, Table, TextField, theme, Typography} from "@acme/ui"
 import useTranslation from "next-translate/useTranslation"
 import {FormEvent, ReactElement, useCallback, useEffect, useMemo, useRef} from "react";
 import AdminLayout from "~/layouts/AdminLayout";
-import {useSession} from "next-auth/react"
 import {useRouter} from "next/router"
 import IconCarbonSearch from "~icons/carbon/search"
 import {api} from "~/utils/api"
 import {debounce} from "~/utils/helpers";
-import {css} from "@emotion/css";
-import tw from "twin.macro"
 import {getProxySSGHelpers} from "~/utils/ssg"
 import {getServerSession} from "@acme/auth";
+import {omit} from "~/utils/utils";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
 	const session = await getServerSession(context)
@@ -29,7 +27,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 	const search = context.query?.search as string || ''
 	const ssg = await getProxySSGHelpers(context)
 	
-	await ssg.leads.list.prefetchInfinite({limit: 20, search})
+	await ssg.skin.list.prefetchInfinite({limit: 20, search})
 	
 	return {
 		props: {
@@ -47,16 +45,23 @@ const Page = () => {
 	const searchQuery = useMemo(() => router.query?.search as string || '', [router.query?.search])
 	
 	const {
-		data: leadsList,
+		data: skinsList,
 		fetchNextPage,
 		hasNextPage
-	} = api.leads.list.useInfiniteQuery({limit: 20, search: searchQuery}, {
+	} = api.skin.list.useInfiniteQuery({limit: 20, search: searchQuery}, {
 		getNextPageParam: (lastPage, allPages) => {
 			if (allPages[allPages.length - 1]?.items.length === 0) return undefined
 			
 			return lastPage.nextCursor
 		}
 	})
+	
+	const skins = useMemo(() => skinsList?.pages.flatMap(page => page.items).map(item => ({
+		...omit(item, 'skinData'),
+		...item.skinData[0],
+		name: item.weapon.name,
+		quality: item.quality.name
+	})) || [], [skinsList])
 	
 	const handleSearch = ({target}: FormEvent<HTMLInputElement>) => {
 		const searchText = (target as HTMLInputElement).value
@@ -76,22 +81,22 @@ const Page = () => {
 	return (
 		<>
 			<Head>
-				<title>YAM | Admin</title>
-				<meta name="description" content={`ים - סוכנות נדל"ן`}/>
+				<title>CS Skins | Admin</title>
+				<meta name="description" content=""/>
 			</Head>
 			
 			<main className="h-full">
-				<Col className="h-full pb-[70px] min-[1260px]:w-[1250px] max-[1260px]:px-20 mx-auto">
+				<Col className="h-full pb-[20px] px-10">
 					<Row className="px-[30px]">
 						<Typography variant={'h2'}
 						            color={theme.colorScheme.subtitle2}
 						            darkColor={theme.colorScheme.body2}>
-							{t("admin:leads")}
+							Skins
 						</Typography>
 					</Row>
 					
 					<Card
-						className="flex-col mt-[60px] w-full"
+						className="flex-col mt-[20px] w-full"
 						noPadding
 						bgColor={theme.colorScheme.accent}
 						bgColorDark={theme.colorScheme.overlaysDark}
@@ -109,78 +114,51 @@ const Page = () => {
 						</Row>
 						
 						<Table
-							data={leadsList?.pages.flatMap(page => page.items) || []}
+							data={skins}
 							autoFocus
 							hasPagination
 							hasNextPage={hasNextPage}
 							onNextPage={fetchNextPage}
-							onRowClick={(lead) => void router.push(`/admin/lead/[leadId]`, `/admin/lead/${lead.id}`)}
+							onRowClick={(skinData) => void router.push(`/admin/skinData/[skinDataId]`, `/admin/skinData/${skinData.id}`)}
 							headers={[
 								{
 									key: 'name',
-									display: t('admin:name')
+									display: 'Name'
 								},
 								{
-									key: 'email',
-									display: t('admin:email')
+									key: 'quality',
+									display: 'Quality'
 								},
 								{
-									key: 'phone',
-									display: t('admin:phone')
+									key: 'steamPrice',
+									display: 'Steam Price'
+								},
+								{
+									key: 'steamListings',
+									display: 'Steam Listings'
+								},
+								{
+									key: 'steamMedianPrice',
+									display: 'Steam Median Price'
+								},
+								{
+									key: 'steamVolume',
+									display: 'Steam Volume'
+								},
+								{
+									key: 'bitSkinsPrice',
+									display: 'BitSkins Price'
+								},
+								{
+									key: 'percentChange',
+									display: 'Percent'
 								},
 								{
 									key: 'createdAt',
-									display: t('admin:dateCreated')
-								},
-								{
-									key: 'message',
-									display: t('admin:message'),
-									tableHeaderProps: {
-										className: "max-w-[70px] ltr:pr-4 rtl:pl-4"
-									},
-									tableDataProps: {
-										className: "max-w-[70px] ltr:pr-4 rtl:pl-4"
-									}
-								},
+									display: 'Created At'
+								}
 							]}
 							components={{
-								message: ({message}, {bodyColor, bodyColorDark}) => {
-									if (message && message.length > 0)
-										return (
-											<div className={css`
-                        ${tw`flex flex-row justify-center items-center p-1 rounded-sm`};
-                        background-color: ${theme.colorScheme.success};
-                        width: 100%;
-                        height: 100%;
-											`}>
-												<Typography
-													className="whitespace-nowrap"
-													color={bodyColor}
-													darkColor={bodyColorDark}
-													variant={'small'}>
-													{t('admin:messageStatus.yes')}
-												</Typography>
-											</div>
-										)
-									
-									
-									return (
-										<div className={css`
-                      ${tw`flex flex-row justify-center items-center p-1 rounded-sm`};
-                      background-color: ${theme.colorScheme.error};
-                      width: 100%;
-                      height: 100%;
-										`}>
-											<Typography
-												className="whitespace-nowrap"
-												color={bodyColor}
-												darkColor={bodyColorDark}
-												variant={'small'}>
-												{t('admin:messageStatus.no')}
-											</Typography>
-										</div>
-									)
-								},
 								createdAt: ({createdAt}, {bodyColor, bodyColorDark}) => (
 									<Typography
 										className="whitespace-nowrap"

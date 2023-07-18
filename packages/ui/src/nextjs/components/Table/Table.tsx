@@ -13,7 +13,7 @@ import {motion} from "framer-motion"
 import ImpulseSpinner from "../Loaders/Impulse";
 import {v3 as uuidv3} from 'uuid';
 
-interface TableHeaderOptions<KeysOptions extends string> extends TableHeaderProps {
+interface TableHeaderOptions<KeysOptions extends string | number | symbol> extends TableHeaderProps {
 	key: KeysOptions
 	display: string
 	tableHeaderProps?: Partial<ComponentProps<typeof TableHeader>>
@@ -34,7 +34,10 @@ interface TablePaginationProps {
 	onNextPage: () => void
 }
 
-interface TableProps<HeadersKeys extends string, DataType extends (({ [key in HeadersKeys]?: any } | { [key: string]: any })[])> {
+interface TableProps<
+	DataType extends { [key in HeadersKeys]?: any }[],
+	HeadersKeys extends string | number | symbol = keyof DataType[number],
+> {
 	data: DataType
 	headers: TableHeaderOptions<HeadersKeys>[]
 	actionsWidth?: string
@@ -67,9 +70,12 @@ const defaultProps = {
 } as const
 
 
-const Table = <HeadersKeys extends string, DataType extends (({ [key in HeadersKeys]?: any } | { [key in HeadersKeys]: any })[])>
+const Table = <
+	DataType extends { [key in HeadersKeys]?: any }[],
+	HeadersKeys extends string | number | symbol,
+>
 (props:
-	 TableProps<HeadersKeys, DataType> &
+	 TableProps<DataType, HeadersKeys> &
 	 Omit<React.DetailedHTMLProps<React.TableHTMLAttributes<HTMLTableElement>, HTMLTableElement>, 'children'> &
 	 (TablePaginationProps | { hasPagination?: false }) &
 	 typeof defaultProps
@@ -105,7 +111,8 @@ const Table = <HeadersKeys extends string, DataType extends (({ [key in HeadersK
 							{...tableHeaderProps}
 							className={`py-[6px] ltr:pl-[32px] rtl:pr-[32px] ${tableHeaderProps?.className ? clsx(tableHeaderProps.className) : ''}`}
 							height={headersHeight}
-							{...restProps}>
+							{...restProps}
+							key={String(restProps.key)}>
 							<Typography
 								className="ltr:text-left rtl:text-right"
 								color={headersColor}
@@ -133,7 +140,7 @@ const Table = <HeadersKeys extends string, DataType extends (({ [key in HeadersK
 									removeBorder={index === data.length - 1}
 									className={`ltr:pl-[32px] rtl:pr-[32px] py-[8px] ${tableDataProps?.className ? clsx(tableDataProps.className) : ''}`}
 									height={bodyHeight}
-									key={`${uuidv3(JSON.stringify(item), uuidv3.URL)}:${key}`}>
+									key={`${uuidv3(JSON.stringify(item), uuidv3.URL)}:${String(key)}`}>
 									{Object.keys(item).length > -1 && (
 										(components && components[key]) ? components[key]!(item, {bodyColor, bodyColorDark}) : (
 											<Typography

@@ -5,6 +5,7 @@
   "types":           "./index.ts",
   "scripts":         {
     "clean":             "rm -rf .turbo node_modules",
+    "db:format":         "pnpm with-env prisma format",
     "db:generate":       "pnpm with-env prisma generate",
     "db:push":           "pnpm with-env prisma db push --skip-generate",
     "db:migrate-dev":    "pnpm with-env prisma migrate dev --skip-generate",
