@@ -1,5 +1,5 @@
 import {CronJob} from "cron"
-import {getIntervalInSec} from "./utils/scheduling"
+import {getCronIntervalString, getIntervalInSec} from "./utils/scheduling"
 import {Producer} from "@acme/message-broker"
 
 
@@ -18,8 +18,9 @@ export const initialJob = async () => {
 
 export const cronJobsInitializer = () => {
 	const intervalInMili = getIntervalInSec({minutes: 5})
+	const cronInterval = getCronIntervalString({minutes: 5})
 	
-	const job = new CronJob("0 0 */1 * * *", () => {
+	const job = new CronJob(cronInterval, () => {
 		console.log("sending intervaled message...");
 		
 		(async () => await publishScrapingMessage(intervalInMili))()

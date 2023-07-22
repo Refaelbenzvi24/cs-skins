@@ -35,3 +35,5 @@ export const main = async () => {
 
 console.info("server has started and is waiting for messages!");
 (async () => await main())()
+// (async () => await scrapeCsGoStash())()
+

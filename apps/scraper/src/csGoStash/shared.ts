@@ -1,14 +1,23 @@
 import cheerio from "cheerio";
 import axios from "axios";
+import DelayManager from "../modules/DelayManager";
+
+const delayManager = new DelayManager({
+	delayInMili: 700
+})
+
 
 export const getSkinHtml = async (skinUrl: string) => {
-	try {
-		return await axios.get(skinUrl)
-	} catch (error) {
-		console.error(error)
-		console.log('error in getting skin html')
-	}
+	return await delayManager.push(async () => {
+		try {
+			return await axios.get(skinUrl)
+		} catch (error) {
+			console.error(error)
+			console.log('error in getting skin html')
+		}
+	})
 }
+
 
 export const getSkinTitle = (skinHtml: string) => {
 	const $ = cheerio.load(skinHtml)

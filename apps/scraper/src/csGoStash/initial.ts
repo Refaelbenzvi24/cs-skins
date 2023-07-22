@@ -50,6 +50,7 @@ const saveSkinToDb = async ({url, name, quality}: { url: string, name: string, q
 			}
 		})
 	} catch (error) {
+		if (error.code === 'P2002') return saveSkinToDb({url, name, quality})
 		console.log(error)
 		console.log('error saving skin to db')
 	}
