@@ -30,7 +30,6 @@ FROM node:18.12-alpine3.16 AS runner
 WORKDIR /app
 
 COPY --from=installer /app .
-RUN pnpm db-generate
 WORKDIR /app/apps/cronjobs
 
 RUN addgroup --system --gid 1001 cronjobs

@@ -44,7 +44,7 @@ services:
   cronjobs_service:
     container_name: cronjobs.cs-skins_container
     environment:
-      DATABASE_URL: ${DB_DATABASE:-postgres://root:1234@localhost/cs-skins}
+      DATABASE_URL: ${DATABASE_URL:-postgres://root:1234@localhost/cs-skins}
       MESSAGE_BROKER_HOST: ${MESSAGE_BROKER_HOST:-localhost}
       MESSAGE_BROKER_USER: ${MESSAGE_BROKER_USER:-guest}
       MESSAGE_BROKER_PASSWORD: ${MESSAGE_BROKER_PASSWORD:-guest}
@@ -59,7 +59,7 @@ services:
   scraper_service:
     container_name: scraper.cs-skins_container
     environment:
-      DATABASE_URL: ${DB_DATABASE:-postgres://root:1234@localhost/cs-skins}
+      DATABASE_URL: ${DATABASE_URL:-postgres://root:1234@localhost/cs-skins}
       MESSAGE_BROKER_HOST: ${MESSAGE_BROKER_HOST:-localhost}
       MESSAGE_BROKER_USER: ${MESSAGE_BROKER_USER:-guest}
       MESSAGE_BROKER_PASSWORD: ${MESSAGE_BROKER_PASSWORD:-guest}
