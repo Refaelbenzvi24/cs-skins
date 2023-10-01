@@ -34,4 +34,4 @@ COPY --from=installer /app .
 WORKDIR /app/apps/scraper
 
 USER chrome
-CMD ./node_modules/.bin/ts-node src/index.ts
+CMD ["npm", "start"]

@@ -35,4 +35,4 @@ WORKDIR /app/apps/cronjobs
 RUN addgroup --system --gid 1001 cronjobs
 RUN adduser --system --uid 1001 cronjobs
 USER cronjobs
-CMD ./node_modules/.bin/ts-node src/index.ts
+CMD ["npm", "start"]

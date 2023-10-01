@@ -1,12 +1,14 @@
 /** @type {import("prettier").Config & { [key:string]: any }} */
 const config = {
-  arrowParens: "always",
+  arrowParens: "avoid",
   printWidth: 80,
   singleQuote: false,
   jsxSingleQuote: false,
-  semi: true,
-  trailingComma: "all",
-  tabWidth: 2,
+  semi: false,
+  bracketSameLine: true,
+  useTabs: true,
+  trailingComma: "none",
+  tabWidth: 4,
   plugins: [
     "@ianvs/prettier-plugin-sort-imports",
     "prettier-plugin-tailwindcss",
@@ -23,7 +25,7 @@ const config = {
     "^~/components/(.*)$",
     "^~/styles/(.*)$",
     "^~/(.*)$",
-    "^[./]",
+    "^[./]"
   ],
   importOrderSeparation: false,
   importOrderSortSpecifiers: true,

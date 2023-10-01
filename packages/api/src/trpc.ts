@@ -6,13 +6,15 @@
  * tl;dr - this is where all the tRPC server stuff is created and plugged in.
  * The pieces you will need to use are documented accordingly near the end
  */
-import {TRPCError, initTRPC} from "@trpc/server"
-import {type CreateNextContextOptions} from "@trpc/server/adapters/next"
+import { TRPCError, initTRPC } from "@trpc/server"
+import { type CreateNextContextOptions } from "@trpc/server/adapters/next"
 import superjson from "superjson"
-import {ZodError} from "zod"
-import {getServerSession, type Session} from "@acme/auth"
-import {prisma} from "@acme/db"
-import {EmailProvider} from "./services/email/emailProvider"
+import { ZodError } from "zod"
+import { getServerSession, type Session } from "@acme/auth"
+import { prisma } from "@acme/db"
+import { type EmailProvider } from "./services/email/emailProvider"
+import { type BuildConnectionStringProps } from "@acme/message-broker"
+
 
 /**
  * 1. CONTEXT
@@ -26,6 +28,7 @@ import {EmailProvider} from "./services/email/emailProvider"
 type CreateContextOptions = {
 	session: Session | null
 	emailProvider: EmailProvider
+	messageBrokerConnectionParams: BuildConnectionStringProps
 };
 
 /**
@@ -38,11 +41,12 @@ type CreateContextOptions = {
  * @see https://create.t3.gg/en/usage/trpc#-servertrpccontextts
  */
 const createInnerTRPCContext = (opts: CreateContextOptions) => {
-	const {session, emailProvider} = opts
-	
+	const { session, emailProvider, messageBrokerConnectionParams } = opts
+
 	return {
 		session,
 		emailProvider,
+		messageBrokerConnectionParams,
 		prisma
 	}
 };
@@ -52,14 +56,15 @@ const createInnerTRPCContext = (opts: CreateContextOptions) => {
  * process every request that goes through your tRPC endpoint
  * @link https://trpc.io/docs/context
  */
-export const createTRPCContext = async (opts: CreateNextContextOptions, emailProvider: EmailProvider) => {
-	const {req, res} = opts
-	
+export const createTRPCContext = async (opts: CreateNextContextOptions, emailProvider: EmailProvider, messageBrokerConnectionParams: BuildConnectionStringProps) => {
+	const { req, res } = opts
+
 	// Get the session from the server using the unstable_getServerSession wrapper function
-	const session = await getServerSession({req, res})
-	
+	const session = await getServerSession({ req, res })
+
 	return createInnerTRPCContext({
 		emailProvider,
+		messageBrokerConnectionParams,
 		session
 	})
 }
@@ -72,7 +77,7 @@ export const createTRPCContext = async (opts: CreateNextContextOptions, emailPro
  */
 const t = initTRPC.context<typeof createTRPCContext>().create({
 	transformer: superjson,
-	errorFormatter({shape, error}) {
+	errorFormatter({ shape, error }) {
 		return {
 			...shape,
 			data: {
@@ -110,14 +115,14 @@ export const publicProcedure = t.procedure
  * Reusable middleware that enforces users are logged in before running the
  * procedure
  */
-const enforceUserIsAuthed = t.middleware(({ctx, next}) => {
+const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
 	if (!ctx.session?.user) {
-		throw new TRPCError({code: "UNAUTHORIZED"})
+		throw new TRPCError({ code: "UNAUTHORIZED" })
 	}
 	return next({
 		ctx: {
 			// infers the `session` as non-nullable
-			session: {...ctx.session, user: ctx.session.user}
+			session: { ...ctx.session, user: ctx.session.user }
 		}
 	})
 })

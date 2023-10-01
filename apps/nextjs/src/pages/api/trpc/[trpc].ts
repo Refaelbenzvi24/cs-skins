@@ -1,15 +1,15 @@
 import {createNextApiHandler} from "@trpc/server/adapters/next"
 import {appRouter, createTRPCContext} from "@acme/api"
-import {getTransporter} from "@acme/api/src/services/email/emailProvider";
 import getEmailProvider from "~/utils/emailProvider";
+import { messageBrokerConnectionParams } from "~/modules/vars"
 
 // export API handler
 export default createNextApiHandler({
 	router: appRouter,
 	createContext: async (opts) => {
 		const emailProvider = await getEmailProvider()
-		
-		return createTRPCContext(opts, emailProvider)
+
+		return createTRPCContext(opts, emailProvider, messageBrokerConnectionParams)
 	}
 });
 

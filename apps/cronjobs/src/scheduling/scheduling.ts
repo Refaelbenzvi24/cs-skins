@@ -17,7 +17,7 @@ export const getIntervalInSec = (
 	const hoursInSec = hours * 60 * 60
 	const daysInSec = days * 60 * 60 * 24
 	const weeksInSec = weeks * 60 * 60 * 24 * 7
-	
+
 	return minutesInSec + hoursInSec + daysInSec + weeksInSec
 }
 
@@ -27,6 +27,6 @@ export const getCronIntervalString = ({minutes, month, dayOfMonth, dayOfWeek, ho
 	const dayOfMonthString = dayOfMonth ? `*/${dayOfMonth}` : "*"
 	const dayOfWeekString = dayOfWeek ? `*/${dayOfWeek}` : "*"
 	const hoursString = hours ? `*/${hours}` : "*"
-	
+
 	return `${minutesString} ${hoursString} ${dayOfMonthString} ${monthString} ${dayOfWeekString}`
 }

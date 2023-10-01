@@ -1,2 +1,2 @@
-export { Consumer, Producer } from "./messageBroker"
-export {CONNECTION_STRING} from "./config/envVars"
+export { Consumer, Producer } from "./messageBroker";
+export { buildConnectionString, type BuildConnectionStringProps  } from "./connectionUtils";

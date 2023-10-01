@@ -1,25 +1,25 @@
 {
-  "name":            "@acme/db",
-  "version":         "0.1.0",
-  "main":            "./index.ts",
-  "types":           "./index.ts",
-  "scripts":         {
-    "clean":             "rm -rf .turbo node_modules",
-    "db:format":         "pnpm with-env prisma format",
-    "db:generate":       "pnpm with-env prisma generate",
-    "db:push":           "pnpm with-env prisma db push --skip-generate",
-    "db:migrate-dev":    "pnpm with-env prisma migrate dev --skip-generate",
+  "name": "@acme/db",
+  "version": "0.1.0",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules",
+    "db:format": "pnpm with-env prisma format",
+    "db:generate": "pnpm with-env prisma generate",
+    "db:push": "pnpm with-env prisma db push --skip-generate",
+    "db:migrate-dev": "pnpm with-env prisma migrate dev --skip-generate",
     "db:migrate-deploy": "pnpm with-env prisma migrate deploy",
-    "db:migrate-reset":  "pnpm with-env prisma migrate reset",
-    "dev":               "pnpm with-env prisma studio --port 5556",
-    "with-env":          "dotenv -e ../../.env --"
+    "db:migrate-reset": "pnpm with-env prisma migrate reset",
+    "dev": "pnpm with-env prisma studio --port 5556",
+    "with-env": "dotenv -e ../../.env --"
   },
-  "dependencies":    {
-    "@prisma/client": "^4.10.1"
+  "dependencies": {
+    "@prisma/client": "^5.2.0"
   },
   "devDependencies": {
     "dotenv-cli": "^7.0.0",
-    "prisma":     "^4.10.1",
+    "prisma": "^5.2.0",
     "typescript": "^5.0.0"
   }
 }

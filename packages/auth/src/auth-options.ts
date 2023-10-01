@@ -19,7 +19,7 @@ declare module "next-auth" {
 			// role: UserRole;
 		} & DefaultSession["user"];
 	}
-	
+
 	// interface User {
 	//   // ...other properties
 	//   // role: UserRole;
@@ -49,10 +49,10 @@ export const authOptions: NextAuthOptions = {
 	secret: process.env.NEXTAUTH_SECRET,
 	pages: {
 		signIn: "/en/admin/login",
-		
+
 	},
 	session: {strategy: "jwt"},
-	
+
 	providers: [
 		CredentialProvider({
 			// The name to display on the sign in form (e.g. "Sign in with...")
@@ -66,11 +66,11 @@ export const authOptions: NextAuthOptions = {
 				username: {label: "Username", type: "text"},
 				password: {label: "Password", type: "password"}
 			},
-			
-			authorize: async (credentials, req) => {
+
+			authorize: async (credentials, _req) => {
 				const user = await prisma.user.findUnique({
 					where: {
-						email: credentials!.username
+						email: credentials?.username
 					},
 					select: {
 						id: true,
@@ -80,15 +80,15 @@ export const authOptions: NextAuthOptions = {
 						password: true,
 					}
 				})
-				
-				if (user && user.password == hashPassword(credentials!.password!)) {
+
+				if (user && user.password == hashPassword(credentials?.password || "")) {
 					return user;
 				} else {
 					return null;
 				}
 			},
 		}),
-		
+
 		// DiscordProvider({
 		//   clientId: process.env.DISCORD_CLIENT_ID as string,
 		//   clientSecret: process.env.DISCORD_CLIENT_SECRET as string,

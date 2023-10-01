@@ -35,6 +35,12 @@ const server = z.object({
     EMAIL_SERVICE:                        optionalInDevelopment(z.string()),
     EMAIL_USER:                           optionalInDevelopment(z.string()),
     EMAIL_PASSWORD:                       optionalInDevelopment(z.string()),
+	MESSAGE_BROKER_HOST: z.string(),
+	MESSAGE_BROKER_PORT: z.string().optional(),
+	MESSAGE_BROKER_USER: z.string(),
+	MESSAGE_BROKER_PASSWORD: z.string(),
+	MESSAGE_BROKER_PROTOCOL: z.string(),
+	MESSAGE_BROKER_PATHNAME: z.string().optional()
 });
 
 /**
@@ -63,6 +69,12 @@ const processEnv = {
     EMAIL_HOST:     process.env.EMAIL_HOST,
     EMAIL_USER:     process.env.EMAIL_USER,
     EMAIL_PASSWORD: process.env.EMAIL_PASSWORD,
+	MESSAGE_BROKER_HOST: process.env.MESSAGE_BROKER_HOST,
+	MESSAGE_BROKER_PORT: process.env.MESSAGE_BROKER_PORT,
+	MESSAGE_BROKER_USER: process.env.MESSAGE_BROKER_USER,
+	MESSAGE_BROKER_PASSWORD: process.env.MESSAGE_BROKER_PASSWORD,
+	MESSAGE_BROKER_PROTOCOL: process.env.MESSAGE_BROKER_PROTOCOL,
+	MESSAGE_BROKER_PATHNAME: process.env.MESSAGE_BROKER_PATHNAME
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 };
 

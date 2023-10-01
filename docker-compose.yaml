@@ -43,6 +43,9 @@ services:
 
   cronjobs_service:
     container_name: cronjobs.cs-skins_container
+    depends_on:
+        - message_broker
+        - postgres
     environment:
       DATABASE_URL: ${DATABASE_URL:-postgres://root:1234@localhost/cs-skins}
       MESSAGE_BROKER_HOST: ${MESSAGE_BROKER_HOST:-localhost}
@@ -58,6 +61,9 @@ services:
 
   scraper_service:
     container_name: scraper.cs-skins_container
+    depends_on:
+        - message_broker
+        - postgres
     environment:
       DATABASE_URL: ${DATABASE_URL:-postgres://root:1234@localhost/cs-skins}
       MESSAGE_BROKER_HOST: ${MESSAGE_BROKER_HOST:-localhost}
