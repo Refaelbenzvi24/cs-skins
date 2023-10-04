@@ -72,7 +72,7 @@ const Page = () => {
 			</Head>
 
 			<main className="h-full">
-				<Col className="mx-auto h-full items-center justify-center px-[400px] ">
+				<Col className="mx-auto h-full items-center justify-center mx-auto min-[950px]:w-[900px] px-[30px]">
 					<Row
 						className="w-full items-center justify-center space-x-[18px] px-[24px] pb-[120px] rtl:space-x-reverse">
 						<Divider className="max-[800px]:hidden" thickness="2px"/>
