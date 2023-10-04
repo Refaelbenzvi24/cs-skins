@@ -27,7 +27,7 @@ RUN pnpm db:generate
 # Build the project and its dependencies
 COPY turbo.json turbo.json
 
-FROM zenika/alpine-chrome:with-node AS runner
+FROM node:18.12-alpine3.16 AS runner
 WORKDIR /app
 
 COPY --from=installer /app .
