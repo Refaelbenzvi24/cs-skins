@@ -1,17 +1,17 @@
 import {toast} from "react-toastify"
 import useTranslation from "next-translate/useTranslation"
 
-import {Button, useIsDark, Row, theme, Typography, useMain, useDimensions} from "@acme/ui"
+import {Button, Row, theme, Typography, useMain, useDimensions, useToasts as libUseToasts} from "@acme/ui"
 
 const useToasts = () => {
 	const {isTouchable} = useMain()
 	const {windowWidth} = useDimensions()
+	const {generalError} = libUseToasts()
 	const {t, lang} = useTranslation()
-	
+
 	const dir = lang === 'he' ? 'rtl' : 'ltr'
-	
-	
-	const sendEmail = async (callback: Promise<any>) => {
+
+	const sendEmail = async (callback: Promise<() => void>) => {
 		return await toast.promise(callback, {
 			pending: {
 				render: () => (
@@ -71,7 +71,7 @@ const useToasts = () => {
 			},
 		})
 	}
-	
+
 	// const reloadPrompt = (offlineReady: boolean, needRefresh: boolean, updateServiceWorker: (value: boolean) => Promise<void>, close: () => void) => {
 	// 	return toast.info(() => (
 	// 		<Row className="justify-between items-center">
@@ -114,11 +114,11 @@ const useToasts = () => {
 	// 		},
 	// 	})
 	// }
-	
-	
+
+
 	return {
 		sendEmail,
-		// reloadPrompt
+		generalError
 	}
 }
 

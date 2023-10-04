@@ -1,7 +1,7 @@
 import React from 'react'
 import {Main, Select} from "@acme/ui"
 import type {Story, ComponentMeta} from '@storybook/react';
-import {useState} from "@storybook/addons";
+import {useState} from "react";
 
 const SectionComponent = Select
 const SectionComponentName = 'Select'
@@ -31,7 +31,7 @@ const selectOptions = [
 
 const SectionTemplate: Story<React.ComponentProps<typeof SectionComponent>> = (args) => {
 	const [selected, setSelected] = useState<SelectOption | undefined>(undefined)
-	
+
 	return (
 		<Main className="px-10 py-10">
 			<SectionComponent
@@ -49,4 +49,23 @@ Default.args = {
 	...SectionComponent.defaultProps,
 	label: 'this is a label',
 	placeholder: 'this is a placeholder',
+}
+
+export const Combobox = SectionTemplate.bind({})
+Combobox.args = {
+	...SectionComponent.defaultProps,
+	label: 'this is a label',
+	placeholder: 'this is a placeholder',
+	isMulti: true,
+	creatable: true
+}
+
+export const ComboboxTextInput = SectionTemplate.bind({})
+ComboboxTextInput.args = {
+	...SectionComponent.defaultProps,
+	label: 'this is a label',
+	placeholder: 'this is a placeholder',
+	isMulti: true,
+	creatable: true,
+	textInput: true
 }

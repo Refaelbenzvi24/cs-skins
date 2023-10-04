@@ -5,16 +5,18 @@ import superjson from "superjson"
 import {appRouter} from "@acme/api"
 import {prisma} from "@acme/db"
 import getEmailProvider from "~/utils/emailProvider"
+import { messageBrokerConnectionParams } from "~/modules/vars"
 
 export const getProxySSGHelpers = async (context: GetServerSidePropsContext) => {
 	const session = await getSession(context)
 	const emailProvider = await getEmailProvider()
-	
-	return await createProxySSGHelpers({
+
+	return createProxySSGHelpers({
 		router: appRouter,
 		ctx: {
 			session,
 			emailProvider,
+			messageBrokerConnectionParams,
 			prisma
 		},
 		transformer: superjson

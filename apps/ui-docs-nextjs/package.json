@@ -1,55 +1,62 @@
 {
-	"name" :            "@acme/ui-docs-nextjs",
-	"version" :         "1.0.0",
-	"description" :     "",
-	"main" :            "index.js",
-	"babelMacros" :     {
-		"twin" : {
-			"config" :       "tailwind.config.cjs",
-			"preset" :       "emotion",
-			"debugProp" :    true,
-			"debugPlugins" : false,
-			"debug" :        false
+	"name":            "@acme/ui-docs-nextjs",
+	"version":         "0.1.0",
+	"private":         true,
+	"babelMacros":     {
+		"twin": {
+			"config":       "tailwind.config.cjs",
+			"preset":       "emotion",
+			"debugProp":    true,
+			"debugPlugins": false,
+			"debug":        false
 		}
 	},
-	"scripts" :         {
-		"test" :  "echo \"Error: no test specified\" && exit 1",
-		"dev" :   "start-storybook -p 6006",
-		"build" : "build-storybook"
+	"scripts":         {
+		"dev":   "storybook dev -p 6006",
+		"build": "storybook build"
 	},
-	"keywords" :        [],
-	"author" :          "",
-	"devDependencies" : {
-		"@acme/tailwind-config" :             "*",
-		"@babel/core" :                       "^7.20.2",
-		"@babel/plugin-transform-react-jsx" : "^7.21.0",
-		"@babel/preset-react" :               "^7.18.6",
-		"@babel/preset-typescript" :          "^7.18.6",
-		"@iconify/json" :                     "^2.2.54",
-		"@storybook/addon-actions" :          "^6.5.16",
-		"@storybook/addon-essentials" :       "^6.5.16",
-		"@storybook/addon-interactions" :     "^6.5.16",
-		"@storybook/addon-links" :            "^6.5.16",
-		"@storybook/addons" :                 "^6.5.16",
-		"@storybook/builder-webpack5" :       "^6.5.16",
-		"@storybook/manager-webpack5" :       "^6.5.16",
-		"@storybook/react" :                  "^6.5.16",
-		"@storybook/testing-library" :        "^0.0.13",
-		"@storybook/theming" :                "^6.5.16",
-		"@svgr/core" :                        "^7.0.0",
-		"@svgr/plugin-jsx" :                  "^7.0.0",
-		"babel-loader" :                      "^8.3.0",
-		"babel-plugin-macros" :               "^3.1.0",
-		"babel-plugin-twin" :                 "^1.1.0",
-		"storybook-addon-next" :              "^1.7.3",
-		"storybook-addon-next-router" :       "^4.0.2",
-		"storybook-addon-rtl-direction" :     "^0.0.19",
-		"storybook-dark-mode" :               "^2.1.1",
-		"tailwindcss" :                       "^3.2.7",
-		"typescript" :                        "^5.0.0",
-		"unplugin-icons" :                    "^0.16.1"
+	"dependencies":    {
+		"@acme/ui":        "*",
+		"@emotion/react":  "^11.10.8",
+		"@emotion/styled": "^11.10.8",
+		"react":           "^18.2.0",
+		"react-dom":       "^18.2.0"
 	},
-	"dependencies" :    {
-		"@acme/ui" : "*"
+	"devDependencies": {
+		"@acme/tailwind-config":            "*",
+		"@babel/core":                      "^7.21.4",
+		"@babel/preset-typescript":         "^7.21.4",
+		"@emotion/babel-preset-css-prop":   "^11.10.0",
+		"@iconify/json":                    "^2.2.54",
+		"@storybook/addon-a11y":            "7.0.24",
+		"@storybook/addon-essentials":      "^7.4.5",
+		"@storybook/addon-interactions":    "^7.4.5",
+		"@storybook/addon-links":           "^7.4.5",
+		"@storybook/blocks":                "^7.4.5",
+		"@storybook/jest":                  "0.1.0",
+		"@storybook/nextjs":                "^7.4.5",
+		"@storybook/react":                 "^7.4.5",
+		"@storybook/test-runner":           "0.11.0",
+		"@storybook/testing-library":       "0.2.0",
+		"@svgr/core":                       "^7.0.0",
+		"@svgr/plugin-jsx":                 "^7.0.0",
+		"@types/node":                      "20.3.2",
+		"@types/react":                     "18.2.14",
+		"@types/react-dom":                 "18.2.6",
+		"@typescript-eslint/eslint-plugin": "5.60.1",
+		"@typescript-eslint/parser":        "^5.60.1",
+		"babel-plugin-macros":              "^3.1.0",
+		"babel-plugin-twin":                "^1.1.0",
+		"eslint":                           "8.43.0",
+		"eslint-config-next":               "13.4.7",
+		"eslint-plugin-storybook":          "0.6.12",
+		"sass":                             "1.63.6",
+		"storybook":                        "^7.4.5",
+		"storybook-addon-rtl-direction":    "^0.0.19",
+		"storybook-dark-mode":              "^2.1.1",
+		"tailwindcss":                      "^3.3.2",
+		"twin.macro":                       "^3.3.1",
+		"typescript":                       "5.1.5",
+		"unplugin-icons":                   "^0.16.1"
 	}
 }

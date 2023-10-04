@@ -1,39 +1,45 @@
 {
-	"name" :           "cs-skins",
-	"private" :        true,
-	"engines" :        {
-		"node" : ">=18.0.0"
+	"name": "cs-skins",
+	"private": true,
+	"engines": {
+		"node": ">=18.0.0"
 	},
-	"packageManager" : "pnpm@7.30.0",
-	"scripts" :        {
-		"start" :             "pnpm with-env turbo start --parallel",
-		"build" :             "pnpm with-env turbo build",
-		"clean" :             "git clean -xdf node_odules",
-		"clean:workspaces" :  "turbo clean",
-		"deploy:cronjobs" :   "fly deploy -c ./infra/cronjobs.toml",
-		"db:generate" :       "pnpm with-env turbo db:generate",
-		"db:format" :         "pnpm --filter db db:format",
-		"db:migrate-dev" :    "pnpm --filter db db:migrate-dev",
-		"db:migrate-deploy" : "pnpm --filter db db:migrate-deploy",
-		"db:migrate-reset" :  "pnpm --filter db db:migrate-reset",
-		"db:push" :           "pnpm with-env turbo db:push db:generate",
-		"dev" :               "pnpm with-env turbo dev --parallel",
-		"format" :            "prettier --write \"**/*.{js,cjs,mjs,ts,tsx,md,json}\" --ignore-path .gitignore",
-		"lint" :              "turbo lint && manypkg check",
-		"lint:fix" :          "turbo lint:fix && manypkg fix",
-		"type-check" :        "turbo type-check",
-		"with-env" :          "dotenv -e .env --"
+	"packageManager": "pnpm@7.30.0",
+	"scripts": {
+		"start": "pnpm with-env turbo start --parallel",
+		"build": "pnpm with-env turbo build",
+		"clean": "git clean -xdf node_odules",
+		"clean:workspaces": "turbo clean",
+		"deploy:cronjobs": "fly deploy -c ./infra/cronjobs.toml",
+		"db:generate": "pnpm with-env turbo db:generate",
+		"db:format": "pnpm --filter db db:format",
+		"db:migrate-dev": "pnpm --filter db db:migrate-dev",
+		"db:migrate-deploy": "pnpm --filter db db:migrate-deploy",
+		"db:migrate-reset": "pnpm --filter db db:migrate-reset",
+		"db:push": "pnpm with-env turbo db:push db:generate",
+		"dev": "pnpm with-env turbo dev --parallel",
+		"format": "prettier --write \"**/*.{js,cjs,mjs,ts,tsx,md,json}\" --ignore-path .gitignore",
+		"lint": "turbo lint && manypkg check",
+		"lint:fix": "turbo lint:fix && manypkg fix",
+		"test": "pnpm with-env turbo test",
+		"test:ci": "pnpm wuth-env turbo test:ci",
+		"test:watch": "pnpm wuth-env  turbo test:watch",
+		"type-check": "turbo type-check",
+		"with-env": "dotenv -e .env --"
 	},
-	"dependencies" :   {
-		"@ianvs/prettier-plugin-sort-imports" : "^3.7.1",
-		"@manypkg/cli" :                        "^0.20.0",
-		"@types/prettier" :                     "^2.7.2",
-		"dotenv-cli" :                          "^7.0.0",
-		"eslint" :                              "^8.34.0",
-		"@acme/eslint-config" :                 "workspace:*",
-		"prettier" :                            "^2.8.4",
-		"prettier-plugin-tailwindcss" :         "^0.2.3",
-		"turbo" :                               "^1.8.2",
-		"typescript" :                          "^5.0.0"
+	"dependencies": {
+		"@acme/eslint-config": "workspace:*",
+		"@ianvs/prettier-plugin-sort-imports": "^3.7.1",
+		"@manypkg/cli": "^0.20.0",
+		"@types/prettier": "^2.7.2",
+		"dotenv-cli": "^7.0.0",
+		"eslint": "^8.34.0",
+		"prettier": "^2.8.4",
+		"prettier-plugin-tailwindcss": "^0.2.3",
+		"turbo": "^1.8.2",
+		"typescript": "^5.0.0"
+	},
+	"devDependencies": {
+		"@storybook/nextjs": "^7.4.5"
 	}
 }

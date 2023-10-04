@@ -10,9 +10,18 @@ export const skinRouter = createTRPCRouter ({
 	create: publicProcedure
 		        .input (z.object (skinValidations.skinObject))
 		        .mutation (async ({ ctx, input }) => {
-			        const producer = new Producer ("scraper")
-			        await producer.initializeProducer (ctx.messageBrokerConnectionParams)
-			        producer.sendMessage ({ payload: "initial_scrape", url: input.url })
+			        if (input.url instanceof Array) {
+				        await Promise.all (input.url.map (async (url) => {
+					        const producer = new Producer ("scraper")
+					        await producer.initializeProducer (ctx.messageBrokerConnectionParams)
+					        producer.sendMessage ({ payload: "initial_scrape", url })
+				        }))
+			        }
+			        if (typeof input.url === "string") {
+				        const producer = new Producer ("scraper")
+				        await producer.initializeProducer (ctx.messageBrokerConnectionParams)
+				        producer.sendMessage ({ payload: "initial_scrape", url: input.url })
+			        }
 
 			        // TODO: create a scraper service and send the data to it
 			        // TODO: The scraper service will create the skin?
@@ -99,7 +108,7 @@ export const skinRouter = createTRPCRouter ({
 
 			      if (items.length !== limit + 1) return { items, nextCursor: undefined }
 
-			      const nextCursor = items.pop ()?.id
+			      const nextCursor = items.length > 0 ? items.pop ()?.id : null
 
 			      return {
 				      items,

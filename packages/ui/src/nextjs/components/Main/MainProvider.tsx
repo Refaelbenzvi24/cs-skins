@@ -1,5 +1,4 @@
 import {useEffect, useState} from 'react'
-import type {ReactElement} from 'react'
 
 import UAParser from "ua-parser-js"
 
@@ -21,18 +20,18 @@ const {
 
 const getIsAnimationActive = (defaultValue: boolean) => {
 	const isAnimationActive = LocalStorage.getIsAnimationsActive()
-	
+
 	if (isAnimationActive !== null) return isAnimationActive
-	
+
 	LocalStorage.setIsAnimationsActive(defaultValue)
-	
+
 	return defaultValue
 }
 
 
 const MainProvider = (props: MainProviderOptions) => {
 	const {children, defaults} = props
-	
+
 	const [appBarState, setAppBarState] = useState(defaultAppBarState)
 	const [appBarOptions, setAppBarOptions] = useState(defaultAppBarOptions)
 	const [sideBarState, setSideBarState] = useState(defaultSideBarState)
@@ -42,39 +41,39 @@ const MainProvider = (props: MainProviderOptions) => {
 	const [isMobile, setIsMobile] = useState<boolean>(false)
 	const [isTouchable, setIsTouchable] = useState<boolean>(false)
 	const [scrollDirection, setScrollDirection] = useState<'up' | 'down'>()
-	
+
 	const isTouchListener = () => setIsTouchable(() => true)
 	const {windowHeight, windowWidth} = useDimensions()
-	
+
 	useEffect(() => {
 		const scrollDirectionHandler = () => {
 			const currentScrollDirection = window.scrollY > lastScrollY ? 'down' : window.scrollY < lastScrollY ? 'up' : undefined
 			if (scrollDirection !== currentScrollDirection) setScrollDirection(() => currentScrollDirection)
 			lastScrollY = window.scrollY
 		}
-		
+
 		setIsAnimationsActive(getIsAnimationActive(defaults.isAnimationsActive))
-		
+
 		window.addEventListener('touchstart', isTouchListener)
 		window.addEventListener('scroll', scrollDirectionHandler)
-		
+
 		return () => {
 			window.removeEventListener('touchstart', isTouchListener)
 			window.removeEventListener('scroll', scrollDirectionHandler)
 		}
 	}, [defaults.isAnimationsActive])
-	
+
 	const initializeIsMobile = () => {
 		const userAgent = new UAParser(window.navigator.userAgent).getResult()
-		
+
 		setIsMobile(userAgent.device.type === "mobile" || userAgent.device.type === "tablet")
 	}
-	
+
 	useEffect(() => {
 		setIsTouchable(() => false)
 		initializeIsMobile()
 	}, [windowHeight, windowWidth])
-	
+
 	return (
 		<MainContext.Provider value={
 			{

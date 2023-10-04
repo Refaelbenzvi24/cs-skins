@@ -22,6 +22,18 @@
       "dependsOn": ["^build", "^db:generate"],
       "outputs":   [".next/**", ".expo/**", "storybook-static/**"]
     },
+    "test": {
+      "persistent": true,
+      "cache":      false
+    },
+    "test:ci": {
+      "persistent": true,
+      "cache":      false
+    },
+    "test:watch":  {
+      "persistent": true,
+      "cache":      false
+    },
     "lint":        {},
     "lint:fix":    {},
     "clean":       {

@@ -1,7 +1,7 @@
 import React from 'react'
 import {Main, Navigation, NavigationItem} from "@acme/ui"
 import type {Story, ComponentMeta} from '@storybook/react'
-import {useState, useEffect} from "@storybook/addons"
+import {useState} from "react"
 import type {NavigationItemType} from "../AppBar/AppBar.stories";
 import {useRouter} from "next/router"
 
@@ -26,15 +26,10 @@ const navigationOptions = [
 ] as const
 
 const SectionTemplate: Story<React.ComponentProps<typeof SectionComponent>> = (args) => {
-	
+
 	const [currentNavigation, setCurrentNavigation] = useState<NavigationItemType>(navigationOptions[0])
 	const router = useRouter()
-	
-	useEffect(() => {
-		const currentNavigation = navigationOptions.filter(nav => nav.value === router.asPath)[0]
-		if (currentNavigation && setCurrentNavigation) setCurrentNavigation(() => currentNavigation)
-	}, [router.asPath]);
-	
+
 	//TODO: fix initialState don't change
 	return (
 		<Main className="flex justify-center py-10">
@@ -48,6 +43,7 @@ const SectionTemplate: Story<React.ComponentProps<typeof SectionComponent>> = (a
 							{...{label, value}}
 							href={value}
 							key={index}
+							onClick={() => setCurrentNavigation(() => ({label, value}))}
 							selected={currentNavigation}/>
 					)}
 				</SectionComponent>

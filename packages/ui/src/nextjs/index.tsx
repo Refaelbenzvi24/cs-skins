@@ -25,7 +25,7 @@ export {default as ConditionalLabel} from './components/Form/ConditionalLabel'
 export {default as HelperText} from './components/Form/HelperText'
 export {default as TextField} from './components/Form/TextField'
 export {default as TextArea} from './components/Form/TextArea'
-export {default as Select} from './components/Form/Select'
+export {default as Select} from './components/Form/Select/Select'
 export {default as Main} from './components/Main/Main'
 export {default as MainProvider} from './components/Main/MainProvider'
 export {default as Navigation} from './components/Navigation/Navigation'
@@ -58,4 +58,6 @@ export const useMain = () => useContext(MainContext)
 export const useTheme = () => useContext(ThemeContext)
 export const useIsDark = () => useThemeValue() === 'dark'
 export const useThemeValue = () => useTheme().theme
+
+export {default as useToasts} from "./hooks/useToasts"
 

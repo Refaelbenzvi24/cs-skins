@@ -1,7 +1,7 @@
 import React from 'react'
 import {Main, TextField, useIsDark} from "@acme/ui"
 import type {Story, ComponentMeta} from '@storybook/react';
-import {useState} from "@storybook/addons";
+import {useState} from "react";
 
 const SectionComponent = TextField
 const SectionComponentName = 'TextField'
@@ -19,7 +19,7 @@ export default Meta
 const SectionTemplate: Story<React.ComponentProps<typeof SectionComponent>> = (args) => {
 	const [value, setValue] = useState<string>('')
 	const isDark = useIsDark()
-	
+
 	return (
 		<Main className="px-10 py-10">
 			<SectionComponent

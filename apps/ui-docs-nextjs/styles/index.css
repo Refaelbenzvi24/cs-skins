@@ -5,3 +5,19 @@
 .dark .sb-show-main.main-bg-color {
     background-color: #2A2A36 !important;
 }
+
+.light .docs-story #__next {
+    background-color: #FAFCFE !important;
+}
+
+.dark .docs-story #__next {
+    background-color: #2A2A36 !important;
+}
+
+#storybook-root {
+    height: 100%;
+}
+
+#__next {
+    height: 100%;
+}

@@ -1,8 +1,6 @@
 import React from 'react'
 import {Main, Tab, Tabs, Typography} from "@acme/ui"
 import type {Story, ComponentMeta} from '@storybook/react'
-import {useState} from "@storybook/addons"
-import type {NavigationItemType} from "../AppBar/AppBar.stories";
 
 const SectionComponent = Tabs
 const SectionComponentName = 'Tabs'
