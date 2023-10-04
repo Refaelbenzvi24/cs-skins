@@ -51,10 +51,10 @@ export class Consumer {
 		this.queue = await Consumer.channel.assertQueue (this.queueName);
 	}
 
-	async consumeMessages(messageHandler: (msg: ConsumeMessage | null, messageContent: MessageBrokerPayloads) => void, options: Options.Consume = {}) {
+	async consumeMessages(messageHandler: (msg: ConsumeMessage | null, messageContent: MessageBrokerPayloads) => Promise<void>, options: Options.Consume = {}) {
 		await Consumer.channel.consume (this.queueName, (msg) => {
 			const messageContent = JSON.parse (msg?.content.toString () || '{}') as MessageBrokerPayloads
-			messageHandler (msg, messageContent)
+			void messageHandler (msg, messageContent)
 		}, options);
 	}
 }

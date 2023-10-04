@@ -665,11 +665,11 @@ importers:
         specifier: '*'
         version: link:../modules/validations
       '@trpc/client':
-        specifier: ^10.12.0
-        version: 10.12.0(@trpc/server@10.12.0)
+        specifier: ^10.38.5
+        version: 10.38.5(@trpc/server@10.38.5)
       '@trpc/server':
-        specifier: ^10.12.0
-        version: 10.12.0
+        specifier: ^10.38.5
+        version: 10.38.5
       nodemailer:
         specifier: ^6.9.1
         version: 6.9.1
@@ -10729,6 +10729,14 @@ packages:
       '@trpc/server': 10.12.0
     dev: false
 
+  /@trpc/client@10.38.5(@trpc/server@10.38.5):
+    resolution: {integrity: sha512-tpGUsoAP+3CD/1KRqMdWZ+zebvB68/86SaVPAYHaEDozTFLQdNqTe98DS/T0S4hfh7WCKbMSObj40SCzE8amKQ==}
+    peerDependencies:
+      '@trpc/server': 10.38.5
+    dependencies:
+      '@trpc/server': 10.38.5
+    dev: false
+
   /@trpc/next@10.12.0(@tanstack/react-query@4.24.10)(@trpc/client@10.12.0)(@trpc/react-query@10.12.0)(@trpc/server@10.12.0)(next@13.2.0)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-Ux6jKkRfmeL8csfhQFUBs9or0MCXeA/S1rbf2OY22GUwldhfaXQXhlaQy9Ae0f/D8Xqlip0i6BVYaG4isKejwA==}
     peerDependencies:
@@ -10768,6 +10776,10 @@ packages:
 
   /@trpc/server@10.12.0:
     resolution: {integrity: sha512-gD5FCNCIDgx1fuYbCfFQgIYT1HVUzsXtQUrvG+nTLBL19eWJctwHetWYB2b71NmfLvq/b+QSH1OzPq1WvsHeag==}
+    dev: false
+
+  /@trpc/server@10.38.5:
+    resolution: {integrity: sha512-J0d2Y3Gpt2bMohOshPBfuzDqVrPaE3OKEDtJYgTmLk5t1pZy3kXHQep4rP2LEIr+ELbmkelhcrSvvFLA+4/w/Q==}
     dev: false
 
   /@tsconfig/node10@1.0.9:

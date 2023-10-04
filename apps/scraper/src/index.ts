@@ -18,14 +18,14 @@ export const main = async () => {
 
 	await Consumer.channel.prefetch (1)
 
-	await consumer.consumeMessages ((message, content) => {
+	await consumer.consumeMessages (async (message, content) => {
 		if (content.payload === "initial_scrape") {
-			void initialScrape (content.url)
+			await initialScrape (content.url)
 			Consumer.channel.ack (message)
 		}
 
 		if (content.payload === "interval_scrape") {
-			void scrape ()
+			await scrape ()
 			Consumer.channel.ack (message)
 		}
 	}, {})

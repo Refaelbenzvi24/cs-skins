@@ -104,7 +104,11 @@ export const skinRouter = createTRPCRouter ({
 						      take:    1
 					      }
 				      },
-			      }) as (Skin & { skinData: SkinData[], weapon: Pick<Weapon, "name">, quality: Pick<SkinQuality, "name"> })[]
+			      }) as (Skin & {
+				      skinData: SkinData[],
+				      weapon: Pick<Weapon, "name">,
+				      quality: Pick<SkinQuality, "name">
+			      })[]
 
 			      if (items.length !== limit + 1) return { items, nextCursor: undefined }
 
