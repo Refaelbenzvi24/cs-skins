@@ -41,7 +41,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
 }
 
 const Page = () => {
-	const submitFormMutation = api.skin.create.useMutation ()
+	const createSkinMutation = api.skin.create.useMutation()
 	const { t } = useTranslation ()
 
 	const [formHasSubmitted, setFormHasSubmitted] = useState (false)
@@ -60,7 +60,7 @@ const Page = () => {
 		const transformedData = {
 			url: data.url.map(({ value }) => value)
 		}
-		submitFormMutation.mutate (transformedData)
+		createSkinMutation.mutate (transformedData)
 		reset ()
 	}
 
@@ -72,7 +72,7 @@ const Page = () => {
 			</Head>
 
 			<main className="h-full">
-				<Col className="mx-auto h-full items-center justify-center mx-auto min-[950px]:w-[900px] px-[30px]">
+				<Col className="mx-auto h-full items-center justify-center min-[950px]:w-[900px] px-[30px]">
 					<Row
 						className="w-full items-center justify-center space-x-[18px] px-[24px] pb-[120px] rtl:space-x-reverse">
 						<Divider className="max-[800px]:hidden" thickness="2px"/>

@@ -12,6 +12,8 @@ services:
     ports:
       - "5432:5432"
     restart: unless-stopped
+    networks:
+      - main_network
 
   pgadmin:
     container_name: pgadmin.cs-skins_container
@@ -44,10 +46,9 @@ services:
   cronjobs_service:
     container_name: cronjobs.cs-skins_container
     depends_on:
-        - message_broker
-        - postgres
+      - message_broker
+      - postgres
     environment:
-      DATABASE_URL: ${DATABASE_URL:-postgres://root:1234@localhost/cs-skins}
       MESSAGE_BROKER_HOST: ${MESSAGE_BROKER_HOST:-localhost}
       MESSAGE_BROKER_USER: ${MESSAGE_BROKER_USER:-guest}
       MESSAGE_BROKER_PASSWORD: ${MESSAGE_BROKER_PASSWORD:-guest}
@@ -62,10 +63,10 @@ services:
   scraper_service:
     container_name: scraper.cs-skins_container
     depends_on:
-        - message_broker
-        - postgres
+      - message_broker
+      - postgres
     environment:
-      DATABASE_URL: ${DATABASE_URL:-postgres://root:1234@localhost/cs-skins}
+      DATABASE_URL: ${DATABASE_URL:-postgres://root:1234@localhost:5432/cs-skins?schema=public}
       MESSAGE_BROKER_HOST: ${MESSAGE_BROKER_HOST:-localhost}
       MESSAGE_BROKER_USER: ${MESSAGE_BROKER_USER:-guest}
       MESSAGE_BROKER_PASSWORD: ${MESSAGE_BROKER_PASSWORD:-guest}
