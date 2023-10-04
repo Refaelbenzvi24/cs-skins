@@ -18,15 +18,13 @@ export const main = async () => {
 
 	await Consumer.channel.prefetch (1)
 
-	await consumer.consumeMessages ((message) => {
-		// TODO: manage types in the message broker
-		const messageObject = JSON.parse (message.content.toString ()) as { payload: "initial_scrape", url: string } | { payload: "interval_scrape" }
-		if (messageObject.payload === "initial_scrape") {
-			void initialScrape (messageObject.url)
+	await consumer.consumeMessages ((message, content) => {
+		if (content.payload === "initial_scrape") {
+			void initialScrape (content.url)
 			Consumer.channel.ack (message)
 		}
 
-		if (messageObject.payload === "interval_scrape") {
+		if (content.payload === "interval_scrape") {
 			void scrape ()
 			Consumer.channel.ack (message)
 		}
