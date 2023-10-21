@@ -4,8 +4,13 @@ search:
 name: Name
 email: Email
 phone: Phone
+skins: Skins
+addSkinUrl: Add Search URL
 dateCreated: Date Created
 message: Message
 messageStatus:
   no: No
   yes: Yes
+addSkin:
+  amount: Amount
+

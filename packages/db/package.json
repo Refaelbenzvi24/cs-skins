@@ -7,7 +7,7 @@
     "clean": "rm -rf .turbo node_modules",
     "db:format": "pnpm with-env prisma format",
     "db:generate": "pnpm with-env prisma generate",
-    "db:push": "pnpm with-env prisma db push --skip-generate",
+    "db:push": "pnpm with-env prisma db push --skip-generate --accept-data-loss",
     "db:migrate-dev": "pnpm with-env prisma migrate dev --skip-generate",
     "db:migrate-deploy": "pnpm with-env prisma migrate deploy",
     "db:migrate-reset": "pnpm with-env prisma migrate reset",

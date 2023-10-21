@@ -41,7 +41,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
 }
 
 const Page = () => {
-	const createSkinMutation = api.skin.create.useMutation()
+	const createSkinMutation = api.skin.create.useMutation ()
 	const { t } = useTranslation ()
 
 	const [formHasSubmitted, setFormHasSubmitted] = useState (false)
@@ -50,15 +50,18 @@ const Page = () => {
 		handleSubmit,
 		reset,
 		control,
+		getValues,
 		formState: { errors, isSubmitting, isDirty, isValid }
 	} = useForm<createSkinValidationSchema> ({
 		resolver: zodResolver (createSkinValidation),
 		mode:     "onChange"
 	})
 
+	const url = getValues ("url")
+
 	const onSubmit: SubmitHandler<createSkinValidationSchema> = data => {
 		const transformedData = {
-			url: data.url.map(({ value }) => value)
+			url: data.url.map (({ value }) => value)
 		}
 		createSkinMutation.mutate (transformedData)
 		reset ()
@@ -72,7 +75,7 @@ const Page = () => {
 			</Head>
 
 			<main className="h-full">
-				<Col className="mx-auto h-full items-center justify-center min-[950px]:w-[900px] px-[30px]">
+				<Col className="mx-auto h-full items-center justify-center min-[950px]:w-[900px] px-[30px] pb-[40px]">
 					<Row
 						className="w-full items-center justify-center space-x-[18px] px-[24px] pb-[120px] rtl:space-x-reverse">
 						<Divider className="max-[800px]:hidden" thickness="2px"/>
@@ -83,6 +86,14 @@ const Page = () => {
 							Add Skin
 						</Typography>
 						<Divider className="max-[800px]:hidden" thickness="2px"/>
+					</Row>
+
+					<Row>
+						{(url && url.length > 0) && (
+							<Typography variant="body">
+								{`${t ("admin:addSkin.amount")}: ${url.length}`}
+							</Typography>
+						)}
 					</Row>
 
 					<form

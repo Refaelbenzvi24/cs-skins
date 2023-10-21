@@ -1,6 +1,6 @@
 import {GetServerSideProps} from "next"
 import Head from "next/head"
-import {Card, Col, Row, Table, TextField, theme, Typography} from "@acme/ui"
+import { Card, Col, LinkButton, Row, Table, TextField, theme, Typography } from "@acme/ui"
 import useTranslation from "next-translate/useTranslation"
 import {FormEvent, ReactElement, useCallback, useEffect, useMemo, useRef} from "react";
 import AdminLayout from "~/layouts/AdminLayout";
@@ -11,10 +11,11 @@ import {debounce} from "~/utils/helpers";
 import {getProxySSGHelpers} from "~/utils/ssg"
 import {getServerSession} from "@acme/auth";
 import {omit} from "~/utils/utils";
+import moment from "moment"
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
 	const session = await getServerSession(context)
-	
+
 	if (!session || !session.user) {
 		return {
 			redirect: {
@@ -23,12 +24,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 			}
 		}
 	}
-	
+
 	const search = context.query?.search as string || ''
 	const ssg = await getProxySSGHelpers(context)
-	
+
 	await ssg.skin.list.prefetchInfinite({limit: 20, search})
-	
+
 	return {
 		props: {
 			trpcState: ssg.dehydrate()
@@ -39,11 +40,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 const Page = () => {
 	const router = useRouter();
 	const {t} = useTranslation()
-	
+
 	const searchInputElement = useRef<HTMLInputElement>(null)
-	
+
 	const searchQuery = useMemo(() => router.query?.search as string || '', [router.query?.search])
-	
+
 	const {
 		data: skinsList,
 		fetchNextPage,
@@ -51,50 +52,57 @@ const Page = () => {
 	} = api.skin.list.useInfiniteQuery({limit: 20, search: searchQuery}, {
 		getNextPageParam: (lastPage, allPages) => {
 			if (allPages[allPages.length - 1]?.items.length === 0) return undefined
-			
+
 			return lastPage.nextCursor
 		}
 	})
-	
+
 	const skins = useMemo(() => skinsList?.pages.flatMap(page => page.items).map(item => ({
 		...omit(item, 'skinData'),
 		...item.skinData[0],
 		name: item.weapon.name,
 		quality: item.quality.name
 	})) || [], [skinsList])
-	
+
+	console.log(skins)
+
 	const handleSearch = ({target}: FormEvent<HTMLInputElement>) => {
 		const searchText = (target as HTMLInputElement).value
-		
+
 		if (searchText.length < 2 && searchText.length !== 0)
 			return void router.push({query: {}}, undefined, {shallow: true})
-		
+
 		void router.push({query: searchText ? {search: searchText} : {}}, undefined, {shallow: true})
 	}
-	
+
 	const debouncedSearchHandler = useCallback(debounce(handleSearch, 400), [])
-	
+
 	useEffect(() => {
 		if (searchInputElement.current) searchInputElement.current.value = searchQuery
 	}, [searchInputElement.current])
-	
+
 	return (
 		<>
 			<Head>
 				<title>CS Skins | Admin</title>
 				<meta name="description" content=""/>
 			</Head>
-			
+
 			<main className="h-full">
-				<Col className="h-full pb-[20px] px-10">
-					<Row className="px-[30px]">
+				<Col className="h-full py-[20px] px-10">
+					<Row className="px-[30px] justify-between w-full">
 						<Typography variant={'h2'}
 						            color={theme.colorScheme.subtitle2}
 						            darkColor={theme.colorScheme.body2}>
-							Skins
+							{t('admin:skins')}
 						</Typography>
+
+						<LinkButton
+							href={`/admin/add-skin`}>
+							{t('admin:addSkinUrl')}
+						</LinkButton>
 					</Row>
-					
+
 					<Card
 						className="flex-col mt-[20px] w-full"
 						noPadding
@@ -112,7 +120,7 @@ const Page = () => {
 								placeholder={t('common:search')}
 								height={'28px'}/>
 						</Row>
-						
+
 						<Table
 							data={skins}
 							autoFocus
@@ -165,12 +173,11 @@ const Page = () => {
 										color={bodyColor}
 										darkColor={bodyColorDark}
 										variant={'small'}>
-										{createdAt.toLocaleDateString()}
+										{moment(createdAt).format('DD/MM/YYYY HH:mm')}
 									</Typography>
 								)
 							}}/>
 					</Card>
-				
 				</Col>
 			</main>
 		</>

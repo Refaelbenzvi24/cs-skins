@@ -21,12 +21,13 @@ model Source {
 model Weapon {
     id        String   @id @default(cuid())
     sourceId  String
-    name      String
+    name      String?
     url       String   @unique
     skins     Skin[]
     source    Source   @relation(fields: [sourceId], references: [id], onDelete: Cascade)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+    @@unique ([sourceId, name])
 }
 
 model SkinQuality {
@@ -58,7 +59,7 @@ model SkinData {
     steamVolume      Int
     steamMedianPrice Float
     bitSkinsPrice    Float
-    percentChange    Float
+    percentChange    Float?
     skin             Skin     @relation(fields: [skinId], references: [id], onDelete: Cascade)
     createdAt        DateTime @default(now())
 

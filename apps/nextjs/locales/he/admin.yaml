@@ -4,8 +4,12 @@ search:
 name: שם
 email: דוא"ל
 phone: טלפון
+skins: סקינים
+addSkinUrl: הוספת כתובת לחיפוש
 dateCreated: תאריך יצירה
 message: הודעה
 messageStatus:
   no: אין
   yes: יש
+addSkin:
+  amount: כמות
