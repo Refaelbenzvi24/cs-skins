@@ -1,13 +1,12 @@
-import axios from "axios"
 import {getSkinHtml, getSkinTableData, getSkinTitle} from "./shared"
 import {prisma} from "@acme/db"
 
 const getBasicSkinData = async (url: string) => {
 	const {data: skinHtml} = await getSkinHtml(url)
-	
+
 	const skinsData = getSkinTableData(skinHtml)
 	const name = getSkinTitle(skinHtml)
-	
+
 	return skinsData.map(row => ({
 		url,
 		name,
@@ -15,7 +14,7 @@ const getBasicSkinData = async (url: string) => {
 	}))
 }
 
-const saveSkinToDb = async ({url, name, quality}: { url: string, name: string, quality: string }) => {
+const saveSkinToDb = async ({url, name, quality}: { url: string, name: string, quality: string }, retries = 0) => {
 	try {
 		return await prisma.skin.create({
 			data: {
@@ -50,7 +49,8 @@ const saveSkinToDb = async ({url, name, quality}: { url: string, name: string, q
 			}
 		})
 	} catch (error) {
-		if (error.code === 'P2002') return saveSkinToDb({url, name, quality})
+		if (error.code === 'P2002' && retries <= 2) return saveSkinToDb({url, name, quality}, retries + 1)
+		if (error.code === 'P2002' && retries > 2) return console.log('prisma error code P2002')
 		console.log(error)
 		console.log('error saving skin to db')
 	}

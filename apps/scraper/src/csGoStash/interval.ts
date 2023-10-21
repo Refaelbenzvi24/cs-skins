@@ -1,9 +1,10 @@
-import {prisma} from "@acme/db";
-import {getSkinHtml, getSkinTableData} from "./shared";
+import { prisma } from "@acme/db";
+import { getSkinHtml, getSkinTableData } from "./shared";
+import _ from "lodash"
 
 const getSkinsList = async () => {
 	try {
-		return await prisma.weapon.findMany({
+		return await prisma.weapon.findMany ({
 			where: {
 				source: {
 					name: "csgostash"
@@ -11,54 +12,54 @@ const getSkinsList = async () => {
 			}
 		})
 	} catch (error) {
-		console.log("error getting skins list from db")
-		console.log(error)
+		console.log ("error getting skins list from db")
+		console.log (error)
 	}
 }
 
 export const removePriceCharFromStr = (value: string) => {
-	return value.replace(/₪|\$/g, '')
+	return value.replace (/₪|\$|\,/g, "")
 }
 
 export const convertToNumber = (value: string) => {
-	const number = Number(removePriceCharFromStr(value))
-	
-	return isNaN(number) ? 0 : number
+	const number = Number (removePriceCharFromStr (value))
+
+	return _.isFinite (number) ? number : null
 }
 
 const getSkinDetails = async (url: string) => {
-	const {data: skinHtml} = await getSkinHtml(url)
-	const skinsData = getSkinTableData(skinHtml)
-	
-	
-	return skinsData.map(row => ({
+	const { data: skinHtml } = await getSkinHtml (url)
+	const skinsData = getSkinTableData (skinHtml)
+
+
+	return skinsData.map (row => ({
 		url,
-		quality: row[0] as string,
-		steamPrice: convertToNumber(row[1]),
-		steamListings: convertToNumber(row[2]),
-		steamMedianPrice: convertToNumber(row[3]),
-		steamVolume: convertToNumber(row[4]),
-		bitSkinsPrice: convertToNumber(row[5])
+		quality:          row[0] as string,
+		steamPrice:       convertToNumber (row[1] as string),
+		steamListings:    convertToNumber (row[2] as string),
+		steamMedianPrice: convertToNumber (row[3] as string),
+		steamVolume:      convertToNumber (row[4] as string),
+		bitSkinsPrice:    convertToNumber (row[5] as string)
 	}))
 }
 
 type SkinDetails = Awaited<ReturnType<typeof getSkinDetails>>[0]
 
 const calculatePercentChange = (
-	{steamPrice, bitSkinsPrice, steamMedianPrice}:
-		Pick<SkinDetails, 'bitSkinsPrice' | 'steamPrice' | 'steamMedianPrice'>
+	{ steamPrice, bitSkinsPrice, steamMedianPrice }:
+		Pick<SkinDetails, "bitSkinsPrice" | "steamPrice" | "steamMedianPrice">
 ) => {
 	const calculateSteamPrice = (steamPrice - steamMedianPrice) * 0.1 + steamMedianPrice
 	const difference = calculateSteamPrice - bitSkinsPrice
-	
-	return convertToNumber(((difference / calculateSteamPrice) * 100).toFixed(2))
+
+	return convertToNumber (((difference / calculateSteamPrice) * 100).toFixed (2))
 }
 
-const getSkin = async ({url, quality}: { url: string, quality: string }) => {
+const getSkin = async ({ url, quality }: { url: string, quality: string }) => {
 	try {
-		return await prisma.skin.findFirst({
+		return await prisma.skin.findFirst ({
 			where: {
-				weapon: {
+				weapon:  {
 					url
 				},
 				quality: {
@@ -67,21 +68,28 @@ const getSkin = async ({url, quality}: { url: string, quality: string }) => {
 			}
 		})
 	} catch (error) {
-		console.log(error)
-		console.log('error getting skin from db')
+		console.log (error)
+		console.log ("error getting skin from db")
 	}
 }
 
 const saveSkinsDetailsToDb = async ({
-	                                    steamPrice, bitSkinsPrice, steamMedianPrice, steamListings, steamVolume, quality, url, percentChange
+	                                    steamPrice,
+	                                    bitSkinsPrice,
+	                                    steamMedianPrice,
+	                                    steamListings,
+	                                    steamVolume,
+	                                    quality,
+	                                    url,
+	                                    percentChange
                                     }: SkinDetails & { percentChange: number }) => {
-	const skin = await getSkin({url, quality})
-	
+	const skin = await getSkin ({ url, quality })
+
 	try {
-		return await prisma.skinData.create({
+		return await prisma.skinData.create ({
 			data: {
-				percentChange: Number(percentChange),
-				skin: {
+				percentChange: Number (percentChange),
+				skin:          {
 					connect: {
 						id: skin.id
 					}
@@ -94,24 +102,24 @@ const saveSkinsDetailsToDb = async ({
 			}
 		})
 	} catch (error) {
-		console.log(error)
-		console.log('error saving skin details to db')
+		console.log (error)
+		console.log ("error saving skin details to db")
 	}
 }
 
 export const scrapeCsGoStash = async (weapon?: { url: string }[]) => {
-	const weaponsList = weapon ? weapon : await getSkinsList()
-	
-	const skinsDetails = await Promise.all(
-		weaponsList.map(async weapon => await getSkinDetails(weapon.url))
+	const weaponsList = weapon ? weapon : await getSkinsList ()
+
+	const skinsDetails = await Promise.all (
+		weaponsList.map (async weapon => await getSkinDetails (weapon.url))
 	)
-	
-	Promise.all(
+
+	void Promise.all (
 		skinsDetails
-			.flat()
-			.map(async skinData => await saveSkinsDetailsToDb({
+			.flat ()
+			.map (async skinData => await saveSkinsDetailsToDb ({
 				...skinData,
-				percentChange: calculatePercentChange(skinData)
+				percentChange: calculatePercentChange (skinData)
 			}))
 	)
 }

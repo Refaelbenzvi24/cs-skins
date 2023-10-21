@@ -5,7 +5,7 @@ import {default as uiTheme} from '../Utils/theme'
 
 
 const customStyles = css({
-	
+
 	body: {
 		WebkitTapHighlightColor: theme`colors.purple.500`,
 		...tw`antialiased`,
@@ -20,7 +20,7 @@ const GlobalStyles = () => (
       body,
       #__next,
       #root {
-        height: 100%;
+        min-height: 100%;
       }
 
       html {

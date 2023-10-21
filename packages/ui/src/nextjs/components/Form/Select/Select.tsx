@@ -99,8 +99,10 @@ const SelectWithLabel = forwardRef<ComponentRef<typeof Select>, SelectProps> ((p
 		textInput,
 		onBlur,
 		onChange,
+		onInputChange,
 		error,
 		value,
+		inputValue,
 		helperText,
 		labelProps,
 		helperTextProps,
@@ -135,7 +137,13 @@ const SelectWithLabel = forwardRef<ComponentRef<typeof Select>, SelectProps> ((p
 			case "Tab": {
 				try {
 					const isLocalInputValueAnArray = localInputValue.startsWith ("[") && localInputValue.endsWith ("]")
-					if (!isLocalInputValueAnArray) return setLocalValue ((prev) => [...(prev as SelectOption[]), createOption (localInputValue)])
+					if (!isLocalInputValueAnArray) {
+						return setLocalValue ((prev) => {
+							const newState = [...(prev as SelectOption[]), createOption (localInputValue)]
+							if (onChange) onChange (newState)
+							return newState
+						})
+					}
 					const options = JSON.parse (localInputValue) as string[]
 					const newOptions = options.map (createOption)
 					setLocalValue ((prev) => {
@@ -166,6 +174,18 @@ const SelectWithLabel = forwardRef<ComponentRef<typeof Select>, SelectProps> ((p
 
 		blurController ()
 	}, [isFocused, onBlur])
+
+	useEffect (() => {
+		if (value && value !== localValue) {
+			setLocalValue (value)
+		}
+	}, [value])
+
+	useEffect (() => {
+		if (inputValue && inputValue !== localInputValue) {
+			setLocalInputValue (inputValue)
+		}
+	}, [inputValue]);
 
 	return (
 		<section ref={sectionRef}>
@@ -198,7 +218,7 @@ const SelectWithLabel = forwardRef<ComponentRef<typeof Select>, SelectProps> ((p
 					           }}
 					           onInputChange={(value, actionMeta) => {
 						           if (props.isMulti) setLocalInputValue (value)
-						           if (restProps.onInputChange) restProps.onInputChange (value, actionMeta)
+						           if (onInputChange) onInputChange (value, actionMeta)
 					           }}
 					           onChange={(value) => {
 						           if (onChange) onChange (value as SelectOption)
