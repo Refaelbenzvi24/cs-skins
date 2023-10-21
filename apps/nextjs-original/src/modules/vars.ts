@@ -1,0 +1,17 @@
+const {
+	MESSAGE_BROKER_HOST,
+	MESSAGE_BROKER_PORT,
+	MESSAGE_BROKER_USER,
+	MESSAGE_BROKER_PASSWORD,
+	MESSAGE_BROKER_PROTOCOL,
+	MESSAGE_BROKER_PATHNAME
+} = process.env
+
+export const messageBrokerConnectionParams = {
+	protocol: MESSAGE_BROKER_PROTOCOL as string,
+	user:     MESSAGE_BROKER_USER as string,
+	password: MESSAGE_BROKER_PASSWORD as string,
+	host:     MESSAGE_BROKER_HOST as string,
+	port:     MESSAGE_BROKER_PORT,
+	pathname: MESSAGE_BROKER_PATHNAME
+}

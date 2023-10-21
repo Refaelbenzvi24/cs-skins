@@ -1,44 +1,39 @@
+import withTwin from './withTwin.mjs'
 import Icons from 'unplugin-icons/webpack'
-import withTwin from "./withTwin.mjs";
 import {default as withNextTranslate} from "next-translate-plugin"
-
+// Importing env files here to validate on build
+import "./src/env.mjs";
+import "@acme/auth/env.mjs";
 /**
- * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.
- * This is especially useful for Docker builds and Linting.
+ * @type {import('next').NextConfig}
  */
-!process.env.SKIP_ENV_VALIDATION && (await import("./src/env.mjs"));
+const config = withTwin({
+	reactStrictMode: true,
+	swcMinify: true,
+	experimental: {
+		serverActions: true,
+	},
 
-/** @type {import("next").NextConfig} */
-const config = withTwin(withNextTranslate({
-    reactStrictMode: true,
-    swcMinify:       true,
+	webpack: (config) => {
+		config.plugins.push(
+			Icons({
+				compiler: 'jsx',
+				jsx: 'react'
+			})
+		)
+		config.module.rules.push({
+			test: /\.ya?ml$/,
+			use: 'yaml-loader'
+		})
 
-    // @ts-ignore-next-line
-    i18n: {
-        localeDetection: false,
-    },
-
-    webpack: (config) => {
-        config.plugins.push(
-            Icons({
-                compiler: 'jsx',
-                jsx:      'react'
-            })
-        )
-        config.module.rules.push({
-            test: /\.ya?ml$/,
-            use:  'yaml-loader'
-        })
-
-        return config
-    },
-    // experimental:      {
-    //     optimizeCss: true, // enabling this will enable SSR for Tailwind
-    // },
-    transpilePackages: ["@acme/api", "@acme/auth", "@acme/db", "@acme/ui"],
-    /** We already do linting and typechecking as separate tasks in CI */
-    eslint:     {ignoreDuringBuilds: !!process.env.CI},
-    typescript: {ignoreBuildErrors: !!process.env.CI}
-}))
+		return config
+	},
+	// experimental:      {
+	//     optimizeCss: true, // enabling this will enable SSR for Tailwind
+	// },
+	transpilePackages: ["@acme/api", "@acme/auth", "@acme/db", "@acme/ui"],
+	eslint: {ignoreDuringBuilds: true},
+	typescript: {ignoreBuildErrors: true},
+})
 
 export default config

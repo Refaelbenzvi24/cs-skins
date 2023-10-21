@@ -1,3 +1,4 @@
+"use client";
 import { SelectContext } from "./SelectContext"
 import { type ReactElement } from "react"
 import { defaultColors, defaultColorsDark, type SelectColors } from "./SelectColors"

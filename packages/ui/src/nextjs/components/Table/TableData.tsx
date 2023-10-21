@@ -1,5 +1,6 @@
+"use client";
 import styled from "@emotion/styled";
-import {css} from "@emotion/react";
+import { css, withTheme } from "@emotion/react";
 import theme from "../../Utils/theme";
 
 interface TableDataProps {
@@ -23,18 +24,18 @@ const TableData = styled.td((
 	height && css`
     height: ${height};
 	`,
-	
+
 	width && css`
     width: ${width};
 	`,
-	
+
 	!removeBorder && css`
     border-bottom: 1px solid ${borderColor};
 	`,
-	
+
 	(props) => ((dark || props.theme.isDark) && !removeBorder) && css`
     border-bottom: 1px solid ${borderColorDark};
 	`
 ])
 
-export default TableData
+export default withTheme(TableData)

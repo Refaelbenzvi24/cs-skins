@@ -1,3 +1,4 @@
+"use client";
 import theme from "../../../Utils/theme"
 import { transformTransition } from "../../../Utils/transitions"
 import { conditionalRotate } from "../../../Utils/utils"

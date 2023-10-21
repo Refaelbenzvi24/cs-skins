@@ -1,5 +1,6 @@
+"use client";
 import styled from "@emotion/styled";
-import {css} from "@emotion/react";
+import { css, withTheme } from "@emotion/react";
 import tw from "twin.macro";
 import theme from "../../Utils/theme";
 import {HTMLMotionProps, motion} from "framer-motion";
@@ -21,19 +22,19 @@ const List = styled.ul((
 		dark
 	}: ListProps) => [
 	tw`flex flex-col w-full`,
-	
+
 	hasBackground && css`
     background-color: ${bgColor};
 	`,
-	
+
 	css`
     list-style: none;
 	`,
-	
+
 	(props) => ((dark || props.theme.isDark) && hasBackground) && css`
     background-color: ${bgColorDark};
 	`
 ])
 
 
-export default List
+export default withTheme(List)

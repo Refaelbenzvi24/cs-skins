@@ -1,4 +1,5 @@
-import {css} from "@emotion/react"
+"use client";
+import { css, withTheme } from "@emotion/react"
 import styled from "@emotion/styled"
 import {motion} from "framer-motion"
 import tw from "twin.macro"
@@ -18,28 +19,28 @@ const Row = styled(motion.div, {
 	)(props as keyof RowProps)
 })(({grid, center, justify, align}: RowProps) => [
 	center && tw`justify-center`,
-	
+
 	css`
     display: flex;
     flex-direction: row;
 	`,
-	
+
 	align && css`
     align-items: ${align};
 	`,
 	justify && css`
     justify-content: ${justify};
 	`,
-	
+
 	!grid && css`
     display: flex;
     flex-direction: row;
 	`,
-	
+
 	grid && css`
     display: grid;
 	`,
 ])
 
 
-export default Row
+export default withTheme(Row)

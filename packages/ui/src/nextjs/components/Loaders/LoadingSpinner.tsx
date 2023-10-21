@@ -1,3 +1,4 @@
+"use client";
 import styled from "@emotion/styled";
 import {css} from "@emotion/react";
 
@@ -38,18 +39,18 @@ export function parseLengthAndUnit(size: number | string): LengthObject {
 	} else {
 		value = parseInt(valueString, 10);
 	}
-	
+
 	const unit: string = (size.match(/[^0-9]*$/) || "").toString();
-	
+
 	if (cssUnit[unit]) {
 		return {
 			value,
 			unit,
 		};
 	}
-	
+
 	console.warn(`React Spinners: ${size} is not a valid css value. Defaulting to ${value}px.`);
-	
+
 	return {
 		value,
 		unit: "px",
@@ -58,7 +59,7 @@ export function parseLengthAndUnit(size: number | string): LengthObject {
 
 export function cssValue(value: number | string): string {
 	const lengthWithunit = parseLengthAndUnit(value);
-	
+
 	return `${lengthWithunit.value}${lengthWithunit.unit}`;
 }
 
@@ -71,25 +72,25 @@ export interface StyledLoadingSpinnerProps {
 
 const createAnimation = (loaderName: string, frames: string, suffix: string): string => {
 	const animationName = `react-spinners-${loaderName}-${suffix}`;
-	
+
 	if (typeof window == "undefined" || !window.document) {
 		return animationName;
 	}
-	
+
 	const styleEl = document.createElement("style");
 	document.head.appendChild(styleEl);
 	const styleSheet = styleEl.sheet;
-	
+
 	const keyFrames = `
     @keyframes ${animationName} {
       ${frames}
     }
   `;
-	
+
 	if (styleSheet) {
 		styleSheet.insertRule(keyFrames, 0);
 	}
-	
+
 	return animationName;
 };
 
@@ -125,9 +126,9 @@ const defaultProps = {
 
 const LoadingSpinner = (props: StyledLoadingSpinnerProps & typeof defaultProps) => {
 	const {loading} = props
-	
+
 	if (!loading) return null
-	
+
 	return (
 		<StyledLoadingSpinner {...props}/>
 	)

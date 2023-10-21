@@ -1,15 +1,17 @@
-import {CSSProperties, useEffect, useRef} from "react"
+"use client";
+import { CSSProperties, useEffect, useRef } from "react"
 
-import {css} from "@emotion/css"
+import { css } from "@emotion/css"
 import styled from "@emotion/styled"
 import autoAnimate from "@formkit/auto-animate"
 import clsx from "clsx"
-import {motion, type HTMLMotionProps} from "framer-motion"
+import { motion, type HTMLMotionProps } from "framer-motion"
 import tw from "twin.macro"
 
 import HelperText from "../Form/HelperText"
-import Button, {type ButtonProps} from "./Button"
-import {shouldForwardProp} from "../../Utils/StyledUtils";
+import Button, { type ButtonProps } from "./Button"
+import { shouldForwardProp } from "../../Utils/StyledUtils";
+import { withTheme } from "@emotion/react"
 
 
 interface FormButtonProps extends ButtonProps {
@@ -18,8 +20,8 @@ interface FormButtonProps extends ButtonProps {
 	centered?: boolean
 }
 
-const ButtonWrapper = styled(motion.div, {
-	shouldForwardProp: (props) => shouldForwardProp<FormButtonProps>(
+const ButtonWrapper = styled (motion.div, {
+	shouldForwardProp: (props) => shouldForwardProp<FormButtonProps> (
 		[
 			"dark",
 			"color",
@@ -37,36 +39,43 @@ const ButtonWrapper = styled(motion.div, {
 			"error",
 			"centered",
 		]
-	)(props as keyof FormButtonProps)
-})(({centered}: { centered?: boolean }) => [
+	) (props as keyof FormButtonProps)
+}) (({ centered }: { centered?: boolean }) => [
 	tw`flex flex-col w-full`,
 	centered && tw`items-center`,
 ])
 
-const FormButton = (props: FormButtonProps & HTMLMotionProps<"button">) => {
-	const {className, helperText, error, dark, centered, children, ...restProps} = props
-	
-	const buttonWrapperRef = useRef(null)
-	
-	useEffect(() => {
-		buttonWrapperRef.current && autoAnimate(buttonWrapperRef.current)
+const FormButton = ({
+	                    centered = true,
+	                    error = false,
+	                    helperText = "",
+	                    className,
+	                    dark,
+	                    children,
+	                    ...restProps
+                    }: FormButtonProps & HTMLMotionProps<"button">) => {
+
+	const buttonWrapperRef = useRef (null)
+
+	useEffect (() => {
+		buttonWrapperRef.current && autoAnimate (buttonWrapperRef.current)
 	}, [buttonWrapperRef])
-	
+
 	return (
-		<ButtonWrapper {...{dark, centered}} ref={buttonWrapperRef}>
+		<ButtonWrapper {...{ dark, centered }} ref={buttonWrapperRef}>
 			{
 				helperText ? (
-					<HelperText className="text-center" {...{error}}>
+					<HelperText className="text-center" {...{ error }}>
 						{helperText}
 					</HelperText>
 				) : null
 			}
 			<Button {...restProps}
-			        {...{dark}}
+			        {...{ dark }}
 			        className={`${
 				        css`
-                  ${helperText ? tw`!mt-0` : tw`!mt-6`}
-				        `} ${clsx(className)}`}
+                          ${helperText ? tw`!mt-0` : tw`!mt-6`}
+				        `} ${clsx (className)}`}
 			        type="submit">
 				{children}
 			</Button>
@@ -74,10 +83,4 @@ const FormButton = (props: FormButtonProps & HTMLMotionProps<"button">) => {
 	)
 }
 
-FormButton.defaultProps = {
-	centered: true,
-	error: false,
-	helperText: '',
-}
-
-export default FormButton
+export default withTheme(ButtonWrapper)

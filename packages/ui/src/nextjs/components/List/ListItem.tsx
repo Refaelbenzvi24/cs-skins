@@ -1,5 +1,6 @@
+"use client";
 import styled from "@emotion/styled";
-import {css} from "@emotion/react";
+import { css, withTheme } from "@emotion/react";
 import theme from "../../Utils/theme";
 import tw from "twin.macro";
 import {ColorsForState} from "../Buttons/Button";
@@ -18,18 +19,18 @@ interface ListItemProps {
 
 const ListItem = styled((props: HTMLMotionProps<'li'> & ListItemProps) => {
 	const {autoFocus, clickable, ...restProps} = props
-	
+
 	const [isFocused, setIsFocused] = useState(false)
 	const listItemRef = useRef<HTMLLIElement>(null)
-	
+
 	useEffect(() => {
 		if (props.clickable && props.autoFocus) {
 			setIsFocused(true)
 			listItemRef.current!.focus()
 		}
 	}, [props.clickable, props.autoFocus])
-	
-	
+
+
 	return (
 		<motion.li
 			ref={listItemRef}
@@ -60,21 +61,21 @@ const ListItem = styled((props: HTMLMotionProps<'li'> & ListItemProps) => {
 	)(props as keyof ListItemProps)
 })((
 	{
-		colorsForState = theme.colorSchemeByState.accent,
-		colorsForStateDark = theme.colorSchemeByState.overlaysDark,
+		colorsForState = theme.colorSchemeByState.light2,
+		colorsForStateDark = theme.colorSchemeByState.overlaysDark2,
 		clickable,
 		nested,
 		dark
 	}: ListItemProps) => [
 	tw`py-3`,
-	
+
 	nested ? tw`pl-4` : tw`px-4`,
-	
+
 	css`
     outline: 0;
     background-color: ${colorsForState!.default};
 	`,
-	
+
 	clickable && css`
     &:hover {
       cursor: pointer;
@@ -97,7 +98,7 @@ const ListItem = styled((props: HTMLMotionProps<'li'> & ListItemProps) => {
       }
     }
 	`,
-	
+
 	(props) => (dark || props.theme.isDark) && css`
     background-color: ${colorsForStateDark!.default};
 
@@ -126,4 +127,4 @@ const ListItem = styled((props: HTMLMotionProps<'li'> & ListItemProps) => {
 	`,
 ])
 
-export default ListItem
+export default withTheme(ListItem)

@@ -1,25 +1,39 @@
 {
-  "name": "@acme/db",
-  "version": "0.1.0",
-  "main": "./index.ts",
-  "types": "./index.ts",
-  "scripts": {
-    "clean": "rm -rf .turbo node_modules",
-    "db:format": "pnpm with-env prisma format",
-    "db:generate": "pnpm with-env prisma generate",
-    "db:push": "pnpm with-env prisma db push --skip-generate",
-    "db:migrate-dev": "pnpm with-env prisma migrate dev --skip-generate",
-    "db:migrate-deploy": "pnpm with-env prisma migrate deploy",
-    "db:migrate-reset": "pnpm with-env prisma migrate reset",
-    "dev": "pnpm with-env prisma studio --port 5556",
-    "with-env": "dotenv -e ../../.env --"
-  },
-  "dependencies": {
-    "@prisma/client": "^5.3.1"
-  },
-  "devDependencies": {
-    "dotenv-cli": "^7.0.0",
-    "prisma": "^5.3.1",
-    "typescript": "^5.1.5"
-  }
+	"name": "@acme/db",
+	"version": "0.1.0",
+	"private": true,
+	"main": "./index.ts",
+	"types": "./index.ts",
+	"scripts": {
+		"clean": "rm -rf .turbo node_modules",
+		"lint": "eslint .",
+		"format": "prettier --check \"**/*.{mjs,ts,md,json}\"",
+		"db:push": "drizzle-kit push:mysql",
+		"studio": "drizzle-kit studio",
+		"typecheck": "tsc --noEmit"
+	},
+	"dependencies": {
+		"@paralleldrive/cuid2": "^2.2.2",
+		"@planetscale/database": "^1.11.0",
+		"drizzle-orm": "^0.28.6",
+		"mysql2": "^3.6.2"
+	},
+	"devDependencies": {
+		"@acme/eslint-config": "^0.2.0",
+		"@acme/prettier-config": "^0.1.0",
+		"@acme/tsconfig": "^0.1.0",
+		"@types/node": "^20.8.3",
+		"dotenv-cli": "^7.3.0",
+		"drizzle-kit": "^0.19.13",
+		"eslint": "^8.50.0",
+		"prettier": "^3.0.3",
+		"typescript": "^5.2.2"
+	},
+	"eslintConfig": {
+		"root": true,
+		"extends": [
+			"@acme/eslint-config/base"
+		]
+	},
+	"prettier": "@acme/prettier-config"
 }

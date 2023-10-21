@@ -1,3 +1,4 @@
+"use client";
 import { toast } from "react-toastify"
 import useTranslation from "next-translate/useTranslation"
 import _ from "lodash"

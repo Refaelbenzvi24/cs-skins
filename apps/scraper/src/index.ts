@@ -33,5 +33,5 @@ export const main = async () => {
 
 console.info ("server has started and is waiting for messages!");
 void (async () => await main ()) ()
-// void (async () => await scrapeCsGoStash())()
+void (async () => await scrapeCsGoStash())()
 

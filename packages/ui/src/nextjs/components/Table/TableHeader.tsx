@@ -1,5 +1,6 @@
+"use client";
 import styled from "@emotion/styled";
-import {css} from "@emotion/react";
+import { css, withTheme } from "@emotion/react";
 import theme from "../../Utils/theme";
 
 export interface TableHeaderProps {
@@ -23,22 +24,22 @@ const TableHeader = styled.th((
 	css`
 		display: table-cell;
 	`,
-	
+
 	height && css`
     width: ${width};
 	`,
-	
+
 	width && css`
     height: ${height};
 	`,
-	
+
 	!removeBorder && css`
     border-bottom: 1px solid ${borderColor};
 	`,
-	
+
 	(props) => ((dark || props.theme.isDark) && !removeBorder) && css`
     border-bottom: 2px solid ${borderColorDark};
 	`
 ])
 
-export default TableHeader
+export default withTheme(TableHeader)

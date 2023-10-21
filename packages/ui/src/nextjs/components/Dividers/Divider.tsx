@@ -1,10 +1,11 @@
-import {css} from "@emotion/react"
+"use client";
+import { css, withTheme } from "@emotion/react"
 import styled from "@emotion/styled"
-import {motion} from "framer-motion"
+import { motion } from "framer-motion"
 import tw from "twin.macro"
 
 import theme from "../../Utils/theme"
-import {shouldForwardProp} from "../../Utils/StyledUtils";
+import { shouldForwardProp } from "../../Utils/StyledUtils";
 
 
 interface DividerProps {
@@ -17,8 +18,8 @@ interface DividerProps {
 	dark?: boolean
 }
 
-const Divider = styled(motion.hr, {
-	shouldForwardProp: (props) => shouldForwardProp<DividerProps>(
+const Divider = styled (motion.hr, {
+	shouldForwardProp: (props) => shouldForwardProp<DividerProps> (
 		[
 			"thickness",
 			"opacity",
@@ -28,34 +29,34 @@ const Divider = styled(motion.hr, {
 			"vertical",
 			"dark"
 		]
-	)(props as keyof DividerProps)
-})(({color, colorDark, opacity, vertical, size, thickness, dark}: DividerProps) => [
+	) (props as keyof DividerProps)
+}) (({
+	     opacity = "100%",
+	     size = "100%",
+	     thickness = "1px",
+	     color = theme.colorScheme.primary,
+	     colorDark = theme.colorScheme.primary,
+	     vertical,
+	     dark
+     }: DividerProps) => [
 	tw`flex justify-center items-center`,
-	
+
 	css`
-    opacity: ${opacity};
-    background-color: ${color};
+      opacity: ${opacity};
+      background-color: ${color};
 	`,
-	
+
 	!vertical ? css` width: ${size};` : css` height: ${size};`,
-	
+
 	vertical ? css` width: ${thickness};` : css` height: ${thickness};`,
-	
+
 	css`
-    border: none;
+      border: none;
 	`,
-	
+
 	(props) => (dark || props.theme.isDark) && css`
-    background-color: ${colorDark};
+      background-color: ${colorDark};
 	`,
 ])
 
-Divider.defaultProps = {
-	opacity: '100%',
-	size: '100%',
-	thickness: '1px',
-	color: theme.colorScheme.primary,
-	colorDark: theme.colorScheme.primary,
-}
-
-export default Divider
+export default withTheme (Divider)

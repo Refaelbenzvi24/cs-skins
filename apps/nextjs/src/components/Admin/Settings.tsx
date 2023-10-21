@@ -1,5 +1,6 @@
+"use client";
 import React, {useState} from "react";
-import {Button, Card, Col, Divider, List, ListItem, Modal, Row, theme, Tooltip, Typography} from "@acme/ui";
+import { Button, Card, Col, Divider, List, ListItem, Modal, Row, theme, Tooltip, Typography, useTheme } from "@acme/ui";
 import useTranslation from "next-translate/useTranslation";
 import IconCarbonLeft from "~icons/carbon/arrowLeft"
 import IconCarbonRight from "~icons/carbon/arrowRight"
@@ -13,14 +14,12 @@ interface SettingsProps {
 
 const Settings = ({onBackButtonClick}: SettingsProps) => {
 	const [isEmailSettingsModalOpen, setIsEmailSettingsModalOpen] = useState<boolean>(false)
-	
+
 	const {t, lang} = useTranslation()
 	const dir = lang === 'he' ? 'rtl' : 'ltr'
-	
-	const openEmailSettings = () => {
-		setIsEmailSettingsModalOpen(true)
-	}
-	
+
+	const openEmailSettings = () => setIsEmailSettingsModalOpen(true)
+
 	return (
 		<>
 			<Modal
@@ -34,7 +33,7 @@ const Settings = ({onBackButtonClick}: SettingsProps) => {
 				onBackdropClick={() => setIsEmailSettingsModalOpen(false)}>
 				<EmailSettings onBackButtonClick={() => setIsEmailSettingsModalOpen(false)}/>
 			</Modal>
-			
+
 			<Col className="h-full w-full">
 				<Card
 					className="flex flex-row py-3 px-3 mb-8 items-center"
@@ -58,7 +57,7 @@ const Settings = ({onBackButtonClick}: SettingsProps) => {
 							{dir === "rtl" ? <IconCarbonRight/> : <IconCarbonLeft/>}
 						</Button>
 					</Tooltip>
-					
+
 					<Row className="ltr:pl-4 rtl:pr-4">
 						<Typography
 							color={theme.colorScheme.white}
@@ -68,7 +67,7 @@ const Settings = ({onBackButtonClick}: SettingsProps) => {
 						</Typography>
 					</Row>
 				</Card>
-				
+
 				<List>
 					<ListItem
 						autoFocus

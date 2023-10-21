@@ -1,5 +1,6 @@
+"use client";
 import styled from "@emotion/styled";
-import {css} from "@emotion/react";
+import { css, withTheme } from "@emotion/react";
 import theme from "../../Utils/theme";
 import tw from "twin.macro";
 
@@ -14,4 +15,4 @@ const BeforeIconWrapper = styled.div(() => [
 	`,
 ])
 
-export default BeforeIconWrapper
+export default withTheme (BeforeIconWrapper)
