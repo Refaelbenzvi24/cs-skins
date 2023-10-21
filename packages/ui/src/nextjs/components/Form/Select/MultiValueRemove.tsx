@@ -1,3 +1,4 @@
+"use client";
 import { type ComponentProps } from "react"
 import { components } from "react-select"
 

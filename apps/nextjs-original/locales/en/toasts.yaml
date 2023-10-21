@@ -1,0 +1,4 @@
+dismiss: Dismiss
+sending: Sending...
+sent: Sent successfully!
+sendingError: There was an error sending the message. Please try again later.

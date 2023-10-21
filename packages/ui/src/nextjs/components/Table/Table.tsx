@@ -1,3 +1,4 @@
+"use client";
 import Typography from "../Typograpy/Typogrphy";
 import {AnimatePresence} from "framer-motion";
 import TableRow from "./TableRow";
@@ -60,46 +61,38 @@ interface TableProps<
 	borderColorDark?: string
 }
 
-const defaultProps = {
-	headersColor: theme.colorScheme.subtitle1,
-	headersColorDark: theme.colorScheme.subtitle1,
-	bodyColor: theme.colorScheme.header2,
-	bodyColorDark: theme.colorScheme.accent,
-	borderColor: theme.colorScheme.subtitle2,
-	borderColorDark: theme.colorScheme.body1
-} as const
-
-
 const Table = <
 	DataType extends { [key in HeadersKeys]?: any }[],
 	HeadersKeys extends string | number | symbol,
 >
-(props:
+({
+	 headers,
+	 components,
+	 data,
+	 headersHeight,
+	 bodyHeight,
+	 autoFocus,
+	 onRowClick,
+	 headersColor = theme.colorScheme.subtitle1,
+	 headersColorDark = theme.colorScheme.subtitle1,
+	 bodyColor = theme.colorScheme.header2,
+	 bodyColorDark = theme.colorScheme.accent,
+	 borderColor = theme.colorScheme.subtitle2,
+	 borderColorDark = theme.colorScheme.body1,
+	...restProps
+ }:
 	 TableProps<DataType, HeadersKeys> &
 	 Omit<React.DetailedHTMLProps<React.TableHTMLAttributes<HTMLTableElement>, HTMLTableElement>, 'children'> &
-	 (TablePaginationProps | { hasPagination?: false }) &
-	 typeof defaultProps
+	 (TablePaginationProps | { hasPagination?: false })
 ) => {
-	const {
-		headers,
-		components,
-		data,
-		headersHeight,
-		bodyHeight,
-		headersColor,
-		headersColorDark,
-		bodyColor,
-		bodyColorDark,
-		autoFocus,
-		onRowClick
-	} = props
-	
+	const props = restProps
+
 	const isFirstRender = useRef(true)
-	
+
 	useEffect(() => {
 		isFirstRender.current = false
 	}, [])
-	
+
 	return (
 		<TableWrapper>
 			<table className="w-full h-fit border-spacing-0 border-separate">
@@ -124,7 +117,7 @@ const Table = <
 					))}
 				</TableRow>
 				</thead>
-				
+
 				<tbody>
 				<AnimatePresence initial={false}>
 					{data.map((item, index) => (
@@ -170,7 +163,5 @@ const Table = <
 		</TableWrapper>
 	)
 }
-
-Table.defaultProps = defaultProps
 
 export default Table

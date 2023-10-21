@@ -1,9 +1,9 @@
-import type { ReactElement } from 'react'
+import type { ReactElement, ReactNode } from "react"
 import type { Dispatch, SetStateAction } from "react"
 
 
 export interface MainProviderOptions {
-	children: ReactElement;
+	children: ReactNode;
 	defaults: {
 		isAnimationsActive: boolean
 	}

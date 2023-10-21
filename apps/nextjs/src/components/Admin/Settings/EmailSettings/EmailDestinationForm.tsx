@@ -19,9 +19,9 @@ const EmailDestinationForm = () => {
 	// const toasts = useToasts()
 	const {windowWidth} = useDimensions()
 	const {t} = useTranslation()
-	
+
 	const [formHasSubmitted, setFormHasSubmitted] = useState(false)
-	
+
 	const {
 		handleSubmit,
 		reset,
@@ -31,7 +31,7 @@ const EmailDestinationForm = () => {
 		resolver: zodResolver(emailDestinationValidation),
 		mode: "onChange",
 	})
-	
+
 	const onSubmit: SubmitHandler<EmailDestinationValidationSchema> = async (data) => {
 		// await toasts.sendEmail(submitFormMutation.mutateAsync(data))
 		reset({
@@ -39,8 +39,8 @@ const EmailDestinationForm = () => {
 			password: ""
 		})
 	}
-	
-	
+
+
 	return (
 		<form onSubmit={(event) => {
 			if (!formHasSubmitted) setFormHasSubmitted(() => true)
@@ -65,7 +65,7 @@ const EmailDestinationForm = () => {
 							error={!!errors.email}
 							helperText={errors.email?.message ? t(errors.email?.message) : ""}/>
 					)}/>
-				
+
 				<Controller
 					defaultValue={""}
 					name={"password"}
@@ -83,10 +83,8 @@ const EmailDestinationForm = () => {
 							error={!!errors.password}
 							helperText={errors.password?.message ? t(errors.password?.message) : ""}/>
 					)}/>
-			
-			
 			</Col>
-			
+
 			<Row className="w-full justify-center">
 				<Button
 					className="mt-4 flex items-center justify-center"

@@ -1,37 +1,41 @@
-import {Button} from "@acme/ui";
-import useTranslation from "next-translate/useTranslation"
-import {ComponentProps} from "react";
+"use client";
+import { Button } from "@acme/ui";
+import { ComponentProps, startTransition } from "react";
 import IconCarbonLanguage from "~icons/carbon/language"
-import {useRouter} from "next/router"
+import { useRouter, usePathname } from "next-intl/client";
+import { useLocale } from "next-intl";
 import clsx from "clsx";
-import {css} from "@emotion/css"
+import { css } from "@emotion/css"
 import tw from "twin.macro"
-import setLanguage from 'next-translate/setLanguage'
 
 const LanguageSelector = (props: ComponentProps<typeof Button>) => {
-	const {className, ...restProps} = props
-	
-	const {lang} = useTranslation()
-	
-	
+	const { className, ...restProps } = props
+
+	const router = useRouter ()
+	const pathname = usePathname ()
+	const locale = useLocale ()
+
 	const languageToggle = async () => {
-		const currentLang = lang === 'en' ? 'he' : 'en'
-		document.documentElement.dir = currentLang === 'he' ? 'rtl' : 'ltr'
-		await setLanguage(currentLang)
+		const currentLang = locale === "en" ? "he" : "en"
+		document.documentElement.dir = currentLang === "he" ? "rtl" : "ltr"
+		document.documentElement.lang = currentLang
+		startTransition(() => {
+			router.push (pathname, { locale: currentLang })
+		});
 	}
-	
+
 	return (
 		<Button
 			text
 			noPadding
-			size={'22px'}
+			size={"22px"}
 			className={`${css`
-        ${tw`p-[10px]`};
-			`} ${clsx(className)}`}
+              ${tw`p-[10px]`};
+			`} ${clsx (className)}`}
 			{...restProps}
 			aria-label="language"
 			id="language-toggle-button"
-			onClick={async () => await languageToggle()}>
+			onClick={async () => await languageToggle ()}>
 			<IconCarbonLanguage/>
 		</Button>
 	)

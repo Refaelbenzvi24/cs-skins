@@ -2,26 +2,25 @@ import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc"
 import { skinValidations } from "@acme/validations"
-import type { SkinQuality, Weapon, Skin, SkinData } from "@prisma/client"
-import { Producer } from "@acme/message-broker"
+import { schema, eq, like, desc } from "@acme/db"
 
 
 export const skinRouter = createTRPCRouter ({
 	create: publicProcedure
 		        .input (z.object (skinValidations.skinObject))
 		        .mutation (async ({ ctx, input }) => {
-			        if (input.url instanceof Array) {
-				        await Promise.all (input.url.map (async (url) => {
-					        const producer = new Producer ("scraper")
-					        await producer.initializeProducer (ctx.messageBrokerConnectionParams)
-					        producer.sendMessage ({ payload: "initial_scrape", url })
-				        }))
-			        }
-			        if (typeof input.url === "string") {
-				        const producer = new Producer ("scraper")
-				        await producer.initializeProducer (ctx.messageBrokerConnectionParams)
-				        producer.sendMessage ({ payload: "initial_scrape", url: input.url })
-			        }
+			        // if (input.url instanceof Array) {
+			        //     await Promise.all (input.url.map (async (url) => {
+			        //         const producer = new Producer ("scraper")
+			        //         await producer.initializeProducer (ctx.messageBrokerConnectionParams)
+			        //         producer.sendMessage ({ payload: "initial_scrape", url })
+			        //     }))
+			        // }
+			        // if (typeof input.url === "string") {
+			        //     const producer = new Producer ("scraper")
+			        //     await producer.initializeProducer (ctx.messageBrokerConnectionParams)
+			        //     producer.sendMessage ({ payload: "initial_scrape", url: input.url })
+			        // }
 
 			        // TODO: create a scraper service and send the data to it
 			        // TODO: The scraper service will create the skin?
@@ -33,90 +32,56 @@ export const skinRouter = createTRPCRouter ({
 	getById: protectedProcedure
 		         .input (z.string ())
 		         .query (({ ctx, input }) => {
-			         return ctx.prisma.skin.findFirst ({
-				         where: {
-					         id: input
-				         }
+			         return ctx.db.query.skins.findFirst ({
+				         where: ((skins, { eq }) => eq (skins.id, input))
 			         })
 		         }),
 
-	list: protectedProcedure
+	list: publicProcedure
 		      .input (z.object (skinValidations.listSkinObject))
 		      .query (async ({ ctx, input }) => {
-			      const { cursor, search, limit = 50 } = input || { limit: 50 }
+			      try {
+				      const { limit = 10, search = "*", offset = 0 } = input
 
-			      const nameQueryObject: Parameters<typeof ctx.prisma.skin.findMany>[0] = {
-				      where: {
-					      weapon: {
-						      name: {
-							      contains: search,
-							      mode:     "insensitive"
-						      }
-					      }
-				      },
-			      } as const
+				      const result = await ctx.db
+					      .select ()
+					      .from (schema.skins)
+					      .leftJoin (schema.skinsQuality, eq (schema.skins.qualityId, schema.skinsQuality.id))
+					      .leftJoin (schema.skinsData, eq (schema.skins.id, schema.skinsData.skinId))
+					      .leftJoin (schema.weapons, eq (schema.skins.weaponId, schema.weapons.id))
+					      .orderBy (desc (schema.skinsData.createdAt))
+					      .where (like (schema.weapons.name, search))
+					      .limit (limit)
+					      .offset (offset)
+					      .execute ()
 
-			      const items = await ctx.prisma.skin.findMany ({
-				      take:    limit + 1,
-				      cursor:  cursor ? { id: cursor } : undefined,
-				      where:   {
-					      ...(search ? nameQueryObject.where : {}),
-					      skinData: {
-						      some: {
-							      steamVolume:   {
-								      gt: 0
-							      },
-							      steamListings: {
-								      gte: 5
-							      },
-							      percentChange: {
-								      gte: 20
-							      }
-						      }
-					      }
-				      },
-				      include: {
-					      weapon:   {
-						      select: {
-							      name: true
-						      }
-					      },
-					      quality:  {
-						      select: {
-							      name: true
-						      }
-					      },
-					      skinData: {
-						      orderBy: {
-							      createdAt: "desc",
-						      },
-						      where:   {
-							      steamVolume:   {
-								      gt: 0
-							      },
-							      steamListings: {
-								      gte: 5
-							      },
-							      percentChange: {
-								      gte: 20
-							      }
-						      },
-						      take:    1
-					      }
-				      },
-			      }) as (Skin & {
-				      skinData: SkinData[],
-				      weapon: Pick<Weapon, "name">,
-				      quality: Pick<SkinQuality, "name">
-			      })[]
-
-			      if (items.length !== limit + 1) return { items, nextCursor: undefined }
-
-			      const nextCursor = items.length > 0 ? items.pop ()?.id : null
-
-			      return {
-				      items,
-				      nextCursor
+				      return result
+			      } catch (error) {
+				      console.error (error)
 			      }
+
+			      // return ctx.db.query.skins.findMany ({
+			      //     where: ((skins, { eq, gt, gte, or }) => or(
+			      //
+			      //     )),
+			      //     with: {
+			      // 	  weapon: {
+			      //
+			      // 	  },
+			      //       quality:   {
+			      // 	      columns: {
+			      // 		      name: true
+			      // 	      }
+			      //       },
+			      //       skinsData: {
+			      // 	      where: ((skinsData, { gt, gte, and }) => and (
+			      // 		      gt (skinsData.steamVolume, 0),
+			      // 		      gte (skinsData.steamListings, 5),
+			      // 		      gte (skinsData.percentChange, 20)
+			      // 	      )),
+			      // 	      orderBy: ((skinsData, { desc }) => desc (skinsData.createdAt)),
+			      //       },
+			      //     },
+			      // })
 		      })
 })

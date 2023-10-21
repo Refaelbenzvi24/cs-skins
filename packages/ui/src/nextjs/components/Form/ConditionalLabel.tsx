@@ -1,4 +1,6 @@
+"use client";
 import Label, {type LabelProps} from "./Label"
+import { withTheme } from "@emotion/react"
 
 
 interface ConditionalLabelProps extends LabelProps {
@@ -6,19 +8,13 @@ interface ConditionalLabelProps extends LabelProps {
 	condition?: boolean
 }
 
-const defaultProps = {
-	label: undefined,
-	value: undefined,
-} as const
-
 const ConditionalLabel = ({label, condition, ...restProps}: ConditionalLabelProps) => {
 	if (condition && label) {
 		return <Label {...restProps}>{label}</Label>
 	}
-	
+
 	return <></>
 }
 
-ConditionalLabel.defaultProps = defaultProps
 
-export default ConditionalLabel
+export default withTheme(ConditionalLabel)

@@ -18,7 +18,7 @@ const skinObject = {
 
 const listSkinObject = {
 	limit:  z.number ().min (1).max (100).optional (),
-	cursor: z.string ().cuid ().optional (),
+	offset: z.number ().min (0).optional (),
 	search: z
 		        .string ()
 		        .min (2, { message: "admin:search.mustBeLongerThan2" })

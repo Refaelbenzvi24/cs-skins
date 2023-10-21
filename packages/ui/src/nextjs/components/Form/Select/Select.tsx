@@ -1,3 +1,4 @@
+"use client";
 import {
 	type ComponentProps, type ComponentRef, forwardRef, type KeyboardEventHandler, useEffect, useId, useRef, useState
 } from "react"

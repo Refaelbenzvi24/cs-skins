@@ -20,7 +20,8 @@ const GlobalStyles = () => (
       body,
       #__next,
       #root {
-        min-height: 100%;
+        margin: 0;
+        height: 100%;
       }
 
       html {

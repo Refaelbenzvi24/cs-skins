@@ -1,0 +1,11 @@
+admin:
+  title: Settings
+  sections:
+    email: Email
+  email:
+    title: Email Settings
+    emailDestination:
+      title: Email Destination
+      form:
+        email: Email
+        password: Password

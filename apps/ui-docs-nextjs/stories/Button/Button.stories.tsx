@@ -2,8 +2,6 @@ import React from "react"
 import {Button, Main, theme, Typography} from "@acme/ui"
 import type {Story, ComponentMeta} from '@storybook/react';
 import type {ButtonProps} from "@acme/ui/src/nextjs/components/Buttons/Button";
-import {buttonDefaultProps} from "@acme/ui/src/nextjs/components/Buttons/Button";
-import {omit} from "../../utils/objectsUtils";
 
 const SectionComponent = Button
 const SectionComponentName = 'Button'
@@ -110,6 +108,3 @@ const ButtonTemplate: Story<ButtonProps> = ({...args}) => {
 
 
 export const Default = ButtonTemplate.bind({})
-Default.args = {
-	...omit(buttonDefaultProps, 'colorsForStates')
-}

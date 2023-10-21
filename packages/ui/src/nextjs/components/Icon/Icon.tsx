@@ -1,4 +1,5 @@
-import { css } from "@emotion/react"
+"use client";
+import { css, withTheme } from "@emotion/react"
 import styled from "@emotion/styled"
 import { motion } from "framer-motion"
 import tw from "twin.macro"
@@ -44,4 +45,4 @@ const Icon = styled(motion.span)(({ size, color, fab, fabSize, bgColor, dark }: 
 ])
 
 
-export default Icon
+export default withTheme(Icon)

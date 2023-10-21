@@ -1,0 +1,37 @@
+admin:
+  login:
+    labels:
+      email: Email
+      password: Password
+    errors:
+      emailRequired: You must enter an email
+      validEmail: You must enter a valid email
+      passwordRequired: You must enter a password
+  settings:
+    emailDestination:
+      labels:
+        email: Email
+        password: Password
+      errors:
+        emailRequired: You must enter an email
+        validEmail: You must enter a valid email
+        passwordRequired: You must enter a password
+contact:
+  errors:
+    nameRequired: You must enter a name
+    emailRequired: You must enter an email
+    validEmail: You must enter a valid email
+    phoneNumberRequired: You must enter a phone number
+    validPhoneNumber: You must enter a valid phone number
+    messageRequired: You must enter a message
+  labels:
+    name: Your name
+    email: Your email
+    phone: Your phone number
+    message: Your message
+  send: Send
+  toast:
+    emailSending: Sending...
+    emailSent: Your message has been sent successfully
+    sendingError: An error occurred while sending the message
+
