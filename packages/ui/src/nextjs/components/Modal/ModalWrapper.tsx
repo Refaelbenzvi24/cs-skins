@@ -7,21 +7,24 @@ import styled from "@emotion/styled"
 import tw from "twin.macro"
 import { css } from "@emotion/css"
 
-const ModalWrapper = styled (motion.div, {
-	shouldForwardProp: (props) => shouldForwardProp<ModalWrapperProps> (
+
+const ModalWrapper = styled(motion.div, {
+	shouldForwardProp: (props) => shouldForwardProp<ModalWrapperProps>(
 		["centered", "showAppBar", "appBarHeight", "isAppBarActive"]
-	) (props as keyof ModalWrapperProps)
-}) (({ centered, showAppBar, isAppBarActive, appBarHeight }: ModalWrapperProps) => [
-	reactCss`
-    z-index: ${theme.zIndex.modal};
-	`,
+	)(props as keyof ModalWrapperProps)
+})(({ centered, showAppBar, isAppBarActive, appBarHeight }: ModalWrapperProps) => {
+	return [
+		reactCss`
+        z-index: ${theme.zIndex.modal};
+		`,
 
-	(showAppBar && isAppBarActive && appBarHeight) && css`
-      top: ${appBarHeight}px;
-	`,
+		(showAppBar && isAppBarActive && appBarHeight) && css`
+			top: ${appBarHeight}px;
+		`,
 
-	centered && tw`flex justify-center items-center`,
-	tw`fixed h-full w-full`,
-])
+		centered && tw`flex justify-center items-center`,
+		tw`fixed h-full w-full`,
+	]
+})
 
-export default withTheme (ModalWrapper)
+export default withTheme(ModalWrapper)

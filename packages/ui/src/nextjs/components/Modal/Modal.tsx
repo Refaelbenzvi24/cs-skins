@@ -35,32 +35,32 @@ export interface ModalProps {
 
 const Modal = (props: ModalProps & Omit<ModalWrapperProps, "appBarHeight" | "isAppBarActive"> & HTMLMotionProps<"div">) => {
 	const {
-		children, className,
-		noBackdrop, fullScreen,
-		isOpen, removeBackdropBackground,
-		height = "200px",
-		width = "200px",
-		onBackdropClick = () => "",
-		centered = false,
-		animation = "fade",
-		animationDuration = 0.3,
-		showAppBar = false,
-		...restProps
-	} = props
-	const { appBarState, appBarOpts } = useMain ()
+		      children, className,
+		      noBackdrop, fullScreen,
+		      isOpen, removeBackdropBackground,
+		      height            = "200px",
+		      width             = "200px",
+		      onBackdropClick   = () => "",
+		      centered          = false,
+		      animation         = "fade",
+		      animationDuration = 0.3,
+		      showAppBar        = false,
+		      ...restProps
+	      }                           = props
+	const { appBarState, appBarOpts } = useMain()
 
-	useEffect (() => {
-		const initialModals = document.querySelectorAll (".modal-wrapper")
+	useEffect(() => {
+		const initialModals = document.querySelectorAll(".modal-wrapper")
 		const closeOnEscape = (e: KeyboardEvent) => {
-			const currentModals = document.querySelectorAll (".modal-wrapper")
+			const currentModals = document.querySelectorAll(".modal-wrapper")
 
-			if (e.key === "Escape" && currentModals.length <= initialModals.length) onBackdropClick?. ()
+			if(e.key === "Escape" && currentModals.length <= initialModals.length) onBackdropClick?.()
 		}
 
-		document.addEventListener ("keydown", closeOnEscape)
+		document.addEventListener("keydown", closeOnEscape)
 
 		return () => {
-			document.removeEventListener ("keydown", closeOnEscape)
+			document.removeEventListener("keydown", closeOnEscape)
 		}
 	}, [onBackdropClick])
 
@@ -113,12 +113,13 @@ const Modal = (props: ModalProps & Omit<ModalWrapperProps, "appBarHeight" | "isA
 						<div className="flex flex-col h-full w-full relative justify-center items-center">
 							<Card {...restProps}
 							      noPadding
-							      bgColor={theme.colorScheme.light}
-							      bgColorDark={theme.colorScheme.dark}
+							      backgroundColor={'colorScheme.light'}
+							      backgroundColorDark={'colorScheme.dark'}
+							      zIndex={'modal'}
 							      className={`${css`
-                                    z-index: ${theme.zIndex.modal};
-                                    position: inherit;
-							      `} ${clsx (className)}`}
+								      /** TODO: check this */
+								      position: inherit;
+							      `} ${clsx(className)}`}
 							      height={fullScreen ? "100%" : height}
 							      width={fullScreen ? "100%" : width}>
 								{children}

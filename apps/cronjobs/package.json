@@ -17,7 +17,7 @@
 		"typescript": "^5.2.2"
 	},
 	"dependencies": {
-		"@acme/message-broker": "workspace:*",
+		"@acme/message-broker": "0.1.0",
 		"axios": "^1.5.1",
 		"cron": "^2.1.0",
 		"ts-node": "^10.9.1"

@@ -1,37 +1,39 @@
-import { Button, Card, Col, Divider, List, ListItem, Row, TextField, theme, Tooltip, Typography } from "@acme/ui";
-import useTranslation from "next-translate/useTranslation";
+"use client";
+import { Button, Card, Col, List, ListItem, Row, Tooltip, Typography } from "@acme/ui";
+
 import IconCarbonLeft from "~icons/carbon/arrowLeft"
 import IconCarbonRight from "~icons/carbon/arrowRight"
-import { css } from "@emotion/css";
-import tw from "twin.macro"
 import EmailDestinationForm from "~/components/Admin/Settings/EmailSettings/EmailDestinationForm";
 import React from "react";
+import { useClientTranslation } from "~/app/i18n/client"
+import i18next from "i18next"
+
 
 interface EmailSettingsProps {
 	onBackButtonClick?: () => void
 }
 
 const EmailSettings = ({ onBackButtonClick }: EmailSettingsProps) => {
-	const { t, lang } = useTranslation ()
-	const dir = lang === "he" ? "rtl" : "ltr"
+	const { t, i18n } = useClientTranslation(i18next.language, 'settings')
+	const dir         = i18n.language === "he" ? "rtl" : "ltr"
 
 	return (
 		<Col className="h-full w-full">
 			<Card
 				className="flex flex-row py-3 px-3 mb-8 items-center"
 				noShadow
-				bgColor={theme.colorScheme.primary}
-				bgColorDark={theme.colorScheme.primary}>
-				<Tooltip tooltip={t ("common:back")}
-				         color={theme.colorScheme.overlaysDark}
+				backgroundColor={'colorScheme.primary'}
+				backgroundColorDark={'colorScheme.primary'}>
+				<Tooltip tooltip={t("common:back")}
+				         color={'colorScheme.overlaysDark'}
 				         placement="bottom-center">
 					<Button
 						text
 						noPadding
 						size={"22px"}
 						aria-label="back"
-						colorsForStates={theme.colorSchemeByState.white}
-						colorsForStatesDark={theme.colorSchemeByState.white}
+						colorsForStates={'white'}
+						colorsForStatesDark={'white'}
 						onClick={onBackButtonClick}>
 						{dir === "rtl" ? <IconCarbonRight/> : <IconCarbonLeft/>}
 					</Button>
@@ -39,10 +41,10 @@ const EmailSettings = ({ onBackButtonClick }: EmailSettingsProps) => {
 
 				<Row className="ltr:pl-4 rtl:pr-4">
 					<Typography
-						color={theme.colorScheme.white}
-						darkColor={theme.colorScheme.white}
+						color={'colorScheme.white'}
+						colorDark={'colorScheme.white'}
 						variant={"subtitle"}>
-						{t ("settings:admin.email.title")}
+						{t("settings:admin.email.title")}
 					</Typography>
 				</Row>
 			</Card>
@@ -51,7 +53,7 @@ const EmailSettings = ({ onBackButtonClick }: EmailSettingsProps) => {
 				<ListItem>
 					<Col className="space-y-3">
 						<Typography variant={"body"}>
-							{t ("settings:admin.email.emailDestination.title")}
+							{t("settings:admin.email.emailDestination.title")}
 						</Typography>
 
 						<List>

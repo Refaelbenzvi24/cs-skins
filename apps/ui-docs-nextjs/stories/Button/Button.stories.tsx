@@ -42,7 +42,7 @@ const ButtonTemplate: Story<ButtonProps> = ({...args}) => {
 					colorsForStates={theme.colorSchemeByState.accent}
 					colorsForStatesDark={theme.colorSchemeByState.accent}>
 					<Typography variant={'button'}
-					            darkColor={args.text ? 'inherit': 'black'}>
+					            colorDark={args.text ? 'inherit': 'black'}>
 						Accent
 					</Typography>
 				</Button>

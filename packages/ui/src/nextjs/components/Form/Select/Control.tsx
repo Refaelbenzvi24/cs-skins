@@ -6,28 +6,21 @@ import { css } from "@emotion/css"
 import produce from "immer"
 import tw from "twin.macro"
 import { useSelect } from "./index"
+import clsx from "clsx"
+
 
 const Control = (props: ComponentProps<typeof components.Control>) => {
 	const { children, isFocused, ...restProps } = props
-	const {theme} = useSelect()
-	const selectIsDark = theme.isDark
-	const isAppDark = useIsDark ()
-	const isDark = selectIsDark ?? isAppDark
+	const { theme, props: { textInput } }       = useSelect()
+	const selectIsDark                          = theme.isDark
+	const isAppDark                             = useIsDark()
+	const isDark                                = selectIsDark ?? isAppDark
 
 
 	return (
 		<components.Control {...{ ...restProps, isFocused }}
-		                    className={css`
-                              ${tw`!cursor-pointer`}
-                              background-color: ${/** inputBgColor */ theme.colors.control.inputBackgroundColor} !important;
-                              transition-property: none !important;
-		                      min-height: inherit;
-
-                              ${isDark && css`
-                                background-color: ${/** inputBgColor */ theme.colorsDark.control.inputBackgroundColor} !important;
-                              `}
-		                    `}
-		                    theme={produce (props.theme, (draft) => {
+		                    className={clsx(textInput ? "cursor-text" : "cursor-pointer")}
+		                    theme={produce(props.theme, (draft) => {
 			                    draft.borderRadius = 5
 			                    /** inputActiveBorder */
 			                    draft.colors.primary = theme.colors.control.inputActiveBorder
@@ -36,7 +29,7 @@ const Control = (props: ComponentProps<typeof components.Control>) => {
 			                    /** inputHoverBorder */
 			                    draft.colors.neutral30 = theme.colors.control.inputHoverBorder
 
-			                    if (isDark) {
+			                    if(isDark){
 				                    /** inputActiveBorder */
 				                    draft.colors.primary = theme.colorsDark.control.inputActiveBorder
 				                    /** inputDefaultBorder */
@@ -51,3 +44,4 @@ const Control = (props: ComponentProps<typeof components.Control>) => {
 }
 
 export default Control
+

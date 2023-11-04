@@ -24,7 +24,7 @@ const CardTemplate: Story<React.ComponentProps<typeof SectionComponent>> = (args
 					<Typography variant={"h3"}>
 						Hello I&apos;m a card
 					</Typography>
-					<Typography color={theme.colorScheme.subtitle1} darkColor={theme.colorScheme.subtitle1}
+					<Typography color={theme.colorScheme.subtitle1} colorDark={theme.colorScheme.subtitle1}
 					            variant={"body"}>
 						And this is some test text for the card
 					</Typography>

@@ -49,6 +49,8 @@ const theme = {
     transition: ${transitions.join(", ")};
 	`,
 
+	disabledState,
+
 	colorScheme: {
 		primary: '#5F9BF3',
 		secondary: '#e08e73',

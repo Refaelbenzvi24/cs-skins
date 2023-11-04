@@ -6,34 +6,44 @@ import { conditionalTranslate } from "../../Utils/utils"
 import { motion } from "framer-motion"
 import styled from "@emotion/styled"
 import tw from "twin.macro"
+import { SingleColorOptions } from "../Theme/types"
+import { getSingleColorFromPath } from "../../Utils/colors"
+import { StyledProps } from "../../types"
 
-export interface StyledSideBarProps {
+
+
+export interface StyledSideBarProps extends StyledProps {
 	dark?: boolean
 	width: number
 	state?: boolean
-	bgColor?: string
-	bgColorDark?: string
+	backgroundColor?: SingleColorOptions
+	backgroundColorDark?: SingleColorOptions
 }
 
 const StyledSideBar = styled(motion.nav, {
 	shouldForwardProp: (props) => shouldForwardProp<StyledSideBarProps>(
-		['dark', 'width', 'state', 'bgColor', 'bgColorDark']
+		['dark', 'width', 'state', 'backgroundColor', 'backgroundColorDark']
 	)(props as keyof StyledSideBarProps)
-})(({dark, bgColor, bgColorDark, width, state}: StyledSideBarProps) => [
-	css`
-    z-index: ${theme.zIndex.sideBar};
-    background-color: ${bgColor};
-    width: ${width}px;
-	`,
+})(({ dark, backgroundColor = 'colorScheme.white', backgroundColorDark = 'colorScheme.overlaysDark', width, state, theme }: StyledSideBarProps) => {
+	const resolvedBackgroundColor     = getSingleColorFromPath(backgroundColor, theme.config)
+	const resolvedBackgroundColorDark = getSingleColorFromPath(backgroundColorDark, theme.config)
+	return [
+		css`
+			z-index: ${theme.config.zIndex.sideBar};
+			background-color: ${resolvedBackgroundColor};
+			width: ${width}px;
+		`,
 
-	(props) => (dark || props.theme.isDark) && css`
-    background-color: ${bgColorDark};
-	`,
+		(props) => (dark || props.theme.isDark) && css`
+			background-color: ${resolvedBackgroundColorDark};
+		`,
 
-	tw`fixed h-full shadow-lg`,
-	theme.transitions([transformTransition()]),
-	theme.transforms([conditionalTranslate(!state, `-100%`, 'ltr')]),
+		tw`fixed h-full shadow-lg`,
+		// TODO: change to motion transitions
+		// theme.transitions([transformTransition()]),
+		// theme.transforms([conditionalTranslate(!state, `-100%`, 'ltr')]),
 
-])
+	]
+})
 
 export default withTheme(StyledSideBar)

@@ -1,97 +1,112 @@
 import { shouldForwardProp } from "../../Utils/StyledUtils"
 import { css, withTheme } from "@emotion/react"
-import theme from "../../Utils/theme"
 import tw from "twin.macro"
 import styled from "@emotion/styled"
+import type { DisabledStateOptions, SingleColorOptions } from "../Theme/types"
+import { getDisabledColorFromPath, getSingleColorFromPath } from "../../Utils/colors"
+import type { StyledProps } from "../../types"
+import { getMargins, MarginsObject } from "../../styles/emotion"
+import { motion } from "framer-motion"
+
 
 export interface TextFieldInputProps {
 	dark?: boolean
 	height?: string
 	centered?: boolean
 	removeShadow?: boolean
-	bgColor?: string
-	bgColorDark?: string
-	bgColorDisabled?: string
-	bgColorDisabledDark?: string
+	backgroundColor?: SingleColorOptions
+	backgroundColorDark?: SingleColorOptions
+	backgroundColorDisabled?: SingleColorOptions
+	backgroundColorDisabledDark?: DisabledStateOptions
 	hasBeforeIcon?: boolean
+	margins?: MarginsObject
 }
 
-export const TextFieldInput = styled('input', {
+export const TextFieldInput = styled(motion.input, {
 	shouldForwardProp: (props) => shouldForwardProp<TextFieldInputProps>(
-		['dark', 'height', 'centered', 'hasBeforeIcon', 'removeShadow', 'bgColor', 'bgColorDark', 'bgColorDisabled', 'bgColorDisabledDark']
+		["dark", "height", "centered", "hasBeforeIcon", "removeShadow", "margins", "backgroundColor", "backgroundColorDark",
+			"backgroundColorDisabled", "backgroundColorDisabledDark"]
 	)(props as keyof TextFieldInputProps)
 })(({
-	    dark,
-	    height,
-	    centered,
-	    bgColor = theme.colorScheme.accent,
-	    bgColorDark = theme.colorScheme.overlaysDark,
-	    bgColorDisabled = theme.colorSchemeByState.accent.lightDisabled,
-	    bgColorDisabledDark = theme.colorSchemeByState.overlaysDark.darkDisabled,
-	    removeShadow,
-	    hasBeforeIcon
-    }:
-	    TextFieldInputProps
-	) =>
-		[
-			tw`w-full py-[7px] resize-none place-self-center`,
+		dark,
+		height,
+		centered,
+		backgroundColor = "colorScheme.accent",
+		backgroundColorDark = "colorScheme.overlaysDark",
+		backgroundColorDisabled = "lightDisabled",
+		backgroundColorDisabledDark = "darkDisabled",
+		removeShadow,
+		hasBeforeIcon,
+		margins,
+	...restProps
+	}: TextFieldInputProps
+) => {
+	const { theme } = restProps as StyledProps
+	const resolvedBackgroundColor             = getSingleColorFromPath(backgroundColor, theme.config)
+	const resolvedDarkBackgroundColor         = getSingleColorFromPath(backgroundColorDark, theme.config)
+	const resolvedBackgroundColorDisabled     = getDisabledColorFromPath(backgroundColorDisabled, theme.config.disabledState)
+	const resolvedBackgroundColorDisabledDark = getDisabledColorFromPath(backgroundColorDisabledDark, theme.config.disabledState)
+	return [
+		tw`w-full py-[7px] resize-none place-self-center`,
 
-			hasBeforeIcon ? tw`ltr:pl-[54px] rtl:pr-[54px] ltr:pr-[10px] rtl:pl-[10px]` : tw`ltr:pl-[22px] rtl:pr-[22px] ltr:pr-[10px] rtl:pl-[10px]`,
+		hasBeforeIcon ? tw`ltr:pl-[54px] rtl:pr-[54px] ltr:pr-[10px] rtl:pl-[10px]` : tw`ltr:pl-[22px] rtl:pr-[22px] ltr:pr-[10px] rtl:pl-[10px]`,
 
-			centered && tw`text-center`,
+		centered && tw`text-center`,
 
-			removeShadow ? '' : css`
-              box-shadow: ${theme.shadows["2"]};
-			`,
+		({ theme }) => removeShadow ? "" : css`
+			box-shadow: ${theme.config.shadows["2"]};
+		`,
 
-			css`
-              background-color: ${bgColor};
-              color: ${theme.colorScheme.header2};
-              font-weight: ${500};
-              height: ${height};
-              font-size: 1rem;
-              line-height: 140%;
-              transition: background-color 0.2s linear;
+		getMargins(margins),
 
-              &:disabled {
-                background-color: ${bgColorDisabled};
-                color: ${theme.colorSchemeByState.overlaysDark.lightDisabledText};
-              }
+		css`
+			background-color: ${resolvedBackgroundColor};
+			color: ${theme.config.colorScheme.header2};
+			font-weight: ${500};
+			height: ${height};
+			font-size: 1rem;
+			line-height: 140%;
+			transition: background-color 0.2s linear;
 
-              &:focus {
-                ${removeShadow ? '' : css`
-                  box-shadow: ${theme.shadows["3"]};
-                `};
+			&:disabled {
+				background-color: ${resolvedBackgroundColorDisabled};
+				color: ${theme.config.colorSchemeByState.overlaysDark.lightDisabledText};
+			}
 
-                ${tw`outline-none ring-transparent`}
-              }
+			&:focus {
+				${removeShadow ? "" : css`
+					box-shadow: ${theme.config.shadows["3"]};
+				`};
 
-              ::placeholder {
-                color: ${theme.colorScheme.subtitle1};
-                opacity: 0.8;
-              }
+				${tw`outline-none ring-transparent`}
+			}
 
-              :-ms-input-placeholder {
-                color: ${theme.colorScheme.subtitle1};
-                opacity: 0.8;
-              }
+			::placeholder {
+				color: ${theme.config.colorScheme.subtitle1};
+				opacity: 0.8;
+			}
 
-              ::-ms-input-placeholder {
-                color: ${theme.colorScheme.subtitle1};
-                opacity: 0.8;
-              }
-			`,
+			:-ms-input-placeholder {
+				color: ${theme.config.colorScheme.subtitle1};
+				opacity: 0.8;
+			}
 
-			(props) => (dark || props.theme.isDark) && css`
-              background-color: ${bgColorDark};
-              color: ${theme.colorScheme.accent};
+			::-ms-input-placeholder {
+				color: ${theme.config.colorScheme.subtitle1};
+				opacity: 0.8;
+			}
+		`,
 
-              &:disabled {
-                background-color: ${bgColorDisabledDark};
-                color: ${theme.colorSchemeByState.overlaysDark.darkDisabledText};
-              }
-			`,
-		]
-)
+		(dark || theme.isDark) && css`
+			background-color: ${resolvedDarkBackgroundColor};
+			color: ${theme.config.colorScheme.accent};
+
+			&:disabled {
+				background-color: ${resolvedBackgroundColorDisabledDark};
+				color: ${theme.config.colorSchemeByState.overlaysDark.darkDisabledText};
+			}
+		`,
+	]
+})
 
 export default withTheme(TextFieldInput)

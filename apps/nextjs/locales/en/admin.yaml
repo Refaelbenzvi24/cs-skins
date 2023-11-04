@@ -1,16 +1,14 @@
 leads: Leads
-search:
-  mustBeLongerThan2: Search must be longer than 2 characters
+search: Search
+mustBeLongerThan2: Search must be longer than 2 characters
 name: Name
 email: Email
 phone: Phone
-skins: Skins
-addSkinUrl: Add Search URL
 dateCreated: Date Created
 message: Message
 messageStatus:
   no: No
   yes: Yes
-addSkin:
-  amount: Amount
-
+skins: Skins
+addSkin: Add Skin
+add: Add

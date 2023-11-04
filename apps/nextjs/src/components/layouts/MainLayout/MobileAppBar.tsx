@@ -35,32 +35,32 @@ const MainLayoutMobileAppBar = (props: MainLayoutMobileAppBarProps & ComponentPr
 	const router = useRouter()
 	const {t, lang} = useTranslation()
 	const dir = lang === 'he' ? 'rtl' : 'ltr'
-	
+
 	const {navigationOptions, currentNavigation, setCurrentNavigation, className, ...restProps} = props
-	
+
 	const [isHamburgerSideBarOpen, setIsHamburgerSideBarOpen] = useState<boolean>(false)
-	
+
 	const {setAppBarState, setAppBarOpts} = useMain()
 	const isDark = useIsDark()
-	
-	
+
+
 	useEffect(() => {
 		setAppBarState(() => true)
-		
+
 		return () => {
 			setAppBarState(() => false)
 		}
 	}, [setAppBarState])
-	
-	
+
+
 	useEffect(() => {
 		setAppBarOpts((prev) => ({
 			...prev,
 			height: 75,
 		}))
 	}, [setAppBarOpts])
-	
-	
+
+
 	return (
 		<Row
 			{...restProps}
@@ -70,7 +70,7 @@ const MainLayoutMobileAppBar = (props: MainLayoutMobileAppBarProps & ComponentPr
           padding-top: 75px;
         }
 			`} ${clsx(className)}`}>
-			
+
 			{/*<Image*/}
 			{/*	className={css`*/}
       {/*    [dir="ltr"] & {*/}
@@ -79,7 +79,7 @@ const MainLayoutMobileAppBar = (props: MainLayoutMobileAppBarProps & ComponentPr
       {/*        margin-left: 20px;*/}
       {/*      }*/}
       {/*    }*/}
-			
+
       {/*    [dir="rtl"] & {*/}
       {/*      margin-right: 60px;*/}
       {/*      @media screen and (max-width: 1200px) {*/}
@@ -90,7 +90,7 @@ const MainLayoutMobileAppBar = (props: MainLayoutMobileAppBarProps & ComponentPr
 			{/*	src={"/Logo.svg"}*/}
 			{/*	alt={'YAM'}*/}
 			{/*	width={38} height={45}/>*/}
-			
+
 			<HamburgerSideBar
 				className="overflow-hidden"
 				dir={dir }
@@ -118,14 +118,14 @@ const MainLayoutMobileAppBar = (props: MainLayoutMobileAppBarProps & ComponentPr
 									<ThemeToggle
 										color={theme.colorScheme.secondary}/>
 								</Tooltip>
-								
+
 								<Tooltip tooltip={t('common:language')}
 								         color={theme.colorScheme.overlaysDark}
 								         placement="bottom-center">
 									<LanguageSelector/>
 								</Tooltip>
 							</Row>
-							
+
 							<Navigation
 								className="mt-[-80px] items-center justify-center mt-auto"
 								vertical
@@ -152,24 +152,24 @@ const MainLayoutMobileAppBar = (props: MainLayoutMobileAppBarProps & ComponentPr
 											strokeColor={theme.colorScheme.header1}
 											darkStrokeColor={theme.colorScheme.light}
 											color={theme.colorScheme.header1}
-											darkColor={theme.colorScheme.light}>
+											colorDark={theme.colorScheme.light}>
 											{label}
 										</Typography>
 									</Button>
 								)}
 							</Navigation>
-							
+
 							<Col className="mb-[40px] mt-auto z-[300]">
 								<Row className="justify-center">
 									<Typography variant="button"
 									            color={theme.colorScheme.header1}
-									            darkColor={theme.colorScheme.light}
+									            colorDark={theme.colorScheme.light}
 									            size={0.8}
 									            weight={400}>
 										{t('common:get in touch')}
 									</Typography>
 								</Row>
-								
+
 								<Row className="pt-[12px] justify-center space-x-[18px] rtl:space-x-reverse">
 									<SocialLinks
 										tw="space-s-2"
@@ -178,7 +178,7 @@ const MainLayoutMobileAppBar = (props: MainLayoutMobileAppBarProps & ComponentPr
 										}}/>
 								</Row>
 							</Col>
-							
+
 							<div className={css`
                 position: absolute;
                 bottom: -55px;

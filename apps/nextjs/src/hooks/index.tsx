@@ -1,0 +1,1 @@
+export { useGetSearchParams } from './useGetSearchParams'

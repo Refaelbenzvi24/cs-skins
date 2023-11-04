@@ -28,17 +28,18 @@ export const env = createEnv({
 	 */
 	server: {
 		DATABASE_URL: z.string().url(),
+		EMAIL_SERVICE_ENABLED: z.string().default("false"),
 		EMAIL_PORT: dependsOnEnvVar(z.string(), process.env.VALIDATE_EMAIL_VARS),
 		EMAIL_HOST: dependsOnEnvVar(z.string(), process.env.VALIDATE_EMAIL_VARS),
 		EMAIL_SERVICE: dependsOnEnvVar(z.string(), process.env.VALIDATE_EMAIL_VARS),
 		EMAIL_USER: dependsOnEnvVar(z.string(), process.env.VALIDATE_EMAIL_VARS),
 		EMAIL_PASSWORD: dependsOnEnvVar(z.string(), process.env.VALIDATE_EMAIL_VARS),
-		MESSAGE_BROKER_HOST: z.string(),
-		MESSAGE_BROKER_PORT: z.string().optional(),
-		MESSAGE_BROKER_USER: z.string(),
-		MESSAGE_BROKER_PASSWORD: z.string(),
-		MESSAGE_BROKER_PROTOCOL: z.string(),
-		MESSAGE_BROKER_PATHNAME: z.string().optional()
+		MESSAGE_BROKER_HOST: dependsOnEnvVar(z.string(), process.env.VALIDATE_MESSAGE_BROKER_VARS),
+		MESSAGE_BROKER_PORT: dependsOnEnvVar(z.string().optional(), process.env.VALIDATE_MESSAGE_BROKER_VARS),
+		MESSAGE_BROKER_USER: dependsOnEnvVar(z.string(), process.env.VALIDATE_MESSAGE_BROKER_VARS),
+		MESSAGE_BROKER_PASSWORD: dependsOnEnvVar(z.string(), process.env.VALIDATE_MESSAGE_BROKER_VARS),
+		MESSAGE_BROKER_PROTOCOL: dependsOnEnvVar(z.string(), process.env.VALIDATE_MESSAGE_BROKER_VARS),
+		MESSAGE_BROKER_PATHNAME: dependsOnEnvVar(z.string().optional(), process.env.VALIDATE_MESSAGE_BROKER_VARS),
 	},
 	/**
 	 * Specify your client-side environment variables schema here.
@@ -54,6 +55,7 @@ export const env = createEnv({
 		VERCEL_URL: process.env.VERCEL_URL,
 		PORT: process.env.PORT,
 		DATABASE_URL: process.env.DATABASE_URL,
+		EMAIL_SERVICE_ENABLED: process.env.EMAIL_SERVICE_ENABLED,
 		EMAIL_PORT: process.env.EMAIL_PORT,
 		EMAIL_SERVICE: process.env.EMAIL_SERVICE,
 		EMAIL_HOST: process.env.EMAIL_HOST,

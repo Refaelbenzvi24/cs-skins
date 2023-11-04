@@ -31,6 +31,7 @@ const NavigationItem = (props: NavigationItemProps) => {
 	return (
 		<LinkButton
 			ref={buttonRef}
+			// TODO: fix this
 			className={`${css`
               ${tw`cursor-pointer relative`};
 
@@ -43,7 +44,7 @@ const NavigationItem = (props: NavigationItemProps) => {
               }
 			`}`}
 			noPadding
-			colorsForStates={theme.colorSchemeByState.primary}
+			colorsForStates={'primary'}
 			text
 			{...restProps}>
 			<div className="absolute w-full bottom-0">
@@ -58,6 +59,7 @@ const NavigationItem = (props: NavigationItemProps) => {
 					transition={{
 						duration: 0.35,
 					}}
+					// TODO: fix this
 					className={css`
                       bottom: -2px;
                       height: 3px;

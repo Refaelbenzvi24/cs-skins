@@ -20,9 +20,7 @@ const ThemeToggle = (props: ComponentProps<typeof Button>) => {
 			text
 			noPadding
 			size={"22px"}
-			className={`${css`
-              ${tw`p-[10px]`};
-			`} ${clsx (className)}`}
+			className={`p-[10px] ${clsx (className)}`}
 			{...restProps}
 			aria-label="theme"
 			id="theme-toggle-button"

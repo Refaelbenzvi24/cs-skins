@@ -1,16 +1,12 @@
 "use client";
 import { toast } from "react-toastify"
-import useTranslation from "next-translate/useTranslation"
 import _ from "lodash"
 
 import { Button, Row, theme, Typography, useMain, useDimensions } from "../index"
 
 const useToasts = () => {
-	const { isTouchable } = useMain ()
+	const { isTouchable, t, dir } = useMain ()
 	const { windowWidth } = useDimensions ()
-	const { t, lang } = useTranslation ()
-
-	const dir = lang === "he" ? "rtl" : "ltr"
 
 	const generalError = async (errorMessagePath: string) => {
 		const toastId = _.uniqueId ("error-toast-")

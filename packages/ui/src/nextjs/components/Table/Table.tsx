@@ -1,18 +1,18 @@
-"use client";
 import Typography from "../Typograpy/Typogrphy";
-import {AnimatePresence} from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import TableRow from "./TableRow";
-import TableHeader, {TableHeaderProps} from "./TableHeader";
-import {ComponentProps, ReactNode, useEffect, useRef} from "react";
+import TableHeader, { TableHeaderProps } from "./TableHeader";
+import { ComponentProps, ReactNode, useEffect, useRef } from "react";
 import theme from "../../Utils/theme";
 import TableData from "./TableData";
 import styled from "@emotion/styled";
-import {css} from "@emotion/react";
+import { css } from "@emotion/react";
 import tw from "twin.macro";
 import clsx from "clsx";
-import {motion} from "framer-motion"
+import { motion } from "framer-motion"
 import ImpulseSpinner from "../Loaders/Impulse";
-import {v3 as uuidv3} from 'uuid';
+import { v3 as uuidv3 } from 'uuid';
+
 
 interface TableHeaderOptions<KeysOptions extends string | number | symbol> extends TableHeaderProps {
 	key: KeysOptions
@@ -45,7 +45,7 @@ interface TableProps<
 	actions?: (data: any) => ReactNode
 	autoFocus?: boolean
 	components?: {
-		[key in HeadersKeys]?: (item: DataType[number], {bodyColor, bodyColorDark}: {
+		[key in HeadersKeys]?: (item: DataType[number], { bodyColor, bodyColorDark }: {
 			bodyColor: string,
 			bodyColorDark: string
 		}) => ReactNode
@@ -66,24 +66,24 @@ const Table = <
 	HeadersKeys extends string | number | symbol,
 >
 ({
-	 headers,
-	 components,
-	 data,
-	 headersHeight,
-	 bodyHeight,
-	 autoFocus,
-	 onRowClick,
-	 headersColor = theme.colorScheme.subtitle1,
-	 headersColorDark = theme.colorScheme.subtitle1,
-	 bodyColor = theme.colorScheme.header2,
-	 bodyColorDark = theme.colorScheme.accent,
-	 borderColor = theme.colorScheme.subtitle2,
-	 borderColorDark = theme.colorScheme.body1,
-	...restProps
- }:
-	 TableProps<DataType, HeadersKeys> &
-	 Omit<React.DetailedHTMLProps<React.TableHTMLAttributes<HTMLTableElement>, HTMLTableElement>, 'children'> &
-	 (TablePaginationProps | { hasPagination?: false })
+		headers,
+		components,
+		data,
+		headersHeight,
+		bodyHeight,
+		autoFocus,
+		onRowClick,
+		headersColor = 'colorScheme.subtitle1',
+		headersColorDark = 'colorScheme.subtitle1',
+		bodyColor = 'colorScheme.header2',
+		bodyColorDark = 'colorScheme.accent',
+		borderColor = 'colorScheme.subtitle2',
+		borderColorDark = 'colorScheme.body1',
+		...restProps
+	}:
+		TableProps<DataType, HeadersKeys> &
+		Omit<React.DetailedHTMLProps<React.TableHTMLAttributes<HTMLTableElement>, HTMLTableElement>, 'children'> &
+		(TablePaginationProps | { hasPagination?: false })
 ) => {
 	const props = restProps
 
@@ -97,25 +97,27 @@ const Table = <
 		<TableWrapper>
 			<table className="w-full h-fit border-spacing-0 border-separate">
 				<thead className="sticky top-0 z-[100]">
-				<TableRow
-					height={headersHeight}>
-					{headers.map(({display, tableHeaderProps, ...restProps}) => (
-						<TableHeader
-							{...tableHeaderProps}
-							className={`py-[6px] ltr:pl-[32px] rtl:pr-[32px] ${tableHeaderProps?.className ? clsx(tableHeaderProps.className) : ''}`}
-							height={headersHeight}
-							{...restProps}
-							key={String(restProps.key)}>
-							<Typography
-								className="ltr:text-left rtl:text-right"
-								color={headersColor}
-								darkColor={headersColorDark}
-								variant={'small'}>
-								{display}
-							</Typography>
-						</TableHeader>
-					))}
-				</TableRow>
+				<AnimatePresence initial={false}>
+					<TableRow
+						height={headersHeight}>
+						{headers.map(({ display, tableHeaderProps, ...restProps }) => (
+							<TableHeader
+								{...tableHeaderProps}
+								className={`px-[20px] py-[6px] ltr:pl-[32px] rtl:pr-[32px] ${tableHeaderProps?.className ? clsx(tableHeaderProps.className) : ''}`}
+								height={headersHeight}
+								{...restProps}
+								key={String(restProps.key)}>
+								<Typography
+									className="ltr:text-left rtl:text-right whitespace-nowrap"
+									color={headersColor}
+									colorDark={headersColorDark}
+									variant={'small'}>
+									{display}
+								</Typography>
+							</TableHeader>
+						))}
+					</TableRow>
+				</AnimatePresence>
 				</thead>
 
 				<tbody>
@@ -126,20 +128,20 @@ const Table = <
 							clickable={!!onRowClick}
 							autoFocus={index === 0 && autoFocus && !isFirstRender.current}
 							onClick={() => onRowClick?.(item)}
-							key={uuidv3(JSON.stringify(item), uuidv3.URL)}>
-							{headers.map(({key, tableDataProps}) => (
+							key={`${uuidv3(JSON.stringify(item), uuidv3.URL)}:${index}`}>
+							{headers.map(({ key, tableDataProps }) => (
 								<TableData
 									{...tableDataProps}
 									removeBorder={index === data.length - 1}
-									className={`ltr:pl-[32px] rtl:pr-[32px] py-[8px] ${tableDataProps?.className ? clsx(tableDataProps.className) : ''}`}
+									className={`px-[20px] ltr:pl-[32px] rtl:pr-[32px] py-[8px] ${tableDataProps?.className ? clsx(tableDataProps.className) : ''}`}
 									height={bodyHeight}
 									key={`${uuidv3(JSON.stringify(item), uuidv3.URL)}:${String(key)}`}>
 									{Object.keys(item).length > -1 && (
-										(components && components[key]) ? components[key]!(item, {bodyColor, bodyColorDark}) : (
+										(components && components[key]) ? components[key]!(item, { bodyColor, bodyColorDark }) : (
 											<Typography
 												className="whitespace-nowrap"
 												color={bodyColor}
-												darkColor={bodyColorDark}
+												colorDark={bodyColorDark}
 												variant={'small'}>
 												{item[key]}
 											</Typography>
@@ -154,7 +156,7 @@ const Table = <
 			</table>
 			{(props.hasPagination && props.hasNextPage) && (
 				<motion.div
-					viewport={{once: false}}
+					viewport={{ once: false }}
 					onViewportEnter={() => void props.onNextPage()}
 					className="flex flex-row justify-center items-center py-2 w-full">
 					<ImpulseSpinner size={50} backColor="#626262" frontColor="#536473"/>

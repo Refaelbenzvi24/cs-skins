@@ -1,117 +1,104 @@
-import {Global} from '@emotion/react'
-import tw, {css, theme} from 'twin.macro'
+import { Global } from "@emotion/react"
+import tw, { css, theme } from "twin.macro"
 
-import {default as uiTheme} from '../Utils/theme'
+import { default as uiTheme } from "../Utils/theme"
 
 
-const customStyles = css({
-
-	body: {
-		WebkitTapHighlightColor: theme`colors.purple.500`,
-		...tw`antialiased`,
-	},
-})
+// const customStyles = css ({
+// 	body: {
+// 		WebkitTapHighlightColor: theme`colors.purple.500`,
+// 		...tw`antialiased`,
+// 	}
+// })
 
 const GlobalStyles = () => (
 	<>
-		<Global styles={customStyles}/>
+		{/*<Global styles={customStyles}/>*/}
 		<Global styles={css`
-      html,
-      body,
-      #__next,
-      #root {
-        margin: 0;
-        height: 100%;
-      }
+          html,
+          body,
+          #__next,
+          #root {
+            margin: 0;
+            height: 100%;
+          }
 
-      html {
-        overflow-x: hidden;
-      }
+          html {
+            overflow-x: hidden;
+          }
 
+          //body {
+          //  transition: all 0.4s linear;
+          //}
 
-      //body {
-      //  transition: all 0.4s linear;
-      //}
+          :root {
+            --toastify-color-light: ${uiTheme.colorScheme.light};
+            --toastify-color-dark: ${uiTheme.colorScheme.overlaysDark};
+            --toastify-text-color-light: ${uiTheme.colorScheme.body1};
+            --toastify-text-color-dark: ${uiTheme.colorScheme.accent};
+          }
 
-      :root {
-        --toastify-color-light: ${uiTheme.colorScheme.light};
-        --toastify-color-dark: ${uiTheme.colorScheme.overlaysDark};
-        --toastify-text-color-light: ${uiTheme.colorScheme.body1};
-        --toastify-text-color-dark: ${uiTheme.colorScheme.accent};
-      }
+          #app {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+          }
 
-      html {
-        color: black;
-        transition: all 0.4s linear;
-        background-color: ${uiTheme.colorScheme.light};
-      }
+          #nprogress {
+            pointer-events: none;
+          }
 
-      html.dark {
-        color: white;
-        transition: all 0.4s linear;
-        background-color: ${uiTheme.colorScheme.dark};
-      }
+          #nprogress .bar {
+            z-index: 1031;
+            background: #4592ea;
+          }
 
-      #app {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
+          /* Designing for scroll-bar */
 
-      #nprogress {
-        pointer-events: none;
-      }
+          ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+          }
 
-      #nprogress .bar {
-        z-index: 1031;
-        background: #4592ea;
-      }
+          /* Track */
 
-      /* Designing for scroll-bar */
+          ::-webkit-scrollbar-track {
+            border-radius: 20px;
+            background-color: #FAFCFE;
+            transition: all 400ms linear;
+          }
 
-      ::-webkit-scrollbar {
-        width: 6px;
-      }
+          .dark ::-webkit-scrollbar-track {
+            background-color: #2A2A36;
+            transition: all 400ms linear;
+          }
 
-      /* Track */
+          /* Handle */
 
-      ::-webkit-scrollbar-track {
-        border-radius: 20px;
-        background-color: #FAFCFE;
-        transition: all 400ms linear;
-      }
+          ::-webkit-scrollbar-thumb {
+            background: #afafaf;
+            border-radius: 60px;
+          }
 
-      .dark ::-webkit-scrollbar-track {
-        background-color: #2A2A36;
-        transition: all 400ms linear;
-      }
+          /* Handle on hover */
 
-      /* Handle */
+          ::-webkit-scrollbar-thumb:hover {
+            background: #d5d5d5;
+          }
 
-      ::-webkit-scrollbar-thumb {
-        background: #afafaf;
-        border-radius: 60px;
-      }
+          #nprogress .bar {
+            position: fixed;
+            z-index: 1031;
+            top: 0;
+            left: 0;
 
-      /* Handle on hover */
+            width: 100%;
+            height: 4px;
+          }
 
-      ::-webkit-scrollbar-thumb:hover {
-        background: #d5d5d5;
-      }
-
-      #nprogress .bar {
-        position: fixed;
-        z-index: 1031;
-        top: 0;
-        left: 0;
-
-        width: 100%;
-        height: 4px;
-      }
-
-      * {
-        font-family: 'Work Sans', 'Heebo', sans-serif;
-      }
+          * {
+            font-family: 'Work Sans', 'Heebo', sans-serif;
+          }
 		`}/>
 	</>
 )

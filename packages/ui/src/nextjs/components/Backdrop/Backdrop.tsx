@@ -1,17 +1,9 @@
 "use client";
 import clsx from "clsx"
-import { AnimatePresence, motion, type HTMLMotionProps } from "framer-motion"
+import { AnimatePresence, type HTMLMotionProps } from "framer-motion"
 
-import StyledBackdrop from "./StyledBackdrop"
+import StyledBackdrop, { StyledBackdropProps } from "./StyledBackdrop"
 import { withTheme } from "@emotion/react"
-
-
-export interface StyledBackdropProps {
-	dark?: boolean,
-	noBackground?: boolean
-}
-
-
 
 export interface BackdropProps extends StyledBackdropProps {
 	active: boolean

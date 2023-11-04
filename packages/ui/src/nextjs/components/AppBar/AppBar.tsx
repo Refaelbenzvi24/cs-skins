@@ -6,27 +6,17 @@ import theme from "../../Utils/theme"
 import { useMain } from "../../index";
 import { type HTMLMotionProps } from "framer-motion"
 import useScrollPosition from "../../hooks/useScrollPosition";
-import AppBarWrapper from "./AppBarWrapper"
+import AppBarWrapper, { AppBarWrapperProps } from "./AppBarWrapper"
 import { withTheme } from "@emotion/react"
-
-
-export interface AppBarWrapperProps {
-	dark?: boolean
-	height?: number
-	backgroundColor?: string
-	darkBackgroundColor?: string
-	hasBackground?: boolean
-}
 
 
 export interface AppBarProps extends Omit<AppBarWrapperProps, "hasBackground"> {
 	hideOnScroll?: boolean
 }
 
-
 const AppBar = ({
-	                backgroundColor = theme.colorScheme.accent,
-	                darkBackgroundColor = theme.colorScheme.overlaysDark,
+	                backgroundColor,
+	                backgroundColorDark,
 	                hideOnScroll = false,
 	                height = 84,
 	                children,
@@ -86,8 +76,6 @@ const AppBar = ({
 			transition={{
 				duration: 0.3,
 			}}
-			backgroundColor={backgroundColor}
-			darkBackgroundColor={darkBackgroundColor}
 			height={height}
 			{...restProps}
 			id="app-bar">

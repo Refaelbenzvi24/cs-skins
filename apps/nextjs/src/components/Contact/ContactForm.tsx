@@ -19,11 +19,11 @@ const ContactForm = () => {
 	const toasts = useToasts()
 	const {windowWidth} = useDimensions()
 	const {t} = useTranslation()
-	
+
 	const firstInputRef = useRef<HTMLInputElement>(null)
-	
+
 	const [formHasSubmitted, setFormHasSubmitted] = useState(false)
-	
+
 	const {
 		handleSubmit,
 		reset,
@@ -33,7 +33,7 @@ const ContactForm = () => {
 		resolver: zodResolver(contactValidation),
 		mode: "onChange",
 	})
-	
+
 	const onSubmit: SubmitHandler<ContactValidationSchema> = async (data) => {
 		await toasts.sendEmail(submitFormMutation.mutateAsync(data))
 		reset({
@@ -44,11 +44,11 @@ const ContactForm = () => {
 		})
 		firstInputRef.current?.focus()
 	}
-	
+
 	useEffect(() => {
 		if (firstInputRef.current) firstInputRef.current.focus({preventScroll: true})
 	}, [firstInputRef])
-	
+
 	return (
 		<Col className="h-full overflow-hidden" id="contact">
 			<Col className="justify-around h-full">
@@ -73,7 +73,7 @@ const ContactForm = () => {
 									error={!!errors.name}
 									helperText={errors.name?.message ? t(errors.name?.message) : ""}/>
 							)}/>
-						
+
 						<Controller
 							defaultValue={""}
 							name={"email"}
@@ -89,8 +89,8 @@ const ContactForm = () => {
 									error={!!errors.email}
 									helperText={errors.email?.message ? t(errors.email?.message) : ""}/>
 							)}/>
-						
-						
+
+
 						<Controller
 							defaultValue={""}
 							name={"phone"}
@@ -106,7 +106,7 @@ const ContactForm = () => {
 									error={!!errors.phone}
 									helperText={errors.phone?.message ? t(errors.phone?.message) : ""}/>
 							)}/>
-						
+
 						<Controller
 							defaultValue={""}
 							name={"message"}
@@ -122,7 +122,7 @@ const ContactForm = () => {
 									helperText={errors.message?.message ? t(errors.message?.message) : ""}/>
 							)}/>
 					</Col>
-					
+
 					<Row className="w-full max-[800px]:justify-center">
 						<Button
 							className="flex items-center justify-center"

@@ -140,6 +140,7 @@ const HamburgerSideBar = (
 
 			<AnimatePresence>
 				{isOpen ? (
+					// TODO: fix this - change to an external component
 					<motion.div
 						onClick={() => toggleOpen ()}
 						className={css`
@@ -176,6 +177,7 @@ const HamburgerSideBar = (
 			{!!windowWidth && (
 				<motion.div
 					{...restProps}
+					// TODO: fix this
 					className={`${clsx (className)} ${css`
                       ${tw`fixed top-0 bottom-0 h-full`};
                       ${isRTL ? tw`left-0` : tw`right-0`};

@@ -32,12 +32,12 @@ const SideBarButtonWrapper = styled (motion.div, {
       top: 0;
 	`,
 	tw`self-center fixed mt-10 shadow-lg`,
-	theme.transitions ([transformTransition ()]),
-	theme.transforms ([
-		conditionalRotate (!state, 180),
-		conditionalTranslate (state, `${width as number}px`, "ltr"),
-	]),
-
+	// TODO: fix this - change to motion transitions
+	// theme.transitions ([transformTransition ()]),
+	// theme.transforms ([
+	// 	conditionalRotate (!state, 180),
+	// 	conditionalTranslate (state, `${width as number}px`, "ltr"),
+	// ]),
 ])
 
 interface SideBarButtonProps {
@@ -50,8 +50,6 @@ const SideBarButton = (
 	{
 		dir = "ltr",
 		dark = undefined,
-		bgColor = theme.colorScheme.white,
-		bgColorDark = theme.colorScheme.overlaysDark,
 		className,
 		...restProps
 	}: SideBarButtonProps & ButtonProps) => {

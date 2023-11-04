@@ -6,9 +6,11 @@ import tw from "twin.macro"
 
 import theme from "../../Utils/theme"
 import { shouldForwardProp } from "../../Utils/StyledUtils";
+import { getSingleColorFromPath, getZIndexFromPath } from "../../Utils/colors"
+import { StyledProps } from "../../types"
 
 
-interface DividerProps {
+interface DividerProps extends StyledProps {
 	vertical?: boolean
 	size?: string
 	thickness?: string
@@ -34,29 +36,34 @@ const Divider = styled (motion.hr, {
 	     opacity = "100%",
 	     size = "100%",
 	     thickness = "1px",
-	     color = theme.colorScheme.primary,
-	     colorDark = theme.colorScheme.primary,
+	     color = "colorScheme.primary",
+	     colorDark = "colorScheme.primary",
 	     vertical,
-	     dark
-     }: DividerProps) => [
-	tw`flex justify-center items-center`,
+	     dark,
+	     theme
+     }: DividerProps) => {
+	const resolvedColor = getSingleColorFromPath (color, theme.config)
+	const resolvedColorDark = getSingleColorFromPath (colorDark, theme.config)
+	return [
+		tw`flex justify-center items-center`,
 
-	css`
-      opacity: ${opacity};
-      background-color: ${color};
-	`,
+		css`
+          opacity: ${opacity};
+          background-color: ${resolvedColor};
+		`,
 
-	!vertical ? css` width: ${size};` : css` height: ${size};`,
+		!vertical ? css` width: ${size};` : css` height: ${size};`,
 
-	vertical ? css` width: ${thickness};` : css` height: ${thickness};`,
+		vertical ? css` width: ${thickness};` : css` height: ${thickness};`,
 
-	css`
-      border: none;
-	`,
+		css`
+          border: none;
+		`,
 
-	(props) => (dark || props.theme.isDark) && css`
-      background-color: ${colorDark};
-	`,
-])
+		(props) => (dark || props.theme.isDark) && css`
+          background-color: ${resolvedColorDark};
+		`,
+	]
+})
 
 export default withTheme (Divider)

@@ -10,8 +10,8 @@ if (!process.env.DATABASE_URL) {
 }
 
 export default {
-  schema: "./schema",
-  driver: "mysql2",
+  schema: "./src/schema",
+  driver: "pg",
   dbCredentials: {
     connectionString: process.env.DATABASE_URL,
   },

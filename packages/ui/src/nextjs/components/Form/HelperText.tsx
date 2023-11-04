@@ -4,64 +4,75 @@ import styled from "@emotion/styled"
 import { motion } from "framer-motion"
 import tw from "twin.macro"
 import { shouldForwardProp } from "../../Utils/StyledUtils";
-import theme from "../../Utils/theme";
+import { SingleColorOptions } from "../Theme/types"
+import { StyledProps } from "../../types"
+import { getSingleColorFromPath } from "../../Utils/colors"
+
 
 export interface HelperTextProps {
 	error?: boolean,
 	dark?: boolean
 	hasBackground?: boolean
-	color?: string
-	colorDark?: string
-	bgColor?: string
-	bgColorDark?: string
+	color?: SingleColorOptions
+	colorDark?: SingleColorOptions
+	backgroundColor?: SingleColorOptions
+	backgroundColorDark?: SingleColorOptions
 }
 
 
-const HelperText = styled (motion.p, {
-	shouldForwardProp: (props) => shouldForwardProp<HelperTextProps> (
+const HelperText = styled(motion.span, {
+	shouldForwardProp: (props) => shouldForwardProp<HelperTextProps>(
 		[
 			"error",
 			"dark",
 			"hasBackground",
 			"color",
 			"colorDark",
-			"bgColor",
-			"bgColorDark"
+			"backgroundColor",
+			"backgroundColorDark"
 		]
-	) (props as keyof HelperTextProps)
-}) (({
-	     error = false,
-	     dark = false,
-	     hasBackground = false,
-	     color = theme.colorScheme.error,
-	     colorDark = theme.colorScheme.errorDark,
-	     bgColor = `${theme.colorScheme.accent}e3`,
-	     bgColorDark = `${theme.colorScheme.overlaysDark}e3`
-     }: HelperTextProps) => [
-	tw`mx-1 mt-1 text-sm min-h-[20px] !w-fit`,
+	)(props as keyof HelperTextProps)
+})(({
+	error = false,
+	dark = false,
+	hasBackground = false,
+	color = 'colorScheme.error',
+	colorDark = 'colorScheme.errorDark',
+	backgroundColor = 'colorScheme.accent',
+	backgroundColorDark = 'colorScheme.overlaysDark',
+	...restProps
+}: HelperTextProps) => {
+	const { theme }                   = restProps as StyledProps
+	const resolvedBackgroundColor     = `${getSingleColorFromPath(backgroundColor, theme.config)}e3`
+	const resolvedDarkBackgroundColor = `${getSingleColorFromPath(backgroundColorDark, theme.config)}e3`
+	const resolvedColor               = getSingleColorFromPath(color, theme.config)
+	const resolvedColorDark           = getSingleColorFromPath(colorDark, theme.config)
+	return [
+		tw`mx-1 mt-1 text-sm min-h-[20px] !w-fit`,
 
-	css`
-      color: inherit;
-	`,
+		css`
+			color: inherit;
+		`,
 
-	error && css`
-      color: ${color};
-	`,
+		error && css`
+			color: ${resolvedColor};
+		`,
 
-	(props) => (dark || props.theme.isDark) && error && css`
-      color: ${colorDark};
-	`,
+		(props) => (dark || props.theme.isDark) && error && css`
+			color: ${resolvedColorDark};
+		`,
 
-	hasBackground && css`
-      ${tw`flex py-0.5 px-2 pt-1 mt-0 ml-2`};
+		hasBackground && css`
+			${tw`flex py-0.5 px-2 pt-1 mt-0 ml-2`};
 
-      box-shadow: ${theme.shadows["2"]};
-      background-color: ${bgColor};
-	`,
+			box-shadow: ${theme.config.shadows["2"]};
+			background-color: ${resolvedBackgroundColor};
+		`,
 
-	(props) => (hasBackground && (dark || props.theme.isDark)) && css`
-      background-color: ${bgColorDark};
-	`,
-])
+		(props) => (hasBackground && (dark || props.theme.isDark)) && css`
+			background-color: ${resolvedDarkBackgroundColor};
+		`,
+	]
+})
 
-export default withTheme (HelperText)
+export default withTheme(HelperText)
