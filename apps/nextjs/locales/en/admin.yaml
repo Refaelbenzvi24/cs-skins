@@ -1,6 +1,6 @@
 leads: Leads
-search:
-  mustBeLongerThan2: Search must be longer than 2 characters
+search: Search
+mustBeLongerThan2: Search must be longer than 2 characters
 name: Name
 email: Email
 phone: Phone
@@ -9,3 +9,6 @@ message: Message
 messageStatus:
   no: No
   yes: Yes
+skins: Skins
+addSkin: Add Skin
+add: Add

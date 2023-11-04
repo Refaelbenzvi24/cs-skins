@@ -12,8 +12,8 @@ import { ZodError } from "zod"
 import { auth } from "@acme/auth";
 import type { Session } from "@acme/auth";
 import { db } from "@acme/db";
-import { type EmailProvider } from "./services/email/emailProvider"
-import { type BuildConnectionStringProps } from "@acme/message-broker"
+import type { EmailProvider } from "./services/email/emailProvider";
+import type { BuildConnectionStringProps } from "@acme/message-broker"
 
 
 /**
@@ -25,11 +25,11 @@ import { type BuildConnectionStringProps } from "@acme/message-broker"
  * processing a request
  *
  */
-type CreateContextOptions = {
+interface CreateContextOptions {
 	session: Session | null
-	emailProvider: EmailProvider
+	emailProvider?: EmailProvider
 	messageBrokerConnectionParams: BuildConnectionStringProps
-};
+}
 
 /**
  * This helper generates the "internals" for a tRPC context. If you need to use
@@ -59,9 +59,9 @@ const createInnerTRPCContext = (opts: CreateContextOptions) => {
 export const createTRPCContext = async (opts: {
 	req?: Request;
 	auth?: Session;
-}, emailProvider: EmailProvider, messageBrokerConnectionParams: BuildConnectionStringProps) => {
+}, { emailProvider, messageBrokerConnectionParams }: { emailProvider?: EmailProvider, messageBrokerConnectionParams: BuildConnectionStringProps }) => {
 	const session = opts.auth ?? (await auth());
-	const source = opts.req?.headers.get("x-trpc-source") ?? "unknown";
+	const source  = opts.req?.headers.get("x-trpc-source") ?? "unknown";
 
 	console.log(">>> tRPC Request from", source, "by", session?.user);
 
@@ -79,7 +79,7 @@ export const createTRPCContext = async (opts: {
  * This is where the trpc api is initialized, connecting the context and
  * transformer
  */
-const t = initTRPC.context<typeof createTRPCContext>().create({
+export const t = initTRPC.context<typeof createTRPCContext> ().create ({
 	transformer: superjson,
 	errorFormatter({ shape, error }) {
 		return {
@@ -87,7 +87,7 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
 			data: {
 				...shape.data,
 				zodError:
-					error.cause instanceof ZodError ? error.cause.flatten() : null,
+					error.cause instanceof ZodError ? error.cause.flatten () : null,
 			},
 		};
 	},
@@ -105,7 +105,6 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
  * @see https://trpc.io/docs/router
  */
 export const createTRPCRouter = t.router;
-
 /**
  * Public (unauthed) procedure
  *

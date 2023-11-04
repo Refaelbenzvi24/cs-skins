@@ -15,7 +15,7 @@ interface TabsProps {
 	bgColorDarkActiveTab?: string
 	dark?: boolean
 }
-
+// TODO: fix this component - split it into smaller components using emotion
 const Tabs = (
 	{
 		bgColor = theme.colorScheme.light2,

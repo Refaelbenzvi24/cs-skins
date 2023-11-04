@@ -2,6 +2,7 @@ import cheerio from "cheerio";
 import axios from "axios";
 import DelayManager from "../modules/DelayManager";
 
+
 const delayManager = new DelayManager({
 	delayInMili: 700
 })
@@ -20,17 +21,18 @@ export const getSkinHtml = async (skinUrl: string) => {
 
 
 export const getSkinTitle = (skinHtml: string) => {
-	const $ = cheerio.load(skinHtml)
-	const title = $("title").text()
-	
-	return title.split('CS:GO')[0].slice(0, -2);
+	const $     = cheerio.load(skinHtml)
+	const title = $(".result-box > h2").text()
+	const [weaponName, skinName] = title.split(" | ")
+
+	return { weaponName, skinName }
 }
 
 export const getSkinTableData = (skinHtml: string) => {
-	const $ = cheerio.load(skinHtml)
+	const $         = cheerio.load(skinHtml)
 	const tableBody = $("tbody")
 	const tableRows = tableBody.find("tr")
-	
+
 	return tableRows.get().map(row =>
 		$(row).map((i, el) =>
 			$(el).find("td").map((i, el) =>

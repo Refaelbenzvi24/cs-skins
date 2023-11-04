@@ -13,14 +13,14 @@ const Home = () => {
 	const {windowWidth, windowHeight} = useDimensions()
 	const isDark = useIsDark()
 	const {t} = useTranslation()
-	
+
 	return (
 		<Row className={css`
       ${tw`items-center h-full w-full max-[800px]:items-start`};
 		`} id="home">
 			<Col className="max-w-[920px] max-[1400px]:max-w-[400px]"
 			     viewport={{once: true}}>
-				
+
 				<Typography
 					className="whitespace-nowrap"
 					variant="bold"
@@ -28,18 +28,18 @@ const Home = () => {
 					color={theme.colorScheme.primary}>
 					{t('home:welcome')}
 				</Typography>
-				
+
 				<div>
 					<Typography
 						className="whitespace-nowrap"
 						variant="h1"
 						size={(windowWidth && windowWidth > 1300) ? '' : interpolate(windowWidth, [2, 4], [375, 1300])}
-						darkColor={theme.colorScheme.light}
+						colorDark={theme.colorScheme.light}
 						color={theme.colorScheme.header1}>
 						{t('common:companyName')}
 					</Typography>
 				</div>
-				
+
 				<div>
 					<Typography className={`whitespace-nowrap max-[700px]:pt-2`}
 					            variant="h1"
@@ -48,8 +48,8 @@ const Home = () => {
 						{t('home:secondaryTitle')}
 					</Typography>
 				</div>
-				
-				
+
+
 				<div>
 					<Typography
 						className={css`
@@ -66,13 +66,13 @@ const Home = () => {
 						variant="body"
 						size={(windowWidth && windowWidth > 1300) ? '' : interpolate(windowWidth, [0.84, 1], [375, 1300])}
 						color={theme.colorScheme.subtitle1}
-						darkColor={theme.colorScheme.subtitle2}>
+						colorDark={theme.colorScheme.subtitle2}>
 						{t('home:description')}
 					</Typography>
 				</div>
-				
+
 				<SocialLinks className="py-1.5"/>
-				
+
 				<LinkButton
 					className={`mt-1 ml-1.5 min-[1100px]:ml-1 flex items-center justify-center`}
 					href={'/contact'}
@@ -83,8 +83,8 @@ const Home = () => {
 					</Typography>
 				</LinkButton>
 			</Col>
-			
-			
+
+
 			<Image
 				className={`${
 					css`

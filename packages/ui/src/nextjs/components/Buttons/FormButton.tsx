@@ -14,51 +14,41 @@ import { shouldForwardProp } from "../../Utils/StyledUtils";
 import { withTheme } from "@emotion/react"
 
 
+interface ButtonWrapperProps {
+	centered?: boolean
+}
+
 interface FormButtonProps extends ButtonProps {
 	helperText?: string
 	error?: boolean
 	centered?: boolean
 }
 
-const ButtonWrapper = styled (motion.div, {
-	shouldForwardProp: (props) => shouldForwardProp<FormButtonProps> (
+const ButtonWrapper = styled(motion.div, {
+	shouldForwardProp: (props) => shouldForwardProp<ButtonWrapperProps>(
 		[
-			"dark",
-			"color",
-			"fab",
-			"icon",
-			"height",
-			"width",
-			"size",
-			"text",
-			"noShadow",
-			"elevation",
-			"bgColor",
-			"colorsForStates",
-			"helperText",
-			"error",
 			"centered",
 		]
-	) (props as keyof FormButtonProps)
-}) (({ centered }: { centered?: boolean }) => [
+	)(props as keyof ButtonWrapperProps)
+})(({ centered }: { centered?: boolean }) => [
 	tw`flex flex-col w-full`,
 	centered && tw`items-center`,
 ])
 
 const FormButton = ({
-	                    centered = true,
-	                    error = false,
-	                    helperText = "",
-	                    className,
-	                    dark,
-	                    children,
-	                    ...restProps
-                    }: FormButtonProps & HTMLMotionProps<"button">) => {
+	centered = true,
+	error = false,
+	helperText = "",
+	className,
+	dark,
+	children,
+	...restProps
+}: FormButtonProps & HTMLMotionProps<"button">) => {
 
-	const buttonWrapperRef = useRef (null)
+	const buttonWrapperRef = useRef(null)
 
-	useEffect (() => {
-		buttonWrapperRef.current && autoAnimate (buttonWrapperRef.current)
+	useEffect(() => {
+		buttonWrapperRef.current && autoAnimate(buttonWrapperRef.current)
 	}, [buttonWrapperRef])
 
 	return (
@@ -72,11 +62,12 @@ const FormButton = ({
 			}
 			<Button {...restProps}
 			        {...{ dark }}
-			        className={`${
-				        css`
-                          ${helperText ? tw`!mt-0` : tw`!mt-6`}
-				        `} ${clsx (className)}`}
-			        type="submit">
+				// TODO: fix this
+				    className={`${
+					    css`
+						    ${helperText ? tw`!mt-0` : tw`!mt-6`}
+					    `} ${clsx(className)}`}
+				    type="submit">
 				{children}
 			</Button>
 		</ButtonWrapper>

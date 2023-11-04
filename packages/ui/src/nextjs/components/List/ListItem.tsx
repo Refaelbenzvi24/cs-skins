@@ -3,28 +3,31 @@ import styled from "@emotion/styled";
 import { css, withTheme } from "@emotion/react";
 import theme from "../../Utils/theme";
 import tw from "twin.macro";
-import {ColorsForState} from "../Buttons/Button";
-import {HTMLMotionProps, motion} from "framer-motion";
-import {shouldForwardProp} from "../../Utils/StyledUtils";
-import {useEffect, useRef, useState} from "react";
+import { HTMLMotionProps, motion } from "framer-motion";
+import { shouldForwardProp } from "../../Utils/StyledUtils";
+import { useEffect, useRef, useState } from "react";
+import { ColorByStateOptions } from "../Theme/types"
+import { getColorByStateFromPath } from "../../Utils/colors"
+import { StyledProps } from "../../types"
 
-interface ListItemProps {
+
+interface ListItemProps extends StyledProps {
 	autoFocus?: boolean
 	clickable?: boolean
-	colorsForState?: ColorsForState
-	colorsForStateDark?: ColorsForState
+	colorsForStates?: ColorByStateOptions
+	colorsForStatesDark?: ColorByStateOptions
 	nested?: boolean
 	dark?: boolean
 }
 
-const ListItem = styled((props: HTMLMotionProps<'li'> & ListItemProps) => {
-	const {autoFocus, clickable, ...restProps} = props
+const ListItem = styled((props: HTMLMotionProps<'li'> & Omit<ListItemProps, 'theme'>) => {
+	const { autoFocus, clickable, ...restProps } = props
 
 	const [isFocused, setIsFocused] = useState(false)
-	const listItemRef = useRef<HTMLLIElement>(null)
+	const listItemRef               = useRef<HTMLLIElement>(null)
 
 	useEffect(() => {
-		if (props.clickable && props.autoFocus) {
+		if(props.clickable && props.autoFocus){
 			setIsFocused(true)
 			listItemRef.current!.focus()
 		}
@@ -35,19 +38,19 @@ const ListItem = styled((props: HTMLMotionProps<'li'> & ListItemProps) => {
 		<motion.li
 			ref={listItemRef}
 			onKeyDown={(e) => {
-				if (props.clickable && isFocused && e.key === 'Enter' || e.key === ' ') {
+				if(props.clickable && isFocused && e.key === 'Enter' || e.key === ' '){
 					e.preventDefault()
 					props.onClick?.(e as any)
 				}
-				if (props.onKeyDown) props.onKeyDown(e as any)
+				if(props.onKeyDown) props.onKeyDown(e as any)
 			}}
 			onFocus={(e) => {
 				setIsFocused(true)
-				if (props.onFocus) props.onFocus(e)
+				if(props.onFocus) props.onFocus(e)
 			}}
 			onBlur={(e) => {
 				setIsFocused(false)
-				if (props.onBlur) props.onBlur(e)
+				if(props.onBlur) props.onBlur(e)
 			}}
 			tabIndex={props.clickable ? 0 : undefined}
 			{...restProps}/>
@@ -56,75 +59,80 @@ const ListItem = styled((props: HTMLMotionProps<'li'> & ListItemProps) => {
 	shouldForwardProp: (props) => shouldForwardProp<ListItemProps>([
 		"dark",
 		"nested",
-		"colorsForState",
-		"colorsForStateDark"]
+		"colorsForStates",
+		"colorsForStatesDark"]
 	)(props as keyof ListItemProps)
 })((
 	{
-		colorsForState = theme.colorSchemeByState.light2,
-		colorsForStateDark = theme.colorSchemeByState.overlaysDark2,
+		colorsForStates = 'light2',
+		colorsForStatesDark = 'overlaysDark2',
 		clickable,
 		nested,
-		dark
-	}: ListItemProps) => [
-	tw`py-3`,
+		dark,
+		theme
+	}: ListItemProps) => {
+	const resolvedColorsForState = getColorByStateFromPath(colorsForStates, theme.config)
+	const resolvedColorsForStateDark = getColorByStateFromPath(colorsForStatesDark, theme.config)
+	return [
+		tw`py-3`,
 
-	nested ? tw`pl-4` : tw`px-4`,
+		nested ? tw`pl-4` : tw`px-4`,
 
-	css`
-    outline: 0;
-    background-color: ${colorsForState!.default};
-	`,
+		css`
+			outline: 0;
+			background-color: ${resolvedColorsForState.default};
+		`,
 
-	clickable && css`
-    &:hover {
-      cursor: pointer;
-      background-color: ${colorsForState!.hover};
-    }
+		clickable && css`
+			&:hover {
+				cursor: pointer;
+				background-color: ${resolvedColorsForState.hover};
+			}
 
-    &:focus {
-      background-color: ${colorsForState!.hover};
-    }
+			&:focus {
+				background-color: ${resolvedColorsForState.hover};
+			}
 
-    &:active {
-      background-color: ${colorsForState!.active};
-    }
+			&:active {
+				background-color: ${resolvedColorsForState.active};
+			}
 
-    &:disabled {
-      background-color: ${colorsForState!.lightDisabled};
+			&:disabled {
+				background-color: ${resolvedColorsForState.lightDisabled};
 
-      & > * {
-        color: ${colorsForStateDark!.lightDisabledText};
-      }
-    }
-	`,
+				& > * {
+					color: ${resolvedColorsForState.lightDisabledText};
+				}
+			}
+		`,
 
-	(props) => (dark || props.theme.isDark) && css`
-    background-color: ${colorsForStateDark!.default};
+		(props) => (dark || props.theme.isDark) && css`
+			background-color: ${resolvedColorsForStateDark.default};
 
-    ${clickable && css`
-      &:hover {
-        cursor: pointer;
-        background-color: ${colorsForStateDark!.hover};
-      }
+			${clickable && css`
+				&:hover {
+					cursor: pointer;
+					background-color: ${resolvedColorsForStateDark.hover};
+				}
 
-      &:focus {
-        background-color: ${colorsForStateDark!.hover};
-      }
+				&:focus {
+					background-color: ${resolvedColorsForStateDark.hover};
+				}
 
-      &:active {
-        background-color: ${colorsForStateDark!.active};
-      }
+				&:active {
+					background-color: ${resolvedColorsForStateDark.active};
+				}
 
-      &:disabled {
-        background-color: ${colorsForStateDark!.darkDisabled};
+				&:disabled {
+					background-color: ${resolvedColorsForStateDark.darkDisabled};
 
-        & > * {
-          color: ${colorsForStateDark!.darkDisabledText};
-        }
-      }
-    `}
-	`,
-])
+					& > * {
+						color: ${resolvedColorsForStateDark.darkDisabledText};
+					}
+				}
+			`}
+		`,
+	]
+})
 
 export default withTheme(ListItem)

@@ -1,28 +1,29 @@
 {
-  "extends": "@acme/tsconfig/base.json",
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "~/*": [
-        "./src/*"
-      ]
-    },
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
-    "types": [
-      "unplugin-icons/types/react"
-    ],
-    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
-    "strictNullChecks": true
-  },
-  "include": [
-    ".",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+	"extends" :         "@acme/tsconfig/base.json",
+	"compilerOptions" : {
+		"baseUrl" :          ".",
+		"paths" :            {
+			"~/*" : [
+				"./src/*"
+			]
+		},
+		"plugins" :          [
+			{
+				"name" : "next"
+			}
+		],
+		"types" :            [
+			"unplugin-icons/types/react"
+		],
+		"tsBuildInfoFile" :  "node_modules/.cache/tsbuildinfo.json",
+		"strictNullChecks" : true
+	},
+	"include" :         [
+		".",
+		"./src/auto-imports.d.ts",
+		".next/types/**/*.ts"
+	],
+	"exclude" :         [
+		"node_modules"
+	]
 }

@@ -1,17 +1,18 @@
-import { ColorsForState } from "../Buttons/Button"
 import { shouldForwardProp } from "../../Utils/StyledUtils"
-import theme from "../../Utils/theme"
 import { css, withTheme } from "@emotion/react"
 import styled from "@emotion/styled"
 import { motion } from "framer-motion"
+import { ColorByStateOptions } from "../Theme/types"
+import { getColorByStateFromPath } from "../../Utils/colors"
+import { StyledProps } from "../../types"
 
 
-export interface StyledTableRowProps {
+export interface StyledTableRowProps extends StyledProps {
 	height?: string
 	width?: string
 	clickable?: boolean
-	colorsForState?: ColorsForState
-	colorsForStateDark?: ColorsForState
+	colorsForStates?: ColorByStateOptions
+	colorsForStatesDark?: ColorByStateOptions
 	dark?: boolean
 }
 
@@ -23,81 +24,86 @@ const StyledTableRow = styled(motion.tr, {
 			"height",
 			"width",
 			"clickable",
-			"colorsForState",
-			"colorsForStateDark",
+			"colorsForStates",
+			"colorsForStatesDark",
 			"dark",
 		]
 	)(props as keyof StyledTableRowProps)
 })(({
-	    height = "auto",
-	    width,
-	    colorsForState = theme.colorSchemeByState.accent,
-	    colorsForStateDark = theme.colorSchemeByState.overlaysDark,
-	    clickable,
-	    dark
-    }: StyledTableRowProps) => [
-	css`
-    outline: 0;
-    background-color: ${colorsForState!.default};
-	`,
+	height = "auto",
+	width,
+	colorsForStates = "accent",
+	colorsForStatesDark = "overlaysDark",
+	clickable,
+	dark,
+	theme
+}: StyledTableRowProps) => {
+	const resolvedColorsForState     = getColorByStateFromPath(colorsForStates, theme.config)
+	const resolvedColorsForStateDark = getColorByStateFromPath(colorsForStatesDark, theme.config)
+	return [
+		css`
+			outline: 0;
+			background-color: ${resolvedColorsForState.default};
+		`,
 
-	clickable && css`
-    &:hover {
-      cursor: pointer;
-      background-color: ${colorsForState!.hover};
-    }
+		clickable && css`
+			&:hover {
+				cursor: pointer;
+				background-color: ${resolvedColorsForState.hover};
+			}
 
-    &:focus {
-      background-color: ${colorsForState!.hover};
-    }
+			&:focus {
+				background-color: ${resolvedColorsForState.hover};
+			}
 
-    &:active {
-      background-color: ${colorsForState!.active};
-    }
+			&:active {
+				background-color: ${resolvedColorsForState.active};
+			}
 
-    &:disabled {
-      background-color: ${colorsForState!.lightDisabled};
+			&:disabled {
+				background-color: ${resolvedColorsForState.lightDisabled};
 
-      & > * {
-        color: ${colorsForStateDark!.lightDisabledText};
-      }
-    }
-	`,
+				& > * {
+					color: ${resolvedColorsForStateDark.lightDisabledText};
+				}
+			}
+		`,
 
-	height && css`
-    height: ${height};
-	`,
+		height && css`
+			height: ${height};
+		`,
 
-	width && css`
-    width: ${width};
-	`,
+		width && css`
+			width: ${width};
+		`,
 
-	(props) => (dark || props.theme.isDark) && css`
-    background-color: ${colorsForStateDark!.default};
+		(props) => (dark || props.theme.isDark) && css`
+			background-color: ${resolvedColorsForStateDark.default};
 
-    ${clickable && css`
-      &:hover {
-        cursor: pointer;
-        background-color: ${colorsForStateDark!.hover};
-      }
+			${clickable && css`
+				&:hover {
+					cursor: pointer;
+					background-color: ${resolvedColorsForStateDark.hover};
+				}
 
-      &:focus {
-        background-color: ${colorsForStateDark!.hover};
-      }
+				&:focus {
+					background-color: ${resolvedColorsForStateDark.hover};
+				}
 
-      &:active {
-        background-color: ${colorsForStateDark!.active};
-      }
+				&:active {
+					background-color: ${resolvedColorsForStateDark.active};
+				}
 
-      &:disabled {
-        background-color: ${colorsForStateDark!.darkDisabled};
+				&:disabled {
+					background-color: ${resolvedColorsForStateDark.darkDisabled};
 
-        & > * {
-          color: ${colorsForStateDark!.darkDisabledText};
-        }
-      }
-    `}
-	`,
-])
+					& > * {
+						color: ${resolvedColorsForStateDark.darkDisabledText};
+					}
+				}
+			`}
+		`,
+	]
+})
 
 export default withTheme(StyledTableRow)

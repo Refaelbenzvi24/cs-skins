@@ -1,3 +1,4 @@
+"use client";
 import {useContext} from "react";
 import {MainContext} from "./components/Main/MainContext";
 // import {useTheme} from "next-themes"
@@ -25,7 +26,7 @@ export {default as ConditionalLabel} from './components/Form/ConditionalLabel'
 export {default as HelperText} from './components/Form/HelperText'
 export {default as TextField} from './components/Form/TextField'
 export {default as TextArea} from './components/Form/TextArea'
-export {default as Select} from './components/Form/Select/Select'
+export {default as Select} from './components/Form/Select'
 export {default as Main} from './components/Main/Main'
 export {default as MainProvider} from './components/Main/MainProvider'
 export {default as Navigation} from './components/Navigation/Navigation'
@@ -50,6 +51,7 @@ export {default as HamburgerSideBar} from './components/SideBar/HamburgerSideBar
 export {default as Table} from "./components/Table/Table"
 export {default as List} from "./components/List/List"
 export {default as ListItem} from "./components/List/ListItem"
+export {default as Body} from "./components/Body/Body"
 
 // export {useTheme}
 export {default as useDimensions} from "./hooks/useDimensions"

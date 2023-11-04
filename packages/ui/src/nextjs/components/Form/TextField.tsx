@@ -1,116 +1,106 @@
 "use client";
-import { forwardRef, useEffect, useRef, useState, type FormEvent, FC, ChangeEvent } from "react"
+import { forwardRef, useEffect, useRef, useState, type FormEvent } from "react"
 
 import { css as classCss } from "@emotion/css"
-import { css, withTheme } from "@emotion/react"
-import styled from "@emotion/styled"
-import autoAnimate from "@formkit/auto-animate"
+import { withTheme } from "@emotion/react"
 import clsx from "clsx"
 import tw from "twin.macro"
 
-import theme from "../../Utils/theme"
 import ConditionalLabel from "./ConditionalLabel"
 import HelperText, { type HelperTextProps } from "./HelperText"
 import Label, { type LabelProps } from "./Label"
-import { shouldForwardProp } from "../../Utils/StyledUtils";
 import { mergeRefs } from "react-merge-refs"
 import BeforeIconWrapper from "./BeforeIconWrapper";
 import { TextFieldInput, TextFieldInputProps } from "./TextFieldInput"
+import ConditionalHelperText from "./ConditionalHelperText"
+import { HTMLMotionProps } from "framer-motion"
 
-interface TextFieldProps extends React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
+
+interface TextFieldProps extends HTMLMotionProps<"input"> {
 	placeholder?: string
 	persistentLabel?: boolean
 	centered?: boolean
 	value?: string | readonly string[] | number | undefined
+	initialValue?: string | readonly string[] | number | undefined
 	error?: boolean
 	helperText?: string
 	label?: string
+	hideHelperText?: boolean
 	labelProps?: LabelProps
-	beforeIcon?: () => React.ReactNode
+	beforeIcon?: React.ReactNode
 	helperTextProps?: HelperTextProps
 }
 
-const TextField = forwardRef<HTMLInputElement, TextFieldProps & Omit<TextFieldInputProps, "hasBeforeIcon">> ((
+const TextField = forwardRef<HTMLInputElement, TextFieldProps & Omit<TextFieldInputProps, "hasBeforeIcon">>((
 	{
 		className,
 		required,
 		placeholder = undefined,
 		persistentLabel = false,
+		hideHelperText = false,
 		value = undefined,
+		initialValue,
 		error = false,
 		helperText = undefined,
 		label = undefined,
 		beforeIcon = undefined,
 		labelProps = Label.defaultProps,
 		helperTextProps = HelperText.defaultProps,
-		bgColor = theme.colorScheme.accent,
-		bgColorDark = theme.colorScheme.overlaysDark,
-		bgColorDisabled = theme.colorSchemeByState.accent.lightDisabled,
-		bgColorDisabledDark = theme.colorSchemeByState.overlaysDark.darkDisabled,
 		...restProps
 	},
 	ref
 ) => {
-	const { height, onInput } = restProps
-	const [localValue, setLocalValue] = useState<string | readonly string[] | number> ("")
+	const { height, onInput }         = restProps
+	const [localValue, setLocalValue] = useState<string | readonly string[] | number>(initialValue ?? value ?? "")
 
-	const sectionRef = useRef<HTMLInputElement | null> (null)
-	const inputRef = useRef<HTMLInputElement | null> (null)
+	const inputRef = useRef<HTMLInputElement | null>(null)
 
-	const requiredStar = `${required ? "*" : ""}`
-	const localLabel = `${label ? `${label}${requiredStar}` : ""}`
-	const localPlaceholder = `${placeholder ? `${placeholder}${requiredStar}` : (!persistentLabel ? localLabel : "") || ""}`
+	const requiredStar     = required ? "*" : ""
+	const localLabel       = label ? `${label}${requiredStar}` : ""
+	const localPlaceholder = placeholder ? `${placeholder}${requiredStar}` : (!persistentLabel ? localLabel : "")
 
-	useEffect (() => {
-		if (sectionRef.current !== null) autoAnimate (sectionRef.current)
-	}, [sectionRef])
-
-	useEffect (() => {
-		if (typeof value === "string") setLocalValue (value)
+	useEffect(() => {
+		if(typeof value === "string") setLocalValue(value)
 	}, [value])
 
-	useEffect (() => {
-		if (inputRef.current) setLocalValue (() => inputRef.current!.value || value || "")
+	useEffect(() => {
+		if(inputRef.current) setLocalValue(() => inputRef.current!.value || value || "")
 	}, [inputRef.current?.value])
 	return (
-		<section className="flex flex-col" ref={sectionRef}>
-			<ConditionalLabel
-				condition={persistentLabel ? true : !!localValue}
-				label={localLabel}
-				{...labelProps}/>
+		<section className="flex flex-col">
+			{localLabel && (
+				<ConditionalLabel
+					condition={persistentLabel ? true : !!localValue}
+					{...labelProps}>
+					{localLabel}
+				</ConditionalLabel>
+			)}
 
 			{beforeIcon && (
 				<div className="relative">
-					<BeforeIconWrapper
-						className={classCss`
-							padding-top: calc(${height} / 2 - 8px);
-							${(localValue && label) || (label && persistentLabel) ? tw`mt-0` : typeof label === "undefined" ? tw`mt-0` : (labelProps?.hasBackground ? tw`mt-[24px]` : tw`mt-[20px]`)};
-						`}>
-						{beforeIcon ()}
+					<BeforeIconWrapper height={height}>
+						{beforeIcon}
 					</BeforeIconWrapper>
 				</div>
 			)}
 
 			<TextFieldInput {...restProps}
-			                ref={mergeRefs ([ref, inputRef])}
+			                ref={mergeRefs([ref, inputRef])}
 			                hasBeforeIcon={!!beforeIcon}
-			                className={`${classCss`
-				                ${(localValue && label) || (label && persistentLabel) ? tw`mt-0` : typeof label === "undefined" ? tw`mt-0` : (labelProps?.hasBackground ? tw`mt-[24px]` : tw`mt-[20px]`)}
-				                ${helperText ? tw`mb-0` : typeof helperText === "undefined" ? tw`mb-0` : (helperTextProps?.hasBackground ? tw`mb-[26px]` : tw`mb-[24px]`)}
-			                `} ${clsx (className ?? "")}`}
+			                className={`transition-all delay-[1500ms] ${clsx(className ?? "")}`}
 			                onInput={(event: FormEvent<HTMLInputElement> & {
 				                target: HTMLInputElement
 			                }) => {
-				                setLocalValue (event.target.value)
-				                if (onInput) onInput (event)
+				                setLocalValue(event.target.value)
+				                if(onInput) onInput(event)
 			                }}
 			                placeholder={localPlaceholder}
 			                value={localValue}/>
 
-			{!!helperText && (
-				<HelperText {...{ ...helperTextProps, error }}>
+			{!hideHelperText && (
+				<ConditionalHelperText condition={!!helperText} {...{ ...helperTextProps, error }}>
 					{helperText}
-				</HelperText>
+				</ConditionalHelperText>
 			)}
 		</section>
 	)

@@ -2,9 +2,7 @@
 import { type FormEvent, forwardRef, useEffect, useRef, useState } from "react"
 
 import { css as classCss } from "@emotion/css"
-import { css, withTheme } from "@emotion/react"
-import styled from "@emotion/styled"
-import autoAnimate from "@formkit/auto-animate"
+import { withTheme } from "@emotion/react"
 import clsx from "clsx"
 import tw from "twin.macro"
 import { mergeRefs } from "react-merge-refs"
@@ -16,6 +14,7 @@ import Label, { type LabelProps } from "./Label";
 import { shouldForwardProp } from "../../Utils/StyledUtils";
 import BeforeIconWrapper from "./BeforeIconWrapper";
 import { TextAreaInput, TextAreaInputProps } from "./TextAreaInput"
+import ConditionalHelperText from "./ConditionalHelperText"
 
 
 
@@ -26,6 +25,7 @@ interface TextAreaProps extends React.DetailedHTMLProps<React.TextareaHTMLAttrib
 	error?: boolean
 	helperText?: string
 	label?: string
+	hideHelperText?: boolean
 	labelProps?: LabelProps
 	beforeIcon?: () => React.ReactNode
 	helperTextProps?: HelperTextProps
@@ -37,6 +37,7 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps & TextAreaInputPr
 		placeholder = undefined,
 		centered = false,
 		persistentLabel = false,
+		hideHelperText = false,
 		value = undefined,
 		error = false,
 		dark = undefined,
@@ -46,10 +47,6 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps & TextAreaInputPr
 		label = undefined,
 		labelProps = Label.defaultProps,
 		helperTextProps = HelperText.defaultProps,
-		bgColor = theme.colorScheme.accent,
-		bgColorDark = theme.colorScheme.overlaysDark,
-		bgColorDisabled = theme.colorSchemeByState.accent.lightDisabled,
-		bgColorDisabledDark = theme.colorSchemeByState.overlaysDark.darkDisabled,
 		className,
 		onInput,
 		required,
@@ -59,7 +56,6 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps & TextAreaInputPr
 ) => {
 	const [localValue, setLocalValue] = useState<string | readonly string[] | number> ("")
 
-	const sectionRef = useRef<HTMLTextAreaElement | null> (null)
 	const textareaRef = useRef<HTMLTextAreaElement | null> (null)
 
 	const requiredStar = `${required ? "*" : ""}`
@@ -75,10 +71,6 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps & TextAreaInputPr
 	}
 
 	useEffect (() => {
-		if (sectionRef.current !== null) autoAnimate (sectionRef.current)
-	}, [sectionRef])
-
-	useEffect (() => {
 		handleAutoGrow ()
 	}, [localValue])
 
@@ -91,11 +83,14 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps & TextAreaInputPr
 	}, [textareaRef.current?.value])
 
 	return (
-		<section className="flex flex-col" ref={sectionRef}>
-			<ConditionalLabel
-				condition={persistentLabel ? true : !!localValue}
-				label={localLabel}
-				{...{ ...labelProps }}/>
+		<section className="flex flex-col">
+			{localLabel && (
+				<ConditionalLabel
+					condition={persistentLabel ? true : !!localValue}
+					{...labelProps}>
+					{localLabel}
+				</ConditionalLabel>
+			)}
 
 			{beforeIcon && (
 				<div className="relative">
@@ -113,10 +108,7 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps & TextAreaInputPr
 			               ref={mergeRefs ([textareaRef, ref])}
 			               hasBeforeIcon={!!beforeIcon}
 			               minHeight={minHeight}
-			               className={`${classCss`
-				                ${(localValue && label) || (label && persistentLabel) ? tw`mt-0` : typeof label === "undefined" ? tw`mt-0` : (labelProps?.hasBackground ? tw`mt-[24px]` : tw`mt-[20px]`)}
-				                ${helperText ? tw`mb-0` : typeof helperText === "undefined" ? tw`mb-0` : (helperTextProps?.hasBackground ? tw`mb-[26px]` : tw`mb-[24px]`)}
-			                `} ${clsx (className ?? "")}`}
+			               className={`${clsx (className ?? "")}`}
 			               onInput={(event: FormEvent<HTMLTextAreaElement> & { target: HTMLInputElement }) => {
 				               setLocalValue (event.target.value)
 				               if (onInput) onInput (event)
@@ -124,10 +116,10 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps & TextAreaInputPr
 			               placeholder={localPlaceholder}
 			               value={localValue}/>
 
-			{!!helperText && (
-				<HelperText {...{ ...helperTextProps, error }}>
+			{!hideHelperText && (
+				<ConditionalHelperText condition={!!helperText} {...{ ...helperTextProps, error }}>
 					{helperText}
-				</HelperText>
+				</ConditionalHelperText>
 			)}
 		</section>
 	)

@@ -27,13 +27,13 @@ const SideBar = (
 	{
 		width = defaultWidth,
 		shrinkPoint = defaultShrinkPoint,
-		bgColor = theme.colorScheme.white,
-		bgColorDark = theme.colorScheme.overlaysDark,
+		backgroundColor,
+		backgroundColorDark,
 		dark,
 		children,
 		className,
 		...restProps
-	}: SideBarProps & Omit<StyledSideBarProps, 'state'>) => {
+	}: SideBarProps & Omit<StyledSideBarProps, 'state' | 'theme'>) => {
 	const {sideBarState: state, setSideBarState: setState, setSideBarOpts, setOverlayState} = useMain()
 
 	const {windowWidth} = useDimensions()

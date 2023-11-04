@@ -1,12 +1,12 @@
-import useToasts from "~/hooks/useToasts"
-import {Button, Col, Row, TextArea, TextField, theme, Typography, useDimensions} from "@acme/ui"
-import {type SubmitHandler, Controller, useForm} from "react-hook-form";
+import {Button, Col, Row, TextField, Typography, useDimensions} from "@acme/ui"
+import { Controller, useForm} from "react-hook-form";
+import type {SubmitHandler} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod"
 import {z} from "zod"
 import {adminSettingsValidations} from "@acme/validations"
 import {useState} from "react";
-import useTranslation from "next-translate/useTranslation"
-import {api} from "~/utils/api";
+import { useClientTranslation } from "~/app/i18n/client"
+import i18next from "i18next"
 
 
 const emailDestinationValidation = z.object(adminSettingsValidations.emailDestination)
@@ -17,8 +17,7 @@ type EmailDestinationValidationSchema = z.infer<typeof emailDestinationValidatio
 const EmailDestinationForm = () => {
 	// const submitFormMutation = api.leads.create.useMutation()
 	// const toasts = useToasts()
-	const {windowWidth} = useDimensions()
-	const {t} = useTranslation()
+	const {t} = useClientTranslation(i18next.language, 'forms')
 
 	const [formHasSubmitted, setFormHasSubmitted] = useState(false)
 
@@ -57,11 +56,9 @@ const EmailDestinationForm = () => {
 							autoFocus
 							required
 							disabled={isSubmitting}
-							labelProps={{hasBackground: !!windowWidth && windowWidth < 1300}}
-							helperTextProps={{hasBackground: !!windowWidth && windowWidth < 1300}}
 							label={t('forms:admin.settings.emailDestination.labels.email')}
 							persistentLabel
-							bgColorDark={theme.colorScheme.overlaysDark2}
+							backgroundColorDark={'colorScheme.overlaysDark2'}
 							error={!!errors.email}
 							helperText={errors.email?.message ? t(errors.email?.message) : ""}/>
 					)}/>
@@ -75,11 +72,9 @@ const EmailDestinationForm = () => {
 							{...field}
 							required
 							disabled={isSubmitting}
-							labelProps={{hasBackground: !!windowWidth && windowWidth < 1300}}
-							helperTextProps={{hasBackground: !!windowWidth && windowWidth < 1300}}
 							label={t('forms:admin.settings.emailDestination.labels.password')}
 							persistentLabel
-							bgColorDark={theme.colorScheme.overlaysDark2}
+							backgroundColorDark={'colorScheme.overlaysDark2'}
 							error={!!errors.password}
 							helperText={errors.password?.message ? t(errors.password?.message) : ""}/>
 					)}/>
@@ -92,9 +87,9 @@ const EmailDestinationForm = () => {
 					width="200px"
 					height="40px"
 					disabled={formHasSubmitted ? isSubmitting || !isDirty || !isValid : false}
-					colorsForStates={theme.colorSchemeByState.primary}>
-					<Typography variant="bold" color={theme.colorScheme.light}>
-						{t('common:save')}
+					colorsForStates={'primary'}>
+					<Typography variant="bold" color={'colorScheme.light'}>
+						{t('forms:save')}
 					</Typography>
 				</Button>
 			</Row>

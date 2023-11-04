@@ -1,4 +1,3 @@
-"use client";
 import {HTMLMotionProps} from "framer-motion";
 import {useEffect, useRef} from "react";
 import StyledTableRow, { StyledTableRowProps } from "./StyledTableRow"
@@ -40,7 +39,7 @@ const TableRow = (props: HTMLMotionProps<"tr"> & StyledTableRowProps & TableRowP
 	return (
 		<StyledTableRow
 			initial={{
-				opacity: 0
+				opacity: 0,
 			}}
 			animate={{
 				opacity: 1

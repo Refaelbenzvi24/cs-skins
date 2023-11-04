@@ -1,28 +1,39 @@
 import { css, withTheme } from "@emotion/react"
 import { shouldForwardProp } from "../../Utils/StyledUtils"
-import theme from "../../Utils/theme"
-import { AppBarWrapperProps } from "./AppBar"
 import { motion } from "framer-motion"
 import tw from "twin.macro"
 import styled from "@emotion/styled"
+import { SingleColorOptions, ZIndexOptions } from "../Theme/types"
+import { getSingleColorFromPath, getZIndexFromPath } from "../../Utils/colors"
+import { StyledProps } from "../../types"
+
+export interface AppBarWrapperProps extends StyledProps {
+	dark?: boolean
+	height?: number
+	backgroundColor?: SingleColorOptions
+	backgroundColorDark?: SingleColorOptions
+	hasBackground?: boolean
+	zIndex?: ZIndexOptions
+}
 
 const AppBarWrapper = styled (motion.div, {
 	shouldForwardProp: (props) => shouldForwardProp<AppBarWrapperProps> (
-		["height", "darkBackgroundColor", "dark", "hasBackground", "backgroundColor"]
+		["height", "backgroundColorDark", "dark", "hasBackground", "backgroundColor"]
 	) (props as keyof AppBarWrapperProps)
-}) ((props: AppBarWrapperProps) => {
-	const { height, hasBackground, backgroundColor, darkBackgroundColor, dark } = props
-
+}) (({ height, hasBackground, dark, theme, zIndex = "appBar", backgroundColor = "colorScheme.accent", backgroundColorDark = "colorScheme.overlaysDark" }: AppBarWrapperProps) => {
+	const resolvedBackgroundColor = getSingleColorFromPath (backgroundColor, theme.config)
+	const resolvedDarkBackgroundColor = getSingleColorFromPath (backgroundColorDark, theme.config)
+	const resolvedZIndex = getZIndexFromPath (zIndex, theme.config)
 	return [
 		tw`flex flex-row fixed w-full items-center`,
 
 		hasBackground && css`
-          background-color: ${backgroundColor};
+          background-color: ${resolvedBackgroundColor};
           box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
 		`,
 
 		css`
-          z-index: ${theme.zIndex.appBar};
+          z-index: ${resolvedZIndex};
           transition: all 150ms linear;
           height: ${height}px;
 
@@ -32,7 +43,7 @@ const AppBarWrapper = styled (motion.div, {
 		`,
 
 		(props) => (hasBackground && (dark || props.theme.isDark)) && css`
-          background-color: ${darkBackgroundColor};
+          background-color: ${resolvedDarkBackgroundColor};
 		`
 	]
 })
