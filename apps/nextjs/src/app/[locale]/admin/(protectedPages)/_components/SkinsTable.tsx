@@ -4,13 +4,11 @@ import { api } from "~/utils/api"
 import type { FormEvent} from "react";
 import { useCallback, useMemo } from "react"
 import type { trpcRsc } from "~/utils/apiServer"
-import { useClientTranslation } from "~/app/i18n/client"
 import i18next from "i18next"
 import { useRouter, useSearchParams } from "next/navigation"
 import { debounce } from "~/utils/helpers"
 import { useGetSearchParams } from "~/hooks"
-import { useTranslation } from "~/app/i18n"
-import { getTranslation } from "~/app/[lng]/admin/(protectedPages)/_components/serverTranslate"
+import { useI18n } from "~/locales/client"
 
 
 interface SkinsTableProps {
@@ -39,7 +37,7 @@ const SkinsTable = ({ searchQuery = "", initialData }: SkinsTableProps) => {
 		}
 	})
 
-	const { t } = useClientTranslation(i18next.language, 'admin')
+	const t = useI18n()
 
 	const skins = useMemo(() => skinsList?.pages.flatMap(page => page.items).map(item => ({
 		...item

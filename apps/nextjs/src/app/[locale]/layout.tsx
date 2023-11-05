@@ -9,17 +9,19 @@ import { dir } from "i18next"
 import { TRPCReactProvider } from "./providers";
 import type { ThemeOptions } from "@acme/ui/src/nextjs/components/Theme/types"
 import UiProviders from "~/components/UiProviders"
-import { languages } from "../i18n/settings"
 import { Body } from "@acme/ui"
-import NextTopLoader from 'nextjs-toploader';
+import NextTopLoader from "nextjs-toploader";
+import TranslationProvider from "~/components/TranslationProvider"
 
 
-const workSans = Work_Sans({ weight: ["400", "500", "700"], subsets: ["latin"], variable: "--work-sans" })
-const heebo    = Heebo({ weight: ["400", "500", "700"], subsets: ["latin"], variable: "--heebo" })
+const workSans = Work_Sans ({ weight: ["400", "500", "700"], subsets: ["latin"], variable: "--work-sans" })
+const heebo = Heebo ({ weight: ["400", "500", "700"], subsets: ["latin"], variable: "--heebo" })
 
 interface GenerateMetadataProps {
 	children: ReactNode;
-	params: { lng: string };
+	params: {
+		locale: string
+	};
 }
 
 // export function generateStaticParams(){
@@ -35,11 +37,7 @@ interface GenerateMetadataProps {
 // 	}
 // }
 
-export function generateStaticParams(){
-	return languages.map((lng) => ({ lng }))
-}
-
-export function generateMetadata(_props: GenerateMetadataProps){
+export function generateMetadata(_props: GenerateMetadataProps) {
 	// const { params: { lang } } = props;
 	// const messages             = await getMessages(lang);
 
@@ -66,22 +64,22 @@ export function generateMetadata(_props: GenerateMetadataProps){
 	};
 }
 
-export default function Layout(props: GenerateMetadataProps){
-	const { params: { lng } } = props
-	const cookieStore         = cookies()
-	const theme               = cookieStore.get("theme")?.value as ThemeOptions
+export default function Layout(props: GenerateMetadataProps) {
+	const { params: { locale } } = props
+	const cookieStore = cookies ()
+	const theme = cookieStore.get ("theme")?.value as ThemeOptions
 
 
 	return (
 		<html
-			dir={dir(lng)}
-			lang={lng}
+			dir={dir (locale)}
+			lang={locale}
 			className={theme === "dark" ? "dark" : "light"}>
-		<Body className={["work-sans", workSans.variable, "heebo", heebo.variable].join(" ")}>
+		<Body className={["work-sans", workSans.variable, "heebo", heebo.variable].join (" ")}>
 			<NextTopLoader/>
-			<TRPCReactProvider headers={headers()}>
+			<TRPCReactProvider headers={headers ()}>
 				<SessionProvider>
-					<UiProviders theme={theme}>
+					<UiProviders locale={locale} theme={theme}>
 						<div id="portals-root"></div>
 						{props.children}
 					</UiProviders>

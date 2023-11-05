@@ -1,22 +1,17 @@
-import {withPathname} from "~/middleware/pathname"
-import {withLanguage} from "~/middleware/language"
-import { stackMiddlewares } from "~/middleware/stackHandler"
-import acceptLanguage from 'accept-language'
+import { createI18nMiddleware } from "next-international/middleware";
+import type { NextRequest } from "next/server";
 
-// TODO: move to settings
-const languages = ['en', 'he']
+const I18nMiddleware = createI18nMiddleware ({
+	locales:       ["en", "he"],
+	defaultLocale: "en"
+});
 
-acceptLanguage.languages(languages)
-
-export const middlewares = [
-	withPathname,
-	withLanguage,
-]
-
-export default stackMiddlewares(middlewares)
+export function middleware(request: NextRequest) {
+	return I18nMiddleware (request);
+}
 
 export const config = {
 	// matcher: '/:lng*'
-	matcher: ['/((?!api|_next/static|_next/image|assets|favicon.ico|sw.js).*)']
+	matcher: ["/((?!api|_next/static|_next/image|assets|favicon.ico|sw.js).*)"]
 }
 

@@ -9,8 +9,8 @@ import { signOut } from "next-auth/react";
 import IconCarbonLogout from "~icons/carbon/logout"
 import IconCarbonSettings from "~icons/carbon/settings"
 import Settings from "~/components/Admin/Settings";
-import { useClientTranslation } from "~/app/i18n/client"
 import { useRouter } from "next/navigation"
+import { useCurrentLocale, useI18n } from "~/locales/client"
 
 
 export interface AdminAppBarProps extends Partial<ComponentProps<typeof AppBar>> {
@@ -30,11 +30,12 @@ const AdminAppBar = (props: AdminAppBarProps) => {
 	const [isSettingsModalOpen, setIsSettingsModalOpen] = useState<boolean>(false)
 
 	const router = useRouter()
-	const { t, i18n } = useClientTranslation()
+	const t = useI18n()
+	const locale = useCurrentLocale()
 
 	const handleLogout = async () => {
 		await signOut({ redirect: false })
-		router.push(`/${i18n.language}/admin/login`)
+		router.push(`/${locale}/admin/login`)
 	}
 
 	const openSettings = () => {

@@ -1,5 +1,5 @@
 interface PageProps {
 	params: {
-		lng: string;
+		locale: string;
 	}
 }

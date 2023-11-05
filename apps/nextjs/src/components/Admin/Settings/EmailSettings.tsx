@@ -5,8 +5,7 @@ import IconCarbonLeft from "~icons/carbon/arrowLeft"
 import IconCarbonRight from "~icons/carbon/arrowRight"
 import EmailDestinationForm from "~/components/Admin/Settings/EmailSettings/EmailDestinationForm";
 import React from "react";
-import { useClientTranslation } from "~/app/i18n/client"
-import i18next from "i18next"
+import { useDir, useI18n } from "~/locales/client"
 
 
 interface EmailSettingsProps {
@@ -14,8 +13,8 @@ interface EmailSettingsProps {
 }
 
 const EmailSettings = ({ onBackButtonClick }: EmailSettingsProps) => {
-	const { t, i18n } = useClientTranslation(i18next.language, 'settings')
-	const dir         = i18n.language === "he" ? "rtl" : "ltr"
+	const t = useI18n()
+	const dir         = useDir()
 
 	return (
 		<Col className="h-full w-full">
