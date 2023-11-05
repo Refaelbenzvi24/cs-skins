@@ -1,24 +1,36 @@
-import Label, {type LabelProps} from "./Label"
+"use client";
+import Label, { type LabelProps } from "./Label"
+import { withTheme } from "@emotion/react"
+import { AnimatePresence, motion } from "framer-motion"
 
 
 interface ConditionalLabelProps extends LabelProps {
-	label?: string
+	children?: React.ReactNode
 	condition?: boolean
 }
 
-const defaultProps = {
-	label: undefined,
-	value: undefined,
-} as const
-
-const ConditionalLabel = ({label, condition, ...restProps}: ConditionalLabelProps) => {
-	if (condition && label) {
-		return <Label {...restProps}>{label}</Label>
-	}
-	
-	return <></>
+const ConditionalLabel = ({ children, condition, ...restProps }: ConditionalLabelProps) => {
+	return (
+		<Label {...restProps}>
+			<AnimatePresence initial={false}>
+				{!!(condition) && (
+					<motion.span
+						initial={{
+							opacity: 0
+						}}
+						animate={{
+							opacity: 1
+						}}
+						exit={{
+							opacity: 0
+						}}>
+						{children}
+					</motion.span>
+				)}
+			</AnimatePresence>
+		</Label>
+	)
 }
 
-ConditionalLabel.defaultProps = defaultProps
 
-export default ConditionalLabel
+export default withTheme (ConditionalLabel)

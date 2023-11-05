@@ -1,9 +1,12 @@
-import type { ReactElement } from 'react'
+import type { ReactElement, ReactNode } from "react"
 import type { Dispatch, SetStateAction } from "react"
 
 
 export interface MainProviderOptions {
-	children: ReactElement;
+	children: ReactNode;
+	translationFunction?: (key: string) => string;
+	dir?: 'ltr' | 'rtl';
+	language?: string;
 	defaults: {
 		isAnimationsActive: boolean
 	}
@@ -28,6 +31,9 @@ export interface MainContextType extends MainDataType {
 	setSideBarOpts: Dispatch<SetStateAction<SideBarOptions>>
 	setOverlayState: Dispatch<SetStateAction<boolean>>
 	setIsAnimationsActive: Dispatch<SetStateAction<boolean | undefined>>
+	t: (key: string) => string
+	language: string
+	dir: 'ltr' | 'rtl'
 }
 
 export interface AppBarOptions {

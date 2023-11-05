@@ -1,3 +1,4 @@
+"use client";
 import {useEffect, useState} from 'react'
 
 import UAParser from "ua-parser-js"
@@ -30,7 +31,7 @@ const getIsAnimationActive = (defaultValue: boolean) => {
 
 
 const MainProvider = (props: MainProviderOptions) => {
-	const {children, defaults} = props
+	const {children, defaults, language = "en", dir = "ltr", translationFunction = (key: string) => key} = props
 
 	const [appBarState, setAppBarState] = useState(defaultAppBarState)
 	const [appBarOptions, setAppBarOptions] = useState(defaultAppBarOptions)
@@ -92,6 +93,9 @@ const MainProvider = (props: MainProviderOptions) => {
 				setOverlayState,
 				isAnimationsActive,
 				setIsAnimationsActive,
+				language: language,
+				dir: dir,
+				t: translationFunction
 			}
 		}>
 			{children}

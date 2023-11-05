@@ -1,15 +1,29 @@
 leads: לידים
-search:
-  mustBeLongerThan2: חיפוש חייב להיות ארוך יותר מ- 2 תווים
+search: חיפוש
+mustBeLongerThan2: חיפוש חייב להיות ארוך יותר מ- 2 תווים
 name: שם
 email: דוא"ל
 phone: טלפון
-skins: סקינים
-addSkinUrl: הוספת כתובת לחיפוש
 dateCreated: תאריך יצירה
 message: הודעה
 messageStatus:
   no: אין
   yes: יש
-addSkin:
-  amount: כמות
+addSkin: הוסף סקין
+skins: סקינים
+add: הוספה
+url: כתובות
+skinsTable:
+  weapon: Weapon
+  skin: Skin
+  quality: Quality
+  steamPrice: Steam Price
+  steamListings: Steam Listings
+  steamMedianPrice: Steam Median Price
+  steamVolume: Steam Volume
+  bitSkinsPrice: Bit Skins Price
+  percentChange: Percent Change
+  createdAt: Created At
+metadata:
+  title: Admin
+  addSkin: Add Skin

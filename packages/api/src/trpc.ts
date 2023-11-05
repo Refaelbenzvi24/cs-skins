@@ -7,13 +7,13 @@
  * The pieces you will need to use are documented accordingly near the end
  */
 import { TRPCError, initTRPC } from "@trpc/server"
-import { type CreateNextContextOptions } from "@trpc/server/adapters/next"
 import superjson from "superjson"
 import { ZodError } from "zod"
-import { getServerSession, type Session } from "@acme/auth"
-import { prisma } from "@acme/db"
-import { type EmailProvider } from "./services/email/emailProvider"
-import { type BuildConnectionStringProps } from "@acme/message-broker"
+import { auth } from "@acme/auth";
+import type { Session } from "@acme/auth";
+import { db } from "@acme/db";
+import type { EmailProvider } from "./services/email/emailProvider";
+import type { BuildConnectionStringProps } from "@acme/message-broker"
 
 
 /**
@@ -25,11 +25,11 @@ import { type BuildConnectionStringProps } from "@acme/message-broker"
  * processing a request
  *
  */
-type CreateContextOptions = {
+interface CreateContextOptions {
 	session: Session | null
-	emailProvider: EmailProvider
+	emailProvider?: EmailProvider
 	messageBrokerConnectionParams: BuildConnectionStringProps
-};
+}
 
 /**
  * This helper generates the "internals" for a tRPC context. If you need to use
@@ -47,7 +47,7 @@ const createInnerTRPCContext = (opts: CreateContextOptions) => {
 		session,
 		emailProvider,
 		messageBrokerConnectionParams,
-		prisma
+		db
 	}
 };
 
@@ -56,18 +56,22 @@ const createInnerTRPCContext = (opts: CreateContextOptions) => {
  * process every request that goes through your tRPC endpoint
  * @link https://trpc.io/docs/context
  */
-export const createTRPCContext = async (opts: CreateNextContextOptions, emailProvider: EmailProvider, messageBrokerConnectionParams: BuildConnectionStringProps) => {
-	const { req, res } = opts
+export const createTRPCContext = async (opts: {
+	req?: Request;
+	auth?: Session;
+}, { emailProvider, messageBrokerConnectionParams }: { emailProvider?: EmailProvider, messageBrokerConnectionParams: BuildConnectionStringProps }) => {
+	const session = opts.auth ?? (await auth());
+	const source  = opts.req?.headers.get("x-trpc-source") ?? "unknown";
 
-	// Get the session from the server using the unstable_getServerSession wrapper function
-	const session = await getServerSession({ req, res })
+	console.log(">>> tRPC Request from", source, "by", session?.user);
 
 	return createInnerTRPCContext({
 		emailProvider,
 		messageBrokerConnectionParams,
 		session
-	})
-}
+	});
+};
+
 
 /**
  * 2. INITIALIZATION
@@ -75,7 +79,7 @@ export const createTRPCContext = async (opts: CreateNextContextOptions, emailPro
  * This is where the trpc api is initialized, connecting the context and
  * transformer
  */
-const t = initTRPC.context<typeof createTRPCContext>().create({
+export const t = initTRPC.context<typeof createTRPCContext> ().create ({
 	transformer: superjson,
 	errorFormatter({ shape, error }) {
 		return {
@@ -83,11 +87,11 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
 			data: {
 				...shape.data,
 				zodError:
-					error.cause instanceof ZodError ? error.cause.flatten() : null
-			}
-		}
-	}
-})
+					error.cause instanceof ZodError ? error.cause.flatten () : null,
+			},
+		};
+	},
+});
 
 /**
  * 3. ROUTER & PROCEDURE (THE IMPORTANT BIT)
@@ -100,8 +104,7 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
  * This is how you create new routers and subrouters in your tRPC API
  * @see https://trpc.io/docs/router
  */
-export const createTRPCRouter = t.router
-
+export const createTRPCRouter = t.router;
 /**
  * Public (unauthed) procedure
  *
@@ -109,7 +112,7 @@ export const createTRPCRouter = t.router
  * tRPC API. It does not guarantee that a user querying is authorized, but you
  * can still access user session data if they are logged in
  */
-export const publicProcedure = t.procedure
+export const publicProcedure = t.procedure;
 
 /**
  * Reusable middleware that enforces users are logged in before running the
@@ -117,15 +120,15 @@ export const publicProcedure = t.procedure
  */
 const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
 	if (!ctx.session?.user) {
-		throw new TRPCError({ code: "UNAUTHORIZED" })
+		throw new TRPCError({ code: "UNAUTHORIZED" });
 	}
 	return next({
 		ctx: {
 			// infers the `session` as non-nullable
-			session: { ...ctx.session, user: ctx.session.user }
-		}
-	})
-})
+			session: { ...ctx.session, user: ctx.session.user },
+		},
+	});
+});
 
 /**
  * Protected (authed) procedure

@@ -2,9 +2,9 @@
 	"name": "cs-skins",
 	"private": true,
 	"engines": {
-		"node": ">=18.0.0"
+		"node": ">=v18.18.0"
 	},
-	"packageManager": "pnpm@7.30.0",
+	"packageManager": "pnpm@8.7.5",
 	"scripts": {
 		"start": "pnpm with-env turbo start --parallel",
 		"build": "pnpm with-env turbo build",
@@ -13,33 +13,28 @@
 		"deploy:cronjobs": "fly deploy -c ./infra/cronjobs.toml",
 		"db:generate": "pnpm with-env turbo db:generate",
 		"db:format": "pnpm --filter db db:format",
-		"db:migrate-dev": "pnpm --filter db db:migrate-dev",
-		"db:migrate-deploy": "pnpm --filter db db:migrate-deploy",
-		"db:migrate-reset": "pnpm --filter db db:migrate-reset",
-		"db:push": "pnpm with-env turbo db:push db:generate",
+		"db:playground": "pnpm with-env turbo db:playground",
+		"db:studio": "pnpm -F db studio",
+		"db:seed": "pnpm with-env pnpm -F db seed",
+		"db:push": "pnpm with-env pnpm -F db push",
 		"dev": "pnpm with-env turbo dev --parallel",
-		"format": "prettier --write \"**/*.{js,cjs,mjs,ts,tsx,md,json}\" --ignore-path .gitignore",
-		"lint": "turbo lint && manypkg check",
-		"lint:fix": "turbo lint:fix && manypkg fix",
+		"format": "turbo format --continue -- --cache --cache-location='node_modules/.cache/.prettiercache'",
+		"format:fix": "turbo format --continue -- --write --cache --cache-location='node_modules/.cache/.prettiercache'",
+		"lint": "turbo lint --continue -- --cache --cache-location 'node_modules/.cache/.eslintcache' && manypkg check",
+		"lint:fix": "turbo lint --continue -- --fix --cache --cache-location 'node_modules/.cache/.eslintcache' && manypkg fix",
 		"test": "pnpm with-env turbo test",
-		"test:ci": "pnpm wuth-env turbo test:ci",
-		"test:watch": "pnpm wuth-env  turbo test:watch",
-		"type-check": "turbo type-check",
+		"test:ci": "pnpm with-env turbo test:ci",
+		"test:watch": "pnpm with-env  turbo test:watch",
+		"typecheck": "turbo typecheck",
 		"with-env": "dotenv -e .env --"
 	},
 	"dependencies": {
-		"@acme/eslint-config": "workspace:*",
-		"@ianvs/prettier-plugin-sort-imports": "^3.7.1",
-		"@manypkg/cli": "^0.20.0",
-		"@types/prettier": "^2.7.2",
-		"dotenv-cli": "^7.0.0",
-		"eslint": "^8.34.0",
-		"prettier": "^2.8.4",
-		"prettier-plugin-tailwindcss": "^0.2.3",
-		"turbo": "^1.8.2",
-		"typescript": "^5.0.0"
+		"@acme/prettier-config": "^0.1.0",
+		"@manypkg/cli": "^0.21.0",
+		"@turbo/gen": "^1.10.14",
+		"prettier": "^3.0.3",
+		"turbo": "^1.10.14",
+		"typescript": "^5.2.2"
 	},
-	"devDependencies": {
-		"@storybook/nextjs": "^7.4.5"
-	}
+	"prettier": "@acme/prettier-config"
 }

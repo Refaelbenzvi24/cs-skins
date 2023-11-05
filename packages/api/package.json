@@ -1,34 +1,47 @@
 {
-  "name": "@acme/api",
-  "version": "0.1.0",
-  "main": "./index.ts",
-  "types": "./index.ts",
-  "scripts": {
-    "clean": "rm -rf .turbo node_modules",
-    "lint": "eslint .",
-    "lint:fix": "pnpm lint --fix",
-    "type-check": "tsc --noEmit"
-  },
-  "dependencies": {
-    "@acme/auth": "*",
-    "@acme/db": "*",
-    "@acme/message-broker": "*",
-    "@acme/email-templates": "*",
-    "@acme/validations": "*",
-    "@trpc/client": "^10.38.5",
-    "@trpc/server": "^10.38.5",
-    "nodemailer": "^6.9.1",
-    "nodemailer-smtp-transport": "^2.7.4",
-    "superjson": "1.12.2",
-    "zod": "^3.20.6"
-  },
-  "devDependencies": {
-    "@types/nodemailer": "^6.4.7",
-    "@types/nodemailer-smtp-transport": "^2.7.5",
-    "@types/preview-email": "^3.0.0",
-    "eslint": "^8.34.0",
-    "eslint-config-acme": "*",
-    "preview-email": "^3.0.10",
-    "typescript": "^5.0.0"
-  }
+	"name": "@acme/api",
+	"version": "0.1.0",
+	"private": true,
+	"main": "./index.ts",
+	"types": "./index.ts",
+	"scripts": {
+		"clean": "rm -rf .turbo node_modules",
+		"lint": "eslint .",
+		"format": "prettier --check \"**/*.{mjs,ts,md,json}\"",
+		"typecheck": "tsc --noEmit"
+	},
+	"dependencies": {
+		"@acme/auth": "0.1.0",
+		"@acme/db": "0.1.0",
+		"@acme/email-templates": "*",
+		"@acme/message-broker": "*",
+		"@acme/validations": "*",
+		"@trpc/client": "^10.41.0",
+		"@trpc/server": "^10.41.0",
+		"lodash": "^4.17.21",
+		"moment": "^2.29.4",
+		"nodemailer": "^6.9.1",
+		"nodemailer-smtp-transport": "^2.7.4",
+		"superjson": "1.13.1",
+		"zod": "^3.22.2"
+	},
+	"devDependencies": {
+		"@acme/eslint-config": "^0.2.0",
+		"@acme/prettier-config": "^0.1.0",
+		"@acme/tsconfig": "^0.1.0",
+		"@types/nodemailer": "^6.4.7",
+		"@types/nodemailer-smtp-transport": "^2.7.5",
+		"@types/preview-email": "^3.0.0",
+		"eslint": "^8.50.0",
+		"prettier": "^3.0.3",
+		"preview-email": "^3.0.10",
+		"typescript": "^5.2.2"
+	},
+	"eslintConfig": {
+		"root": true,
+		"extends": [
+			"@acme/eslint-config/base"
+		]
+	},
+	"prettier": "@acme/prettier-config"
 }

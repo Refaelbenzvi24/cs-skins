@@ -1,17 +1,22 @@
-import {css} from "@emotion/react"
+"use client";
+import { css, withTheme } from "@emotion/react"
 import styled from "@emotion/styled"
-import {motion} from "framer-motion"
+import { motion } from "framer-motion"
 import tw from "twin.macro"
 
 import theme from "../../Utils/theme"
-import {shouldForwardProp} from "../../Utils/StyledUtils";
+import { shouldForwardProp } from "../../Utils/StyledUtils";
+import { getDisabledColorFromPath, getSingleColorFromPath } from "../../Utils/colors"
+import { StyledProps } from "../../types"
+import { SingleColorOptions } from "../Theme/types"
+
 
 export interface LabelProps {
 	hasBackground?: boolean
-	color?: string
-	colorDark?: string
-	bgColor?: string
-	bgColorDark?: string
+	color?: SingleColorOptions
+	colorDark?: SingleColorOptions
+	backgroundColor?: SingleColorOptions
+	backgroundColorDark?: SingleColorOptions
 	dark?: boolean,
 	dir?: "ltr" | "rtl"
 }
@@ -19,41 +24,49 @@ export interface LabelProps {
 
 const Label = styled(motion.span, {
 	shouldForwardProp: (props) => shouldForwardProp<LabelProps>(
-		['dark', 'dir', 'color', 'colorDark', 'hasBackground', 'bgColor', 'bgColorDark']
+		["dark", "dir", "color", "colorDark", "hasBackground", "backgroundColor", "backgroundColorDark"]
 	)(props as keyof LabelProps)
-})(({dark, dir, color, colorDark, hasBackground, bgColor, bgColorDark}: LabelProps) => [
-	css`
-    color: ${color};
-	`,
-	
-	(props) => (dark || props.theme.isDark) && css`
-    color: ${colorDark};
-	`,
-	
-	dir === "rtl" && tw`text-right`,
-	
-	dir === "ltr" && tw`text-left`,
-	
-	tw`whitespace-nowrap text-sm !w-fit px-[2px]`,
-	
-	hasBackground && css`
-    ${tw`flex py-0.5 px-2 ml-2`};
+})(({
+	hasBackground = false,
+	color = "colorScheme.body2",
+	colorDark = "colorScheme.subtitle2",
+	backgroundColor = "colorScheme.accent",
+	backgroundColorDark = "colorScheme.overlaysDark",
+	dark,
+	dir,
+	...restProps
+}: LabelProps) => {
+	const {theme} = restProps as StyledProps
+	const resolvedBackgroundColor     = `${getSingleColorFromPath(backgroundColor, theme.config)}e3`
+	const resolvedDarkBackgroundColor = `${getSingleColorFromPath(backgroundColorDark, theme.config)}e3`
+	const resolvedColor               = getSingleColorFromPath(color, theme.config)
+	const resolvedColorDark           = getSingleColorFromPath(colorDark, theme.config)
+	return [
+		css`
+			color: ${resolvedColor};
+		`,
 
-    box-shadow: ${theme.shadows["2"]};
-    background-color: ${bgColor};
-	`,
-	
-	(props) => (hasBackground && (dark || props.theme.isDark)) && css`
-    background-color: ${bgColorDark};
-	`,
-])
+		dir === "rtl" && tw`text-right`,
 
-Label.defaultProps = {
-	hasBackground: false,
-	color: theme.colorScheme.body2,
-	colorDark: theme.colorScheme.subtitle2,
-	bgColor: `${theme.colorScheme.accent}e3`,
-	bgColorDark: `${theme.colorScheme.overlaysDark}e3`
-}
+		dir === "ltr" && tw`text-left`,
 
-export default Label
+		tw`whitespace-nowrap text-sm !w-fit px-[2px] min-h-[20px]`,
+
+		hasBackground && css`
+			${tw`flex py-0.5 px-2 ml-2`};
+
+			box-shadow: ${theme.config.shadows["2"]};
+			background-color: ${resolvedBackgroundColor};
+		`,
+
+		(props) => (dark || props.theme.isDark) && css`
+			color: ${resolvedColorDark};
+		`,
+
+		(props) => (hasBackground && (dark || props.theme.isDark)) && css`
+			background-color: ${resolvedDarkBackgroundColor};
+		`,
+	]
+})
+
+export default withTheme(Label)

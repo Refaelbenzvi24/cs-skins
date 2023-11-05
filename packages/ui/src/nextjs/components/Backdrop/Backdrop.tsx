@@ -1,44 +1,16 @@
-import { css } from "@emotion/react"
-import styled from "@emotion/styled"
+"use client";
 import clsx from "clsx"
-import { AnimatePresence, motion, type HTMLMotionProps } from "framer-motion"
-import tw from "twin.macro"
+import { AnimatePresence, type HTMLMotionProps } from "framer-motion"
 
-import theme from "../../Utils/theme"
-import { shouldForwardProp } from "../../Utils/StyledUtils"
-
-
-export interface StyledBackdropProps {
-	dark?: boolean,
-	noBackground?: boolean
-}
-
-const StyledBackdrop = styled(motion.div, {
-	shouldForwardProp: (props) => shouldForwardProp<StyledBackdropProps>(
-		['dark', 'noBackground']
-	)(props as keyof StyledBackdropProps)
-})(({ dark, noBackground }: StyledBackdropProps) => [
-	tw`fixed h-full w-full opacity-0 !cursor-default`,
-
-	!noBackground && css`
-		background-color: ${theme.colors.dark_200};
-	`,
-
-	css`
-		z-index: ${theme.zIndex.backdrop};
-	`,
-
-	(props) => ((dark || props.theme.isDark) && !noBackground) && css`
-		background-color: ${theme.colors.dark_800};
-	`,
-])
+import StyledBackdrop, { StyledBackdropProps } from "./StyledBackdrop"
+import { withTheme } from "@emotion/react"
 
 export interface BackdropProps extends StyledBackdropProps {
 	active: boolean
 	animationTime?: number
 }
 
-const Backdrop = ({ active, className, animationTime, ...restProps }: BackdropProps & HTMLMotionProps<"div">) => {
+const Backdrop = ({ active, className, animationTime = 0.4, ...restProps }: BackdropProps & HTMLMotionProps<"div">) => {
 	return (
 		<AnimatePresence>
 			{active ? (
@@ -63,9 +35,4 @@ const Backdrop = ({ active, className, animationTime, ...restProps }: BackdropPr
 	)
 }
 
-Backdrop.defaultProps = {
-	dark:          undefined,
-	animationTime: 0.4,
-}
-
-export default Backdrop
+export default withTheme(Backdrop)

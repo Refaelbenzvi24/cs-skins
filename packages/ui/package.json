@@ -1,54 +1,64 @@
 {
-  "name": "@acme/ui",
-  "version": "1.0.0",
-  "description": "",
-  "main": "src/nextjs/index.tsx",
-  "types": "src/nextjs/index.tsx",
-  "files": [
-    "src/nextjs/index.tsx",
-    "src/nextjs/globals.css"
-  ],
-  "scripts": {
-    "clean": "rm -rf .turbo node_modules",
-    "lint": "eslint .",
-    "lint:fix": "pnpm lint --fix",
-    "type-check": "tsc --noEmit"
-  },
-  "keywords": [],
-  "author": "",
-  "dependencies": {
-    "@emotion/css": "^11.10.6",
-    "@emotion/react": "^11.10.6",
-    "@emotion/server": "11.10.0",
-    "@emotion/styled": "^11.10.6",
-    "@formkit/auto-animate": "1.0.0-beta.6",
-    "clsx": "^1.2.1",
-    "cookies-next": "^2.1.1",
-    "framer-motion": "10.0.0",
-    "immer": "^9.0.19",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "react-merge-refs": "^2.0.1",
-    "react-select": "^5.7.0",
-    "twin.macro": "^3.4.0",
-    "ua-parser-js": "^1.0.33",
-    "use-long-press": "^2.0.3",
-    "uuid": "^9.0.0"
-  },
-  "devDependencies": {
-    "@acme/localstorage": "*",
-    "@acme/tailwind-config": "*",
-    "@iconify/json": "^2.2.54",
-    "@svgr/core": "^7.0.0",
-    "@types/node": "^18.0.0",
-    "@types/react": "^18.0.27",
-    "@types/react-dom": "^18.0.10",
-    "@types/ua-parser-js": "^0.7.36",
-    "@types/uuid": "^9.0.1",
-    "eslint": "^8.34.0",
-    "eslint-config-acme": "*",
-    "tailwindcss": "^3.2.7",
-    "typescript": "^5.0.0",
-    "unplugin-icons": "^0.16.1"
-  }
+	"name": "@acme/ui",
+	"version": "0.1.0",
+	"description": "",
+	"main": "src/nextjs/index.tsx",
+	"types": "src/nextjs/index.tsx",
+	"babelMacros": {
+		"twin": {
+			"preset": "emotion",
+			"config": "tailwind.config.ts"
+		}
+	},
+	"files": [
+		"src/nextjs/index.tsx",
+		"src/nextjs/globals.css"
+	],
+	"scripts": {
+		"clean": "rm -rf .turbo node_modules",
+		"lint": "eslint .",
+		"lint:fix": "pnpm lint --fix",
+		"type-check": "tsc --noEmit"
+	},
+	"keywords": [],
+	"author": "",
+	"dependencies": {
+		"@emotion/cache": "^11.11.0",
+		"@emotion/css": "^11.11.2",
+		"@emotion/react": "^11.11.1",
+		"@emotion/server": "11.11.0",
+		"@emotion/styled": "^11.11.0",
+		"@formkit/auto-animate": "0.8.0",
+		"clsx": "^2.0.0",
+		"cookies-next": "^2.1.1",
+		"framer-motion": "10.16.4",
+		"immer": "^9.0.19",
+		"react": "18.2.0",
+		"react-dom": "18.2.0",
+		"react-merge-refs": "^2.0.1",
+		"react-select": "^5.7.7",
+		"ua-parser-js": "^1.0.33",
+		"use-long-press": "^2.0.3",
+		"uuid": "^9.0.0"
+	},
+	"devDependencies": {
+		"@acme/eslint-config": "^0.2.0",
+		"@acme/localstorage": "*",
+		"@acme/prettier-config": "^0.1.0",
+		"@acme/tailwind-config": "^0.1.0",
+		"@acme/tsconfig": "0.1.0",
+		"@iconify/json": "^2.2.54",
+		"@svgr/core": "^7.0.0",
+		"@types/node": "^18.0.0",
+		"@types/react": "^18.2.22",
+		"@types/react-dom": "^18.2.7",
+		"@types/ua-parser-js": "^0.7.36",
+		"@types/uuid": "^9.0.1",
+		"eslint": "^8.50.0",
+		"prettier": "^3.0.3",
+		"tailwindcss": "3.3.3",
+		"twin.macro": "^3.4.0",
+		"typescript": "^5.2.2",
+		"unplugin-icons": "^0.16.1"
+	}
 }

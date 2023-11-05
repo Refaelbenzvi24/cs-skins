@@ -24,10 +24,10 @@ const SectionTemplate: Story = () => {
 						key={color}
 						width={'60%'}
 						height={100}
-						bgColor={Object.values(theme.colorScheme)[index]}
-						bgColorDark={Object.values(theme.colorScheme)[index]}>
+						backgroundColor={Object.values(theme.colorScheme)[index]}
+						backgroundColorDark={Object.values(theme.colorScheme)[index]}>
 						<Typography
-							darkColor={'black'}
+							colorDark={'black'}
 							variant={'h3'}>
 							{color}
 						</Typography>
