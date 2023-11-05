@@ -11,7 +11,7 @@
 		"clean": "git clean -xdf node_odules",
 		"clean:workspaces": "turbo clean",
 		"deploy:cronjobs": "fly deploy -c ./infra/cronjobs.toml",
-		"db:generate": "pnpm with-env turbo db:generate",
+		"db:generate": "pnpm  -F db generate",
 		"db:format": "pnpm --filter db db:format",
 		"db:playground": "pnpm with-env turbo db:playground",
 		"db:studio": "pnpm -F db studio",
