@@ -4,7 +4,7 @@ import type { ComponentProps } from "react";
 import { useEffect } from "react";
 import clsx from "clsx";
 import LanguageSelector from "~/components/LanguageSelector";
-import { useClientTranslation } from "~/app/i18n/client"
+import { useTranslation } from "~/app/i18n/client"
 
 
 export interface NavigationItemType {
@@ -22,7 +22,7 @@ interface MainLayoutAppBarProps {
 const MainLayoutAppBar = (props: MainLayoutAppBarProps & Partial<ComponentProps<typeof AppBar>>) => {
 	const { setCurrentNavigation, navigationOptions, currentNavigation, className, ...restProps } = props
 
-	const { t } = useClientTranslation()
+	const { t } = useTranslation()
 
 	const navigationOptionsString = JSON.stringify(navigationOptions)
 

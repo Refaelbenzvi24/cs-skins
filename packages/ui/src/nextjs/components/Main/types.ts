@@ -4,9 +4,9 @@ import type { Dispatch, SetStateAction } from "react"
 
 export interface MainProviderOptions {
 	children: ReactNode;
-	translationFunction: (key: string) => string;
-	dir: 'ltr' | 'rtl';
-	language: string;
+	translationFunction?: (key: string) => string;
+	dir?: 'ltr' | 'rtl';
+	language?: string;
 	defaults: {
 		isAnimationsActive: boolean
 	}

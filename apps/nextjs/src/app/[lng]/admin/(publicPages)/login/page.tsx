@@ -8,18 +8,18 @@ import Head from "next/head"
 import { Button, Col, Divider, Row, TextField, theme, Typography } from "@acme/ui"
 import { z } from "zod"
 import { authValidations } from "@acme/validations"
-import { useParams, useRouter } from "next/navigation"
-import { useClientTranslation } from "~/app/i18n/client"
+import { useRouter } from "next/navigation"
+import { useTranslation } from "~/app/i18n/client"
 import i18next from "i18next"
 
 const loginValidation = z.object (authValidations.loginObject)
 
 type LoginValidationSchema = z.infer<typeof loginValidation>
-
+// TODO: make server component and move form into separate component
 const Page = () => {
 	const router = useRouter()
 	const { status } = useSession ()
-	const { t, i18n } = useClientTranslation(i18next.language, 'forms')
+	const { t, i18n } = useTranslation(i18next.language, 'forms')
 	const [formHasSubmitted, setFormHasSubmitted] = useState (false)
 
 	const {
@@ -33,7 +33,7 @@ const Page = () => {
 	})
 
 	const onSubmit: SubmitHandler<LoginValidationSchema> = async (data) => {
-		const result = await signIn ("credentials", {
+		await signIn ("credentials", {
 			redirect: false,
 			username: data.email,
 			...data
@@ -43,7 +43,7 @@ const Page = () => {
 
 	useEffect (() => {
 		if (status === "authenticated") router.push (`/${i18n.language}/admin`)
-	}, [router, status])
+	}, [i18n.language, router, status])
 
 	return (
 		<>

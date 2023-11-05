@@ -5,7 +5,7 @@ import {zodResolver} from "@hookform/resolvers/zod"
 import {z} from "zod"
 import {adminSettingsValidations} from "@acme/validations"
 import {useState} from "react";
-import { useClientTranslation } from "~/app/i18n/client"
+import { useTranslation } from "~/app/i18n/client"
 import i18next from "i18next"
 
 
@@ -17,7 +17,7 @@ type EmailDestinationValidationSchema = z.infer<typeof emailDestinationValidatio
 const EmailDestinationForm = () => {
 	// const submitFormMutation = api.leads.create.useMutation()
 	// const toasts = useToasts()
-	const {t} = useClientTranslation(i18next.language, 'forms')
+	const {t} = useTranslation(i18next.language, 'forms')
 
 	const [formHasSubmitted, setFormHasSubmitted] = useState(false)
 

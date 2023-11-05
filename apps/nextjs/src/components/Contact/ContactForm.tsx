@@ -1,4 +1,4 @@
-import useToasts from "../../hooks/useToasts"
+import { useToasts } from "~/hooks"
 import {Button, Col, Row, TextArea, TextField, theme, Typography, useDimensions} from "@acme/ui"
 import {type SubmitHandler, Controller, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod"

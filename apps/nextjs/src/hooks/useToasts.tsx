@@ -1,13 +1,13 @@
 import { toast } from "react-toastify"
 
 import { Button, Row, theme, Typography, useMain, useDimensions, useToasts as libUseToasts } from "@acme/ui"
-import { useClientTranslation } from "~/app/i18n/client"
+import { useTranslation } from "~/app/i18n/client"
 
 
-const useToasts = () => {
+export const useToasts = () => {
 	const { isTouchable }  = useMain()
 	const { windowWidth }  = useDimensions()
-	const { t, i18n }      = useClientTranslation()
+	const { t, i18n }      = useTranslation()
 	const { generalError } = libUseToasts()
 
 	const dir = i18n.language === 'he' ? 'rtl' : 'ltr'
@@ -122,5 +122,3 @@ const useToasts = () => {
 		generalError
 	}
 }
-
-export default useToasts

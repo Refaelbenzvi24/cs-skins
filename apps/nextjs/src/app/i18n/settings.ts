@@ -3,7 +3,7 @@ export const languages = [fallbackLng, 'he']
 export const defaultNS = 'common'
 export const cookieName = 'i18next'
 
-export function getOptions (lng = fallbackLng, ns = defaultNS) {
+export function getOptions (lng = fallbackLng, ns: string | string[] = defaultNS) {
 	return {
 		// debug: true,
 		supportedLngs: languages,

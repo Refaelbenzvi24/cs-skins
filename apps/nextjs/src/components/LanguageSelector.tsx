@@ -3,13 +3,13 @@ import { Button } from "@acme/ui";
 import type { ComponentProps } from "react";
 import clsx from "clsx";
 import { usePathname, useRouter } from "next/navigation"
-import { useClientTranslation } from "~/app/i18n/client"
+import { useTranslation } from "~/app/i18n/client"
 
 
 const LanguageSelector = (props: ComponentProps<typeof Button>) => {
 	const { className, ...restProps } = props
 
-	const {i18n} = useClientTranslation()
+	const {i18n} = useTranslation()
 	const router = useRouter()
 	const pathname = usePathname()
 

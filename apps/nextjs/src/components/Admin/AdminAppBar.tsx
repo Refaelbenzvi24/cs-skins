@@ -9,7 +9,7 @@ import { signOut } from "next-auth/react";
 import IconCarbonLogout from "~icons/carbon/logout"
 import IconCarbonSettings from "~icons/carbon/settings"
 import Settings from "~/components/Admin/Settings";
-import { useClientTranslation } from "~/app/i18n/client"
+import { useTranslation } from "~/app/i18n/client"
 import { useRouter } from "next/navigation"
 
 
@@ -30,7 +30,7 @@ const AdminAppBar = (props: AdminAppBarProps) => {
 	const [isSettingsModalOpen, setIsSettingsModalOpen] = useState<boolean>(false)
 
 	const router = useRouter()
-	const { t, i18n } = useClientTranslation()
+	const { t, i18n } = useTranslation()
 
 	const handleLogout = async () => {
 		await signOut({ redirect: false })

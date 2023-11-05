@@ -3,11 +3,11 @@ import ToastifyContainer from "~/components/ToastifyContainer"
 import { MainProvider, ThemeProvider } from "@acme/ui"
 import type { ReactNode } from "react"
 import type { ThemeOptions } from "@acme/ui/src/nextjs/components/Theme/types"
-import { useClientTranslation } from "~/app/i18n/client"
+import { useTranslation } from "~/app/i18n/client"
 import { dir } from "i18next"
 
 const UiProviders = (props: { children: ReactNode, theme: ThemeOptions }) => {
-	const {t, i18n} = useClientTranslation()
+	const {t, i18n} = useTranslation()
 
 	return (
 		<ThemeProvider

@@ -12,3 +12,18 @@ messageStatus:
 addSkin: הוסף סקין
 skins: סקינים
 add: הוספה
+url: כתובות
+skinsTable:
+  weapon: Weapon
+  skin: Skin
+  quality: Quality
+  steamPrice: Steam Price
+  steamListings: Steam Listings
+  steamMedianPrice: Steam Median Price
+  steamVolume: Steam Volume
+  bitSkinsPrice: Bit Skins Price
+  percentChange: Percent Change
+  createdAt: Created At
+metadata:
+  title: Admin
+  addSkin: Add Skin

@@ -31,7 +31,7 @@ const getIsAnimationActive = (defaultValue: boolean) => {
 
 
 const MainProvider = (props: MainProviderOptions) => {
-	const {children, defaults, language, dir, translationFunction} = props
+	const {children, defaults, language = "en", dir = "ltr", translationFunction = (key: string) => key} = props
 
 	const [appBarState, setAppBarState] = useState(defaultAppBarState)
 	const [appBarOptions, setAppBarOptions] = useState(defaultAppBarOptions)
@@ -93,8 +93,8 @@ const MainProvider = (props: MainProviderOptions) => {
 				setOverlayState,
 				isAnimationsActive,
 				setIsAnimationsActive,
-				language,
-				dir,
+				language: language,
+				dir: dir,
 				t: translationFunction
 			}
 		}>

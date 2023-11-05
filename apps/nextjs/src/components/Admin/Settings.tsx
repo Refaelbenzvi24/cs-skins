@@ -4,7 +4,7 @@ import { Button, Card, Col, List, ListItem, Modal, Row, Tooltip, Typography } fr
 import IconCarbonLeft from "~icons/carbon/arrowLeft"
 import IconCarbonRight from "~icons/carbon/arrowRight"
 import EmailSettings from "~/components/Admin/Settings/EmailSettings";
-import { useClientTranslation } from "~/app/i18n/client"
+import { useTranslation } from "~/app/i18n/client"
 import i18next from "i18next"
 
 interface SettingsProps {
@@ -14,7 +14,7 @@ interface SettingsProps {
 const Settings = ({onBackButtonClick}: SettingsProps) => {
 	const [isEmailSettingsModalOpen, setIsEmailSettingsModalOpen] = useState<boolean>(false)
 
-	const {t, i18n} = useClientTranslation(i18next.language, 'settings')
+	const {t, i18n} = useTranslation(i18next.language, 'settings')
 	const dir = i18n.language === 'he' ? 'rtl' : 'ltr'
 
 	const openEmailSettings = () => setIsEmailSettingsModalOpen(true)

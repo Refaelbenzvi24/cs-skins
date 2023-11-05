@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation"
 
-const Page = ({params: {lng}}: PageProps) => {
+const Page = ({params: {lng}}: TranslatedRouteProps) => {
 	redirect (`/${lng}/admin`)
 }
 

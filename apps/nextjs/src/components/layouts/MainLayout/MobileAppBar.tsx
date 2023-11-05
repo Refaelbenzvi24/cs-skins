@@ -15,7 +15,6 @@ import {
 } from "@acme/ui"
 import {useState, useEffect, ComponentProps} from "react"
 import tw from "twin.macro"
-import useTranslation from "next-translate/useTranslation"
 
 import type {NavigationItemType} from "./AppBar"
 import Image from "next/image";
