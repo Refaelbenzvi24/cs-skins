@@ -70,6 +70,9 @@ importers:
         specifier: 1.8.0-canary.2
         version: 1.8.0-canary.2
     devDependencies:
+      '@acme/tsconfig':
+        specifier: 0.1.0
+        version: link:../../tooling/typescript
       typescript:
         specifier: ^5.2.2
         version: 5.2.2
