@@ -1,4 +1,5 @@
-import {css} from "@emotion/react";
+"use client";
+import { css, withTheme } from "@emotion/react";
 import styled from "@emotion/styled";
 import Link from "next/link"
 
@@ -11,4 +12,4 @@ const ColoredLink = styled(Link)(() => [
 	`,
 ])
 
-export default ColoredLink
+export default withTheme(ColoredLink)

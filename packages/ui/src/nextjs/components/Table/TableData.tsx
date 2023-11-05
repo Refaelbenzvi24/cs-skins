@@ -1,12 +1,15 @@
+"use client";
 import styled from "@emotion/styled";
-import {css} from "@emotion/react";
-import theme from "../../Utils/theme";
+import { css, withTheme } from "@emotion/react";
+import { SingleColorOptions } from "../Theme/types"
+import { getSingleColorFromPath } from "../../Utils/colors"
+import { StyledProps } from "../../types"
 
-interface TableDataProps {
+interface TableDataProps extends StyledProps {
 	height?: string
 	width?: string
-	borderColor?: string
-	borderColorDark?: string
+	borderColor?: SingleColorOptions
+	borderColorDark?: SingleColorOptions
 	dark?: boolean
 	removeBorder?: boolean
 }
@@ -15,26 +18,31 @@ const TableData = styled.td((
 	{
 		height = 'auto',
 		width = ' 80px',
-		borderColor = theme.colorScheme.subtitle2,
-		borderColorDark = theme.colorScheme.body1,
+		borderColor = 'colorScheme.subtitle2',
+		borderColorDark = 'colorScheme.body1',
 		removeBorder,
-		dark
-	}: TableDataProps) => [
-	height && css`
-    height: ${height};
-	`,
-	
-	width && css`
-    width: ${width};
-	`,
-	
-	!removeBorder && css`
-    border-bottom: 1px solid ${borderColor};
-	`,
-	
-	(props) => ((dark || props.theme.isDark) && !removeBorder) && css`
-    border-bottom: 1px solid ${borderColorDark};
-	`
-])
+		dark,
+		theme
+	}: TableDataProps) => {
+	const resolvedBorderColor = getSingleColorFromPath(borderColor, theme.config)
+	const resolvedBorderColorDark = getSingleColorFromPath(borderColorDark, theme.config)
+	return [
+		height && css`
+			height: ${height};
+		`,
 
-export default TableData
+		width && css`
+			width: ${width};
+		`,
+
+		!removeBorder && css`
+			border-bottom: 1px solid ${resolvedBorderColor};
+		`,
+
+		(props) => ((dark || props.theme.isDark) && !removeBorder) && css`
+			border-bottom: 1px solid ${resolvedBorderColorDark};
+		`
+	]
+})
+
+export default withTheme(TableData)

@@ -1,15 +1,16 @@
-import {toast} from "react-toastify"
-import useTranslation from "next-translate/useTranslation"
+import { toast } from "react-toastify"
 
-import {Button, Row, theme, Typography, useMain, useDimensions, useToasts as libUseToasts} from "@acme/ui"
+import { Button, Row, theme, Typography, useMain, useDimensions, useToasts as libUseToasts } from "@acme/ui"
+import { useTranslation } from "~/app/i18n/client"
 
-const useToasts = () => {
-	const {isTouchable} = useMain()
-	const {windowWidth} = useDimensions()
-	const {generalError} = libUseToasts()
-	const {t, lang} = useTranslation()
 
-	const dir = lang === 'he' ? 'rtl' : 'ltr'
+export const useToasts = () => {
+	const { isTouchable }  = useMain()
+	const { windowWidth }  = useDimensions()
+	const { t, i18n }      = useTranslation()
+	const { generalError } = libUseToasts()
+
+	const dir = i18n.language === 'he' ? 'rtl' : 'ltr'
 
 	const sendEmail = async (callback: Promise<() => void>) => {
 		return await toast.promise(callback, {
@@ -41,7 +42,7 @@ const useToasts = () => {
 					</Row>
 				),
 			},
-			error: {
+			error:   {
 				render: () => (
 					<Row className="justify-between items-center">
 						<Typography className="max-[530px]:whitespace-nowrap" variant="body">
@@ -60,13 +61,13 @@ const useToasts = () => {
 				),
 			},
 		}, {
-			toastId: 'email-toast',
-			position: "bottom-left",
-			rtl: dir === 'rtl',
-			draggable: isTouchable,
+			toastId:      'email-toast',
+			position:     "bottom-left",
+			rtl:          dir === 'rtl',
+			draggable:    isTouchable,
 			pauseOnHover: true,
 			closeOnClick: false,
-			style: {
+			style:        {
 				width: (windowWidth && (windowWidth > 530)) ? 'fit-content' : '100%',
 			},
 		})
@@ -121,5 +122,3 @@ const useToasts = () => {
 		generalError
 	}
 }
-
-export default useToasts

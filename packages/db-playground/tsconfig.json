@@ -1,0 +1,22 @@
+{
+	"extends":         "@acme/tsconfig/base.json",
+	"compilerOptions": {
+		"tsBuildInfoFile":    "node_modules/.cache/tsbuildinfo.json",
+		"outDir":             "./out",
+		"rootDir":            "./",
+		"sourceMap":          true,
+		"moduleResolution":   "node",
+		"target":             "es5",
+		"module":             "commonjs",
+		"esModuleInterop":    true,
+		"skipLibCheck":       true,
+		"downlevelIteration": true,
+		"resolveJsonModule":  true
+	},
+	"include":         [
+		"*.ts"
+	],
+	"exclude":         [
+		"node_modules"
+	]
+}

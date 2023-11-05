@@ -1,44 +1,66 @@
+import bundleAnalyzer from "@next/bundle-analyzer";
+import withTwin from './withTwin.mjs'
 import Icons from 'unplugin-icons/webpack'
-import withTwin from "./withTwin.mjs";
-import {default as withNextTranslate} from "next-translate-plugin"
+import AutoImport from "unplugin-auto-import/webpack"
+import IconsResolver from 'unplugin-icons/resolver'
+import "./src/env.mjs";
+import "@acme/auth/env.mjs";
 
 /**
- * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.
- * This is especially useful for Docker builds and Linting.
+ * @type {import('next').NextConfig}
  */
-!process.env.SKIP_ENV_VALIDATION && (await import("./src/env.mjs"));
+const config = withTwin({
+	reactStrictMode: true,
+	swcMinify: true,
+	experimental: {
+		serverActions: true
+		// optimizeCss: true, // enabling this will enable SSR for Tailwind
+	},
 
-/** @type {import("next").NextConfig} */
-const config = withTwin(withNextTranslate({
-    reactStrictMode: true,
-    swcMinify:       true,
+	webpack: (config, {webpack}) => {
+		config.plugins.push(
+			Icons({
+				compiler: 'jsx',
+				jsx: 'react'
+			})
+		)
 
-    // @ts-ignore-next-line
-    i18n: {
-        localeDetection: false,
-    },
+		config.plugins.push(
+			AutoImport({
+				resolvers: [
+					IconsResolver({
+						componentPrefix: 'Icon',
+						extension:       'jsx'
+					})
+				],
+				include:   [
+					/\.[tj]sx?$/, // .ts, .tsx, .js, .jsx
+					/\.md$/, // .md
+				],
+				dts:       'src/auto-imports.d.ts',
+			})
+		)
 
-    webpack: (config) => {
-        config.plugins.push(
-            Icons({
-                compiler: 'jsx',
-                jsx:      'react'
-            })
-        )
-        config.module.rules.push({
-            test: /\.ya?ml$/,
-            use:  'yaml-loader'
-        })
+		config.plugins.push(
+			bundleAnalyzer({
+				enabled: process.env.ANALYZE === "true",
+			}),
+		)
 
-        return config
-    },
-    // experimental:      {
-    //     optimizeCss: true, // enabling this will enable SSR for Tailwind
-    // },
-    transpilePackages: ["@acme/api", "@acme/auth", "@acme/db", "@acme/ui"],
-    /** We already do linting and typechecking as separate tasks in CI */
-    eslint:     {ignoreDuringBuilds: !!process.env.CI},
-    typescript: {ignoreBuildErrors: !!process.env.CI}
-}))
+		config.plugins.push(new webpack.IgnorePlugin({
+			resourceRegExp: /^pg-native$|^cloudflare:sockets$/,
+		}))
+
+		config.module.rules.push({
+			test: /\.ya?ml$/,
+			use: 'yaml-loader'
+		})
+
+		return config
+	},
+	transpilePackages: ["@acme/api", "@acme/auth", "@acme/db", "@acme/ui", "@trpc/next-layout"],
+	eslint: {ignoreDuringBuilds: true},
+	typescript: {ignoreBuildErrors: true},
+})
 
 export default config

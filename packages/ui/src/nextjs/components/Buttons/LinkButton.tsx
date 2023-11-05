@@ -1,7 +1,9 @@
+"use client";
 import Link from "next/link"
 import styled from "@emotion/styled"
-import {buttonDefaultProps, buttonPropsArray, ButtonStyles, type ButtonProps} from "./Button"
+import {buttonPropsArray, ButtonStyles, type ButtonProps} from "./Button"
 import {shouldForwardProp} from "../../Utils/StyledUtils";
+import { withTheme } from "@emotion/react"
 
 
 const LinkButton = styled(Link, {
@@ -10,8 +12,4 @@ const LinkButton = styled(Link, {
 	)(props as keyof ButtonProps)
 })(ButtonStyles)
 
-LinkButton.defaultProps = {
-	...buttonDefaultProps
-}
-
-export default LinkButton
+export default withTheme(LinkButton)

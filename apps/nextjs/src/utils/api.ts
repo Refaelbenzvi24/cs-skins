@@ -1,57 +1,15 @@
-import {httpBatchLink, loggerLink} from "@trpc/client"
-import {createTRPCNext} from "@trpc/next"
-import {type inferRouterInputs, type inferRouterOutputs} from "@trpc/server"
-import type {AppRouter} from "@acme/api"
-import {transformer} from "@acme/api/transformer"
+import { createTRPCReact } from "@trpc/react-query";
 
-const getBaseUrl = () => {
+import type { AppRouter } from "@acme/api";
+import { env } from "~/env.mjs"
+
+export const getBaseUrl = () => {
 	if (typeof window !== "undefined") return ""; // browser should use relative url
-	if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`; // SSR should use vercel url
-	
-	return `http://localhost:3000`; // dev SSR should use localhost
-}
+	if (env.VERCEL_URL) return env.VERCEL_URL; // SSR should use vercel url
 
-export const api = createTRPCNext<AppRouter>({
-	config({ctx}) {
-		return {
-			headers: () => {
-				if (ctx?.req) {
-					// To use SSR properly, you need to forward the client's headers to the server
-					const headers = ctx?.req?.headers;
-					// If you're using Node 18, delete the "connection" header
-					delete headers?.connection;
-					return {
-						...headers,
-						// optional - inform server that it's an ssr request
-						'x-ssr': '1',
-					};
-				}
-				return {};
-			},
-			transformer,
-			links: [
-				loggerLink({
-					enabled: (opts) =>
-						process.env.NODE_ENV === "development" ||
-						(opts.direction === "down" && opts.result instanceof Error),
-				}),
-				httpBatchLink({
-					url: `${getBaseUrl()}/api/trpc`,
-				}),
-			],
-		};
-	},
-	ssr: false,
-});
+	return `http://localhost:${env.PORT}`; // dev SSR should use localhost
+};
 
-/**
- * Inference helpers for input types
- * @example type HelloInput = RouterInputs['example']['hello']
- **/
-export type RouterInputs = inferRouterInputs<AppRouter>;
+export const api = createTRPCReact<AppRouter>();
 
-/**
- * Inference helpers for output types
- * @example type HelloOutput = RouterOutputs['example']['hello']
- **/
-export type RouterOutputs = inferRouterOutputs<AppRouter>;
+export { type RouterInputs, type RouterOutputs } from "@acme/api";

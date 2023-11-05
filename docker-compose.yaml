@@ -1,34 +1,18 @@
 services:
-  postgres:
-    container_name: postgres.cs-skins_container
-    image: postgres
+  mysql:
+    container_name: mysql.cs-skins_container
+    image: mysql:latest
     environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: 1234
-      PGDATA: /data/postgres
-      POSTGRES_DB: ${DB_DATABASE:-cs-skins}
-    volumes:
-      - postgres:/data/postgres
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_USER: mysql
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: ${DB_DATABASE:-cs-skins}
     ports:
-      - "5432:5432"
+      - 3306:3306
     restart: unless-stopped
     networks:
       - main_network
-
-  pgadmin:
-    container_name: pgadmin.cs-skins_container
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
-    volumes:
-      - pgadmin:/var/lib/pgadmin
-    ports:
-      - "${PGADMIN_PORT:-5050}:80"
-    restart: unless-stopped
-    depends_on:
-      - postgres
 
   message_broker:
     container_name: rabbitmq.cs-skins_container
@@ -47,7 +31,7 @@ services:
     container_name: cronjobs.cs-skins_container
     depends_on:
       - message_broker
-      - postgres
+      - mysql
     environment:
       MESSAGE_BROKER_HOST: ${MESSAGE_BROKER_HOST:-localhost}
       MESSAGE_BROKER_USER: ${MESSAGE_BROKER_USER:-guest}
@@ -64,7 +48,7 @@ services:
     container_name: scraper.cs-skins_container
     depends_on:
       - message_broker
-      - postgres
+      - mysql
     environment:
       DATABASE_URL: ${DATABASE_URL:-postgres://root:1234@localhost:5432/cs-skins?schema=public}
       MESSAGE_BROKER_HOST: ${MESSAGE_BROKER_HOST:-localhost}
@@ -83,5 +67,4 @@ networks:
     driver: bridge
 
 volumes:
-  postgres:
-  pgadmin:
+  mysql:

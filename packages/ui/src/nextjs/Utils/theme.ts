@@ -17,7 +17,7 @@ const theme = {
 		conditionalMargins,
 		conditionalRotate,
 	},
-	
+
 	zIndex: {
 		mobileStepper: 1000,
 		fab: 1050,
@@ -30,7 +30,7 @@ const theme = {
 		snackbar: 1400,
 		tooltip: 1500,
 	},
-	
+
 	screens: {
 		xs: 0,
 		sm: 576,
@@ -40,15 +40,17 @@ const theme = {
 		xl2: 1500,
 		xl3: 1800,
 	},
-	
+
 	transforms: (transforms: string[]) => css`
     transform: ${transforms.join(" ")};
 	`,
-	
+
 	transitions: (transitions: string[]) => css`
     transition: ${transitions.join(", ")};
 	`,
-	
+
+	disabledState,
+
 	colorScheme: {
 		primary: '#5F9BF3',
 		secondary: '#e08e73',
@@ -74,7 +76,7 @@ const theme = {
 		subtitle3: '#939393',
 		white: '#ffffff',
 	},
-	
+
 	colorSchemeByState: {
 		primary: {
 			default: '#5F9BF3',
@@ -112,6 +114,12 @@ const theme = {
 			active: '#28283a',
 			...disabledState
 		},
+		overlaysDark2: {
+			default: '#2b2b3d',
+			hover: '#393952',
+			active: '#242434',
+			...disabledState
+		},
 		white: {
 			default: '#ffffff',
 			hover: '#ebefef',
@@ -135,9 +143,14 @@ const theme = {
 			hover: '#ebedef',
 			active: '#dadcde',
 			...disabledState
+		},
+		light2: {
+			default: '#f3f6f8',
+			hover: '#e5e9eb',
+			active: '#d6d9db',
 		}
 	},
-	
+
 	shadows: {
 		1: '0 3px 10px rgba(0, 0, 0, 0.08)',
 		2: '0 2px 8px rgba(0, 0, 0, 0.1)',
@@ -146,11 +159,11 @@ const theme = {
 		5: '0 1px 2px rgba(0, 0, 0, 0.15), 0 4px 8px rgba(0, 0, 0, 0.2)',
 		6: '0px 5px 4px rgba(0, 0, 0, 0.4)',
 	},
-	
+
 	colors: {
 		white: '#fff',
 		black: '#000',
-		
+
 		light_50: '#fdfdfd',
 		light_100: '#fcfcfc',
 		light_200: '#fafafa',
@@ -161,7 +174,7 @@ const theme = {
 		light_700: '#e9ecef',
 		light_800: '#dee2e6',
 		light_900: '#dde1e3',
-		
+
 		dark_50: '#4a4a4a',
 		dark_100: '#3c3c3c',
 		dark_200: '#323232',
@@ -172,7 +185,7 @@ const theme = {
 		dark_700: '#1b1b1b',
 		dark_800: '#181818',
 		dark_900: '#0f0f0f',
-		
+
 		slate_50: '#f8fafc',
 		slate_100: '#f1f5f9',
 		slate_200: '#e2e8f0',
@@ -183,7 +196,7 @@ const theme = {
 		slate_700: '#334155',
 		slate_800: '#1e293b',
 		slate_900: '#0f172a',
-		
+
 		gray_50: '#f9fafb',
 		gray_100: '#f3f4f6',
 		gray_200: '#e5e7eb',
@@ -194,7 +207,7 @@ const theme = {
 		gray_700: '#374151',
 		gray_800: '#1f2937',
 		gray_900: '#111827',
-		
+
 		zinc_50: '#fafafa',
 		zinc_100: '#f4f4f5',
 		zinc_200: '#e4e4e7',
@@ -205,8 +218,8 @@ const theme = {
 		zinc_700: '#3f3f46',
 		zinc_800: '#27272a',
 		zinc_900: '#18181b',
-		
-		
+
+
 		netural_50: '#fafafa',
 		netural_100: '#f5f5f5',
 		netural_200: '#e5e5e5',
@@ -217,7 +230,7 @@ const theme = {
 		netural_700: '#404040',
 		netural_800: '#262626',
 		netural_900: '#171717',
-		
+
 		stone_50: '#fafaf9',
 		stone_100: '#f5f5f4',
 		stone_200: '#e7e5e4',
@@ -228,7 +241,7 @@ const theme = {
 		stone_700: '#44403c',
 		stone_800: '#292524',
 		stone_900: '#1c1917',
-		
+
 		red_50: '#fef2f2',
 		red_100: '#fee2e2',
 		red_200: '#fecaca',
@@ -239,7 +252,7 @@ const theme = {
 		red_700: '#b91c1c',
 		red_800: '#991b1b',
 		red_900: '#7f1d1d',
-		
+
 		orange_50: '#fff7ed',
 		orange_100: '#ffedd5',
 		orange_200: '#fed7aa',
@@ -250,7 +263,7 @@ const theme = {
 		orange_700: '#c2410c',
 		orange_800: '#9a3412',
 		orange_900: '#7c2d12',
-		
+
 		amber_50: '#fffbeb',
 		amber_100: '#fef3c7',
 		amber_200: '#fde68a',
@@ -261,8 +274,8 @@ const theme = {
 		amber_700: '#b45309',
 		amber_800: '#92400e',
 		amber_900: '#78350f',
-		
-		
+
+
 		yellow_50: '#fefce8',
 		yellow_100: '#fef9c3',
 		yellow_200: '#fef08a',
@@ -273,7 +286,7 @@ const theme = {
 		yellow_700: '#a16207',
 		yellow_800: '#854d0e',
 		yellow_900: '#713f12',
-		
+
 		lime_50: '#f7fee7',
 		lime_100: '#ecfccb',
 		lime_200: '#d9f99d',
@@ -284,7 +297,7 @@ const theme = {
 		lime_700: '#4d7c0f',
 		lime_800: '#3f6212',
 		lime_900: '#365314',
-		
+
 		green_50: '#f0fdf4',
 		green_100: '#dcfce7',
 		green_200: '#bbf7d0',
@@ -295,7 +308,7 @@ const theme = {
 		green_700: '#15803d',
 		green_800: '#166534',
 		green_900: '#14532d',
-		
+
 		emerald_50: '#ecfdf5',
 		emerald_100: '#d1fae5',
 		emerald_200: '#a7f3d0',
@@ -306,7 +319,7 @@ const theme = {
 		emerald_700: '#047857',
 		emerald_800: '#065f46',
 		emerald_900: '#064e3b',
-		
+
 		teal_50: '#f0fdfa',
 		teal_100: '#ccfbf1',
 		teal_200: '#99f6e4',
@@ -317,7 +330,7 @@ const theme = {
 		teal_700: '#0f766e',
 		teal_800: '#115e59',
 		teal_900: '#134e4a',
-		
+
 		cyan_50: '#ecfeff',
 		cyan_100: '#cffafe',
 		cyan_200: '#a5f3fc',
@@ -328,7 +341,7 @@ const theme = {
 		cyan_700: '#0e7490',
 		cyan_800: '#155e75',
 		cyan_900: '#164e63',
-		
+
 		sky_50: '#f0f9ff',
 		sky_100: '#e0f2fe',
 		sky_200: '#bae6fd',
@@ -339,7 +352,7 @@ const theme = {
 		sky_700: '#0369a1',
 		sky_800: '#075985',
 		sky_900: '#0c4a6e',
-		
+
 		blue_50: '#eff6ff',
 		blue_100: '#dbeafe',
 		blue_200: '#bfdbfe',
@@ -350,7 +363,7 @@ const theme = {
 		blue_700: '#1d4ed8',
 		blue_800: '#1e40af',
 		blue_900: '#1e3a8a',
-		
+
 		indigo_50: '#eef2ff',
 		indigo_100: '#e0e7ff',
 		indigo_200: '#c7d2fe',
@@ -361,7 +374,7 @@ const theme = {
 		indigo_700: '#4338ca',
 		indigo_800: '#3730a3',
 		indigo_900: '#312e81',
-		
+
 		violet_50: '#f5f3ff',
 		violet_100: '#ede9fe',
 		violet_200: '#ddd6fe',
@@ -372,7 +385,7 @@ const theme = {
 		violet_700: '#6d28d9',
 		violet_800: '#5b21b6',
 		violet_900: '#4c1d95',
-		
+
 		purple_50: '#faf5ff',
 		purple_100: '#f3e8ff',
 		purple_200: '#e9d5ff',
@@ -383,7 +396,7 @@ const theme = {
 		purple_700: '#7e22ce',
 		purple_800: '#6b21a8',
 		purple_900: '#581c87',
-		
+
 		fuchsia_50: '#fdf4ff',
 		fuchsia_100: '#fae8ff',
 		fuchsia_200: '#f5d0fe',
@@ -394,7 +407,7 @@ const theme = {
 		fuchsia_700: '#a21caf',
 		fuchsia_800: '#86198f',
 		fuchsia_900: '#701a75',
-		
+
 		pink_50: '#fdf2f8',
 		pink_100: '#fce7f3',
 		pink_200: '#fbcfe8',
@@ -405,7 +418,7 @@ const theme = {
 		pink_700: '#be185d',
 		pink_800: '#9d174d',
 		pink_900: '#831843',
-		
+
 		rose_50: '#fff1f2',
 		rose_100: '#ffe4e6',
 		rose_200: '#fecdd3',

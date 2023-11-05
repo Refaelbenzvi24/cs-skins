@@ -1,37 +1,39 @@
-import {Button} from "@acme/ui";
-import useTranslation from "next-translate/useTranslation"
-import {ComponentProps} from "react";
-import IconCarbonLanguage from "~icons/carbon/language"
-import {useRouter} from "next/router"
+"use client";
+import { Button } from "@acme/ui";
+import type { ComponentProps } from "react";
 import clsx from "clsx";
-import {css} from "@emotion/css"
-import tw from "twin.macro"
-import setLanguage from 'next-translate/setLanguage'
+import { usePathname, useRouter } from "next/navigation"
+import { useTranslation } from "~/app/i18n/client"
+
 
 const LanguageSelector = (props: ComponentProps<typeof Button>) => {
-	const {className, ...restProps} = props
-	
-	const {lang} = useTranslation()
-	
-	
+	const { className, ...restProps } = props
+
+	const {i18n} = useTranslation()
+	const router = useRouter()
+	const pathname = usePathname()
+
 	const languageToggle = async () => {
-		const currentLang = lang === 'en' ? 'he' : 'en'
-		document.documentElement.dir = currentLang === 'he' ? 'rtl' : 'ltr'
-		await setLanguage(currentLang)
+		const lng = i18n.language
+		const currentLang = lng === "he" ? "en" : "he"
+		document.documentElement.dir = currentLang === "he" ? "rtl" : "ltr"
+		document.documentElement.lang = currentLang
+		const newPathname = pathname.replace(`${lng}`, `${currentLang}`)
+		await i18n.changeLanguage(currentLang)
+		router.refresh()
+		router.push (newPathname)
 	}
-	
+
 	return (
 		<Button
 			text
 			noPadding
-			size={'22px'}
-			className={`${css`
-        ${tw`p-[10px]`};
-			`} ${clsx(className)}`}
+			size={"22px"}
+			className={`p-[10px] ${clsx (className ?? "")}`}
 			{...restProps}
 			aria-label="language"
 			id="language-toggle-button"
-			onClick={async () => await languageToggle()}>
+			onClick={() => languageToggle ()}>
 			<IconCarbonLanguage/>
 		</Button>
 	)

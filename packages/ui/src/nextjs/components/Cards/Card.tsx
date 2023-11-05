@@ -1,13 +1,17 @@
-import {css} from "@emotion/react"
+"use client";
+import { css, withTheme } from "@emotion/react"
 import styled from "@emotion/styled"
-import {motion} from "framer-motion"
+import { motion } from "framer-motion"
 import tw from "twin.macro"
 
 import theme from "../../Utils/theme"
-import {shouldForwardProp} from "../../Utils/StyledUtils";
+import { shouldForwardProp } from "../../Utils/StyledUtils";
+import { SingleColorOptions, ZIndexOptions } from "../Theme/types"
+import { getSingleColorFromPath, getZIndexFromPath } from "../../Utils/colors"
+import { StyledProps } from "../../types"
 
 
-export interface CardProps {
+export interface CardProps extends StyledProps {
 	dark?: boolean,
 	height?: string | number
 	minHeight?: string
@@ -15,8 +19,9 @@ export interface CardProps {
 	width?: string | number
 	minWidth?: string
 	maxWidth?: string
-	bgColor?: string
-	bgColorDark?: string
+	zIndex?: ZIndexOptions
+	backgroundColor?: SingleColorOptions
+	backgroundColorDark?: SingleColorOptions
 	noShadow?: boolean
 	noPadding?: boolean
 	elevation?: keyof typeof theme.shadows
@@ -33,68 +38,75 @@ const Card = styled(motion.div, {
 			"width",
 			"minWidth",
 			"maxWidth",
-			"bgColor",
-			"bgColorDark",
+			"backgroundColor",
+			"backgroundColorDark",
 			"noShadow",
 			"noPadding",
+			"zIndex",
 			"elevation"
 		]
 	)(props as keyof CardProps)
 })(({
-	    dark,
-	    elevation,
-	    noShadow,
-	    bgColor,
-	    bgColorDark,
-	    minHeight,
-	    maxHeight,
-	    height,
-	    minWidth,
-	    maxWidth,
-	    noPadding,
-	    width
-    }: CardProps) => [
-	tw`flex right-0 overflow-hidden`,
-	
-	!noShadow && css`
-    box-shadow: ${theme.shadows[elevation || 3]};
-	`,
-	
-	noPadding ? '' : tw`p-2`,
-	
-	css`
-    background-color: ${bgColor};
-	`,
-	
-	height && css`
-    height: ${typeof height === 'number' ? `${height}px` : height};
-	`,
-	
-	width && css`
-    width: ${typeof width === 'number' ? `${width}px` : width};
-	`,
-	
-	minHeight && css`
-    min-height: ${minHeight};
-	`,
-	maxHeight && css`
-    max-height: ${maxHeight};
-	`,
-	minWidth && css`
-    min-width: ${minWidth};
-	`,
-	maxWidth && css`
-    max-width: ${maxWidth};
-	`,
-	
-	(props) => (dark || props.theme.isDark) && css`
-    background-color: ${bgColorDark};
-	`
-])
+	dark,
+	elevation = 3,
+	noShadow,
+	backgroundColor = 'colorScheme.white',
+	backgroundColorDark = 'colorScheme.overlaysDark',
+	minHeight,
+	maxHeight,
+	height,
+	minWidth,
+	maxWidth,
+	noPadding,
+	width,
+	zIndex = 0,
+	theme
+}: CardProps) => {
+	const resolvedBackgroundColor     = getSingleColorFromPath(backgroundColor, theme.config)
+	const resolvedBackgroundColorDark = getSingleColorFromPath(backgroundColorDark, theme.config)
+	const resolvedZIndex              = getZIndexFromPath(zIndex, theme.config)
+	return [
+		tw`flex right-0 overflow-hidden`,
 
-Card.defaultProps = {
-	bgColor: theme.colorScheme.white,
-	bgColorDark: theme.colorScheme.overlaysDark
-}
+		!noShadow && css`
+			box-shadow: ${theme.config.shadows[elevation]};
+		`,
 
-export default Card
+		noPadding ? "" : tw`p-2`,
+
+		css`
+			background-color: ${resolvedBackgroundColor};
+		`,
+
+		height && css`
+			height: ${typeof height === "number" ? `${height}px` : height};
+		`,
+
+		width && css`
+			width: ${typeof width === "number" ? `${width}px` : width};
+		`,
+
+		minHeight && css`
+			min-height: ${minHeight};
+		`,
+		maxHeight && css`
+			max-height: ${maxHeight};
+		`,
+		minWidth && css`
+			min-width: ${minWidth};
+		`,
+		maxWidth && css`
+			max-width: ${maxWidth};
+		`,
+
+		zIndex && css`
+			z-index: ${resolvedZIndex};
+		`,
+
+		(props) => (dark || props.theme.isDark) && css`
+			background-color: ${resolvedBackgroundColorDark};
+		`
+	]
+})
+
+export default withTheme(Card)

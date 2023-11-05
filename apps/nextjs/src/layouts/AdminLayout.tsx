@@ -1,5 +1,5 @@
 import {Main} from "@acme/ui";
-import AdminAppBar from "~/components/Admin/Login/AdminAppBar";
+import AdminAppBar from "~/components/Admin/AdminAppBar";
 
 export interface AdminLayoutProps {
 	children: React.ReactNode
@@ -10,7 +10,7 @@ const AdminLayout = ({children, adminAppBarProps}: AdminLayoutProps) => {
 	return (
 		<div className="h-full">
 			<AdminAppBar removeSettingsButton {...adminAppBarProps}/>
-			
+
 			<Main>
 				{children}
 			</Main>

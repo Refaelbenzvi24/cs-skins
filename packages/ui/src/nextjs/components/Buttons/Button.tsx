@@ -1,27 +1,19 @@
-import type {CSSProperties} from "react"
+"use client";
 
-import {css} from "@emotion/react"
+import { css, withTheme } from "@emotion/react"
 import styled from "@emotion/styled"
-import {motion} from "framer-motion"
+import { motion } from "framer-motion"
 
 import theme from "../../Utils/theme"
-import type {StyledFunction} from "../../types";
-import {shouldForwardProp} from "../../Utils/StyledUtils";
-
-
-export interface ColorsForState {
-	default: string
-	hover?: string
-	active?: string
-	lightDisabled?: string
-	darkDisabled?: string
-	lightDisabledText?: string
-	darkDisabledText?: string
-}
+import type { StyledFunction } from "../../types";
+import { shouldForwardProp } from "../../Utils/StyledUtils";
+import { ColorByStateOptions, SingleColorOptions } from "../Theme/types"
+import { getColorByStateFromPath, getSingleColorFromPath } from "../../Utils/colors"
 
 export interface ButtonProps {
 	dark?: boolean
-	color?: string
+	color?: SingleColorOptions
+	colorDark?: SingleColorOptions
 	fab?: boolean
 	icon?: boolean
 	height?: string | number
@@ -31,198 +23,203 @@ export interface ButtonProps {
 	noShadow?: boolean
 	elevation?: keyof typeof theme.shadows
 	noPadding?: boolean
-	bgColor?: CSSProperties["backgroundColor"]
-	bgColorDark?: CSSProperties["backgroundColor"]
-	colorsForStates?: ColorsForState
-	colorsForStatesDark?: ColorsForState
+	colorsForStates?: ColorByStateOptions
+	colorsForStatesDark?: ColorByStateOptions
 }
 
 export const ButtonStyles: StyledFunction<ButtonProps> = (
 	{
-		colorsForStates,
-		colorsForStatesDark,
 		color,
-		elevation,
-		noShadow,
-		text,
-		icon,
-		bgColor,
-		bgColorDark,
-		height,
-		noPadding,
-		size,
-		width,
-		fab,
+		colorDark,
 		dark,
+		fab = false,
+		icon = false,
+		height = undefined,
+		width = undefined,
+		colorsForStates = "primary",
+		colorsForStatesDark = "primary",
+		elevation = 3,
+		noPadding = false,
+		noShadow = false,
+		text = false,
+		size = undefined,
+		theme
 	}
-) => [
-	css`
-    cursor: pointer;
-    border: none;
-	`,
-	
-	icon && css`
-    padding: 4px;
-    width: fit-content;
-    height: fit-content;
-	`,
-	
-	!icon && css`
-    padding: 8px 16px;
-	`,
-	noPadding && css`
-    padding: 0;
-	`,
-	
-	fab && css`
-    border-radius: 9999px;
-	`,
-	
-	height && css`
-    height: ${typeof height === 'number' ? `${height}px` : height};
-	`,
-	
-	width && css`
-    width: ${typeof width === 'number' ? `${width}px` : width};
-	`,
-	
-	!width && icon && css`
-    width: fit-content;
-	`,
-	
-	!height && icon && css`
-    height: fit-content;
-	`,
-	
-	size && css`
-    font-size: ${size};
-	`,
-	
-	
-	(!icon && !text && !noShadow) && css`
-    box-shadow: ${theme.shadows[elevation || 3]};
-	`,
-	
-	icon && css`
-    display: flex;
+) => {
+	const resolvedColorsForState = getColorByStateFromPath(colorsForStates, theme.config)
+	const resolvedColorsForStateDark = getColorByStateFromPath(colorsForStatesDark, theme.config)
+	const resolvedColor = getSingleColorFromPath(color, theme.config)
+	const resolvedColorDark = getSingleColorFromPath(colorDark, theme.config)
+	return [
+		css`
+          cursor: pointer;
+          border: none;
+		`,
 
-    * {
-      width: ${size};
-      height: ${size};
-    }
-	`,
-	
-	css`
-    &:disabled {
-      cursor: default;
-    }
-	`,
-	
-	!text && css`
-    color: ${color || theme.colors.gray_900};
-    background-color: ${colorsForStates?.default || bgColor || theme.colors.gray_200};
-    transition: all 100ms linear;
+		!noPadding && icon && css`
+          padding: 4px;
+		`,
 
-    * {
-      transition: all 100ms linear;
-    }
+		icon && css`
+          width: fit-content;
+          height: fit-content;
+		`,
 
-    &:hover {
-      background-color: ${colorsForStates?.hover || theme.colors.light_700};
-    }
+		!noPadding && !icon && css`
+          padding: 8px 16px;
+		`,
 
-    &:active {
-      background-color: ${colorsForStates?.active || theme.colors.light_600};
-    }
+		fab && css`
+          border-radius: 9999px;
+		`,
 
-    &:disabled {
-      * {
-        color: ${colorsForStates?.lightDisabledText || theme.colors.gray_600};
-      }
+		height && css`
+          height: ${typeof height === "number" ? `${height}px` : height};
+		`,
 
-      box-shadow: none;
-      background-color: ${colorsForStates?.lightDisabled || theme.colors.gray_200};
-    }
-	`,
-	
-	(props) => (!text && (dark || props.theme.isDark)) && css`
-    background-color: ${colorsForStatesDark?.default || bgColorDark || theme.colors.dark_400};
-    color: ${color || theme.colors.gray_200};
+		width && css`
+          width: ${typeof width === "number" ? `${width}px` : width};
+		`,
 
-    &:hover {
-      color: ${theme.colors.white};
-      background-color: ${colorsForStatesDark?.hover || theme.colors.dark_200};
-    }
+		!width && icon && css`
+          width: fit-content;
+		`,
 
-    &:active {
-      background-color: ${colorsForStatesDark?.active || theme.colors.dark_100}
-    }
+		!height && icon && css`
+          height: fit-content;
+		`,
 
-    &:disabled {
-      * {
-        color: ${colorsForStatesDark?.darkDisabledText || theme.colors.gray_600};
-      }
+		size && css`
+          font-size: ${size};
+		`,
 
-      box-shadow: none;
-      background-color: ${colorsForStatesDark?.darkDisabled || theme.colors.dark_400};
-    }
-	`,
-	
-	text && css`
-    color: ${colorsForStates?.default || color || theme.colors.gray_200};
 
-    * {
-      transition: color 100ms ease-in-out;
-    }
+		(!icon && !text && !noShadow) && css`
+          box-shadow: ${theme.config.shadows[elevation]};
+		`,
 
-    & > * {
-      color: ${colorsForStates?.default || color || theme.colors.gray_200};
-    }
+		icon && css`
+          display: flex;
 
-    &:hover {
-      & > * {
-        color: ${colorsForStates?.hover || theme.colors.light_700};
-      }
-    }
+          * {
+            width: ${size};
+            height: ${size};
+          }
+		`,
 
-    &:active {
-      & > * {
-        color: ${colorsForStates?.active || theme.colors.light_600};
-      }
-    }
+		css`
+          &:disabled {
+            cursor: default;
+          }
+		`,
 
-    &:disabled {
+		!text && css`
+          color: ${resolvedColor};
+          background-color: ${resolvedColorsForState.default};
+          transition: all 100ms linear;
 
-      & > * {
-        color: ${colorsForStates?.lightDisabledText || theme.colors.gray_200};
-      }
-    }
-	`,
-	
-	(props) => (text && (dark || props.theme.isDark)) && css`
-    & > * {
-      color: ${colorsForStatesDark?.default || color || theme.colors.dark_400};
-    }
+          * {
+            transition: all 100ms linear;
+          }
 
-    &:hover {
-      & > * {
-        color: ${colorsForStatesDark?.hover || theme.colors.dark_200};
-      }
-    }
+          &:hover {
+            background-color: ${resolvedColorsForState.hover};
+          }
 
-    &:active {
-      & > * {
-        color: ${colorsForStatesDark?.active || theme.colors.dark_100}
-      }
-    }
+          &:active {
+            background-color: ${resolvedColorsForState.active};
+          }
 
-    &:disabled {
-      & > * {
-        color: ${colorsForStatesDark?.darkDisabledText || theme.colors.gray_200};
-      }
-    }
-	`
-]
+          &:disabled {
+            * {
+              color: ${resolvedColorsForState.lightDisabledText};
+            }
+
+            box-shadow: none;
+            background-color: ${resolvedColorsForState.lightDisabled};
+          }
+		`,
+
+		(props) => (!text && (dark || props.theme.isDark)) && css`
+          background-color: ${resolvedColorsForStateDark.default};
+          color: ${resolvedColorDark};
+
+          &:hover {
+            /** TODO: check this */
+            color: white;
+            background-color: ${resolvedColorsForStateDark.hover};
+          }
+
+          &:active {
+            background-color: ${resolvedColorsForStateDark.active}
+          }
+
+          &:disabled {
+            * {
+              color: ${resolvedColorsForStateDark.darkDisabledText};
+            }
+
+            box-shadow: none;
+            background-color: ${resolvedColorsForStateDark.darkDisabled};
+          }
+		`,
+
+		text && css`
+          color: ${resolvedColorsForState.default};
+
+          * {
+            transition: color 100ms ease-in-out;
+          }
+
+          & > * {
+            color: ${resolvedColorsForState.default};
+          }
+
+          &:hover {
+            & > * {
+              color: ${resolvedColorsForState.hover};
+            }
+          }
+
+          &:active {
+            & > * {
+              color: ${resolvedColorsForState.active};
+            }
+          }
+
+          &:disabled {
+
+            & > * {
+              color: ${resolvedColorsForState.lightDisabledText};
+            }
+          }
+		`,
+
+		(props) => (text && (dark || props.theme.isDark)) && css`
+          & > * {
+            color: ${resolvedColorsForStateDark.default};
+          }
+
+          &:hover {
+            & > * {
+              color: ${resolvedColorsForStateDark.hover};
+            }
+          }
+
+          &:active {
+            & > * {
+              color: ${resolvedColorsForStateDark.active}
+            }
+          }
+
+          &:disabled {
+            & > * {
+              color: ${resolvedColorsForStateDark.darkDisabledText};
+            }
+          }
+		`
+	]
+}
 
 export const buttonPropsArray: (keyof ButtonProps)[] = [
 	"colorsForStates",
@@ -232,8 +229,6 @@ export const buttonPropsArray: (keyof ButtonProps)[] = [
 	"noPadding",
 	"text",
 	"icon",
-	"bgColor",
-	"bgColorDark",
 	"colorsForStatesDark",
 	"height",
 	"size",
@@ -242,28 +237,12 @@ export const buttonPropsArray: (keyof ButtonProps)[] = [
 	"dark"
 ]
 
-const Button = styled(motion.button, {
-	shouldForwardProp: (props) => shouldForwardProp<ButtonProps>(
+const Button = styled (motion.button, {
+	shouldForwardProp: (props) => shouldForwardProp<ButtonProps> (
 		buttonPropsArray
-	)(props as keyof ButtonProps)
-})(ButtonStyles)
+	) (props as keyof ButtonProps)
+}) (ButtonStyles)
 
-export const buttonDefaultProps = {
-	fab: false,
-	icon: false,
-	height: undefined,
-	width: undefined,
-	colorsForStates: theme.colorSchemeByState.primary,
-	colorsForStatesDark: theme.colorSchemeByState.primary,
-	elevation: 3,
-	noPadding: false,
-	noShadow: false,
-	text: false,
-	size: undefined
-} as const
-
-Button.defaultProps = buttonDefaultProps
-
-export default Button
+export default withTheme (Button)
 
 

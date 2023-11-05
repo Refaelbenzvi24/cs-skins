@@ -1,5 +1,6 @@
-import {useState, useEffect} from 'react'
-import type {ReactElement} from 'react'
+"use client";
+import { useState, useEffect } from "react"
+import type { ReactElement } from "react"
 
 
 interface ConditionalAnimationProps {
@@ -9,38 +10,37 @@ interface ConditionalAnimationProps {
 	timeout?: number;
 }
 
-const ConditionalAnimation = (props: ConditionalAnimationProps) => {
-	const [render, setRender] = useState(false)
-	
-	const {condition, timeout, instantEntrance, children} = props
-	
+const ConditionalAnimation = ({
+	                              condition,
+	                              instantEntrance = false,
+	                              timeout = 500,
+	                              children
+                              }: ConditionalAnimationProps) => {
+	const [render, setRender] = useState (false)
+
+
 	const renderController = () => {
 		if (condition) {
 			if (instantEntrance) {
-				setRender(() => true)
+				setRender (() => true)
 				return
 			}
-			
-			return setTimeout(() => {
-				setRender(() => true)
+
+			return setTimeout (() => {
+				setRender (() => true)
 			}, timeout)
 		}
-		
-		setTimeout(() => {
-			setRender(false)
+
+		setTimeout (() => {
+			setRender (false)
 		}, timeout)
 	}
-	
-	useEffect(() => {
-		renderController()
-	}, [condition])
-	
-	return render && !!children ? children : <></>
-}
 
-ConditionalAnimation.defaultProps = {
-	instantEntrance: false,
-	timeout: 500,
+	useEffect (() => {
+		renderController ()
+	}, [condition])
+
+	return render && !!children ? children : <></>
 }
 
 export default ConditionalAnimation

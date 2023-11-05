@@ -6,7 +6,7 @@ contact: יצירת קשר
 get in touch: צור קשר
 dismiss: סגור
 login: התחברות
-logout: התנתקות
+logout: התנתק
 search: חיפוש
 edit: עריכה
 noMessage: אין הודעות
@@ -14,3 +14,6 @@ settings: הגדרות
 back: הקודם
 save: שמור
 send: שלח
+metadata:
+    title: CS Skins
+    appDescription: CS Skins

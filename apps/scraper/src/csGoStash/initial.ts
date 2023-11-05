@@ -1,62 +1,95 @@
-import {getSkinHtml, getSkinTableData, getSkinTitle} from "./shared"
-import {prisma} from "@acme/db"
+import { getSkinHtml, getSkinTableData, getSkinTitle } from "./shared"
+import { db, schema, dbOperators, dbHelper } from "@acme/db"
+
 
 const getBasicSkinData = async (url: string) => {
-	const {data: skinHtml} = await getSkinHtml(url)
+	const { data: skinHtml } = await getSkinHtml(url)
 
-	const skinsData = getSkinTableData(skinHtml)
-	const name = getSkinTitle(skinHtml)
+	const skinsData                = getSkinTableData(skinHtml)
+	const { weaponName, skinName } = getSkinTitle(skinHtml)
 
-	return skinsData.map(row => ({
-		url,
-		name,
-		quality: row[0] as string,
-	}))
-}
-
-const saveSkinToDb = async ({url, name, quality}: { url: string, name: string, quality: string }, retries = 0) => {
-	try {
-		return await prisma.skin.create({
-			data: {
-				weapon: {
-					connectOrCreate: {
-						where: {
-							url
-						},
-						create: {
-							name,
-							url,
-							source: {
-								connectOrCreate: {
-									create: {
-										name: 'csgostash',
-										url: 'https://csgostash.com/',
-									},
-									where: {
-										name: 'csgostash'
-									}
-								}
-							}
-						}
-					}
-				},
-				quality: {
-					connectOrCreate: {
-						create: {name: quality},
-						where: {name: quality}
-					}
-				}
-			}
-		})
-	} catch (error) {
-		if (error.code === 'P2002' && retries <= 2) return saveSkinToDb({url, name, quality}, retries + 1)
-		if (error.code === 'P2002' && retries > 2) return console.log('prisma error code P2002')
-		console.log(error)
-		console.log('error saving skin to db')
+	return {
+		skins: skinsData.map(row => ({
+			quality: row[0] as string,
+		})),
+		weaponName,
+		skinName,
 	}
 }
 
+const connectSkinQuality = async ({ quality, skinId }: { skinId: string, quality: string }) => {
+	const { eq }      = dbOperators
+	const skinQuality = await
+		db
+		.select({
+			id:   schema.qualities.id,
+			name: schema.qualities.name,
+		})
+		.from(schema.qualities)
+		.where(({ name }) => eq(name, quality))
+		.execute()
+
+	return await
+		db
+		.insert(schema.skinsQualities)
+		.values({
+			qualityId: skinQuality[0].id,
+			skinId:    skinId,
+		})
+		.returning()
+		.execute()
+}
+
+const getSource = async () => {
+	const { eq }   = dbOperators
+	const [source] = await
+		db
+		.select({
+			id:   schema.sources.id,
+			name: schema.sources.name,
+		})
+		.from(schema.sources)
+		.where(({ name }) => eq(name, "csgostash"))
+		.execute()
+	return source!
+}
+
+const getWeapon = ({ data }: { data: Parameters<typeof dbHelper.mutate.weapons.insert>[0]['data'] }) => {
+	const weaponQuery =
+		      db
+		      .select()
+		      .from(schema.weapons)
+		      .where(({ name: weaponName }) => dbOperators.eq(weaponName, data.name))
+	return {
+		ignoreIfNotExists: async () => await weaponQuery.execute(),
+		insertIfNotExists: async ({ connect = {} }: { connect?: Parameters<typeof dbHelper.mutate.weapons.insert>[0]['connect'] } = {}) => {
+			const [weapon] = await weaponQuery.execute()
+
+			if(weapon) return weapon
+			return dbHelper.mutate.weapons.insert({ data, connect })
+		}
+	}
+}
+
+const insertSkin = async ({ name, url }: typeof schema.skins.$inferInsert) => {
+	const [skin] = await
+		db
+		.insert(schema.skins)
+		.values({
+			name,
+			url,
+		})
+		.returning()
+		.onConflictDoNothing()
+		.execute()
+	return skin!
+}
+
 export const initialScrapeCsGoStash = async (url: string) => {
-	const basicSkinData = await getBasicSkinData(url)
-	await Promise.all(basicSkinData.map(async skin => await saveSkinToDb(skin)))
+	const { skins, weaponName, skinName } = await getBasicSkinData(url)
+	const source = await getSource()
+	const weapon = await getWeapon({ data: { name: weaponName } })
+	.insertIfNotExists({ connect: { sourceId: source.id } })
+	const newSkin = await dbHelper.mutate.skins.insert({ data: { name: skinName, url }, connect: { weaponId: weapon.id } })
+	await Promise.all(skins.map(async skin => await connectSkinQuality({ quality: skin.quality, skinId: newSkin.id })))
 }

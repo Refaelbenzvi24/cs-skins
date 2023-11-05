@@ -1,6 +1,7 @@
+"use client";
 import React from "react";
 import styled from "@emotion/styled";
-import {css, keyframes} from "@emotion/react";
+import { css, keyframes } from "@emotion/react";
 
 interface ImpulseProps {
 	backColor: string
@@ -35,17 +36,17 @@ interface GetBallsProps extends ImpulseProps {
 	sizeUnit: string
 }
 
-const getBalls = ({countBalls, frontColor, backColor, size, sizeUnit}: GetBallsProps) => {
+const getBalls = ({ countBalls, frontColor, backColor, size, sizeUnit }: GetBallsProps) => {
 	const balls = [];
 	for (let i = 0; i < countBalls; i++) {
-		balls.push(
+		balls.push (
 			<Ball
 				frontColor={frontColor}
 				backColor={backColor}
 				size={size}
 				x={i * (size / 5 + size / 5)}
 				y={0}
-				key={i.toString()}
+				key={i.toString ()}
 				index={i}
 				sizeUnit={sizeUnit}
 			/>,
@@ -59,14 +60,14 @@ interface WrapperProps {
 	sizeUnit: string
 }
 
-const Wrapper = styled.div((props: WrapperProps) => [
+const Wrapper = styled.div ((props: WrapperProps) => [
 	css`
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: ${`${props.size}${props.sizeUnit}`};
-    height: ${`${props.size / 5}${props.sizeUnit}`};
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: ${`${props.size}${props.sizeUnit}`};
+      height: ${`${props.size / 5}${props.sizeUnit}`};
 	`
 ])
 
@@ -76,17 +77,17 @@ interface BallProps extends ImpulseProps, WrapperProps {
 	index: number
 }
 
-const Ball = styled.div((props: BallProps) => [
+const Ball = styled.div ((props: BallProps) => [
 	css`
-    position: absolute;
-    top: ${`${props.y}${props.sizeUnit}`};
-    left: ${`${props.x}${props.sizeUnit}`};
-    width: ${`${props.size / 5}${props.sizeUnit}`};
-    height: ${`${props.size / 5}${props.sizeUnit}`};
-    border-radius: 50%;
-    background-color: ${props.frontColor};
-    animation: ${impulse({frontColor: props.frontColor, backColor: props.frontColor})} 1.25s linear infinite;
-    animation-delay: ${props.index * 0.125}s;
+      position: absolute;
+      top: ${`${props.y}${props.sizeUnit}`};
+      left: ${`${props.x}${props.sizeUnit}`};
+      width: ${`${props.size / 5}${props.sizeUnit}`};
+      height: ${`${props.size / 5}${props.sizeUnit}`};
+      border-radius: 50%;
+      background-color: ${props.frontColor};
+      animation: ${impulse ({ frontColor: props.frontColor, backColor: props.frontColor })} 1.25s linear infinite;
+      animation-delay: ${props.index * 0.125}s;
 	`
 ])
 
@@ -95,21 +96,15 @@ interface ImpulseSpinnerProps extends Partial<WrapperProps>, Partial<ImpulseProp
 	loading?: boolean
 }
 
-const defaultProps = {
-	loading: true,
-	size: 40,
-	frontColor: "#00ff89",
-	backColor: "#4b4c56",
-	sizeUnit: "px"
-}
+const defaultProps = {}
 
 
-export const ImpulseSpinner = ({size, frontColor, backColor, loading, sizeUnit}: typeof defaultProps & ImpulseSpinnerProps) => {
+export const ImpulseSpinner = ({ loading = true, size = 40, frontColor = "#00ff89", backColor = "#4b4c56", sizeUnit = "px" }: typeof defaultProps & ImpulseSpinnerProps) => {
 	const countBalls = 3;
 	return (
 		loading ? (
 			<Wrapper size={size} sizeUnit={sizeUnit}>
-				{getBalls({
+				{getBalls ({
 					countBalls,
 					frontColor,
 					backColor,
@@ -120,8 +115,5 @@ export const ImpulseSpinner = ({size, frontColor, backColor, loading, sizeUnit}:
 		) : <></>
 	);
 };
-
-
-ImpulseSpinner.defaultProps = defaultProps
 
 export default ImpulseSpinner
