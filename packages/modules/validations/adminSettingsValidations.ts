@@ -1,6 +1,6 @@
 import {z} from "zod"
 
-const emailDestination = {
+export const emailDestination = {
 	email: z.string()
 	        .min(1, {message: "forms:admin.settings.emailDestination.errors.emailRequired"})
 	        .email({message: "forms:admin.settings.emailDestination.errors.validEmail"}),
@@ -9,8 +9,6 @@ const emailDestination = {
 }
 
 
-const adminSettingsValidations = {
+export const adminSettingsValidations = {
 	emailDestination
 }
-
-export default adminSettingsValidations

@@ -224,6 +224,7 @@ export const ButtonStyles: StyledFunction<ButtonProps> = (
 export const buttonPropsArray: (keyof ButtonProps)[] = [
 	"colorsForStates",
 	"color",
+	"colorDark",
 	"elevation",
 	"noShadow",
 	"noPadding",

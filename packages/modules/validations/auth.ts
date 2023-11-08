@@ -1,6 +1,6 @@
 import {z} from "zod"
 
-const loginObject = {
+export const loginObject = {
 	email: z.string()
 	        .min(1, {message: "forms:admin.login.errors.emailRequired"})
 	        .email({message: "forms:admin.login.errors.validEmail"}),
@@ -8,8 +8,6 @@ const loginObject = {
 	           .min(1, {message: "forms:admin.login.errors.passwordRequired"})
 }
 
-const authValidations = {
+export const authValidations = {
 	loginObject
 }
-
-export default authValidations

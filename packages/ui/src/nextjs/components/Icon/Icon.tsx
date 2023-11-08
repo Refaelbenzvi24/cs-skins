@@ -62,6 +62,11 @@ const Icon = styled(motion.span, {
 		css`
 			font-size: ${size}px;
 			color: ${resolvedColor};
+
+			& > svg {
+				transform: inherit;
+				transition: inherit;
+			}
 		`,
 
 		(props) => (dark || props.theme.isDark) && css`

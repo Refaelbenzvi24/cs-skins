@@ -28,3 +28,9 @@ export const getZIndexFromPath = (zIndex: ZIndexOptions, themeConfig: ThemeConfi
 	if (typeof zIndex === 'number') return zIndex
 	return _.get(themeConfig.zIndex, zIndex)
 }
+
+
+export const getCssUnit = (value: number | string) => {
+	if (typeof value === 'number') return `${value}px`
+	return value
+}

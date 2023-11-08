@@ -1,6 +1,6 @@
 "use client";
 import type { ReactNode } from "react"
-import { useCallback, useEffect, useRef, useState } from "react"
+import { forwardRef, useCallback, useEffect, useRef, useState } from "react"
 
 import { css as rawCss } from "@emotion/css"
 import { motion, AnimatePresence, type HTMLMotionProps } from "framer-motion"
@@ -14,6 +14,8 @@ import theme from "../../Utils/theme"
 import TooltipContainer, { TooltipContainerProps } from "./TooltipContainer"
 import { withTheme } from "@emotion/react"
 import { SingleColorOptions } from "../Theme/types"
+import clsx from "clsx"
+import { mergeRefs } from "react-merge-refs"
 
 
 type Placement = `${"top" | "bottom" | "center"}-${"left" | "right" | "center"}`
@@ -30,7 +32,7 @@ interface CalcPlacementProps {
 }
 
 const checkForFocusableChildren = (element: HTMLElement) => {
-	const focusableChildren = element.querySelectorAll("a, button, input, textarea, select, details, [tabindex]")
+	const focusableChildren = element.querySelectorAll ("a, button, input, textarea, select, details, [tabindex]")
 	return focusableChildren.length > 0
 }
 
@@ -45,25 +47,27 @@ const calcPlacement = (
 		offsetY
 	}: CalcPlacementProps
 ) => {
-	let top            = 0
-	let left           = 0
-	const placementArr = placement.split("-")
+	let top = 0
+	let left = 0
+	const placementArr = placement.split ("-")
 
-	if(placementArr[0] === "top") top = -(((elementHeight + tooltipHeight) / 2) + (offsetY))
-	if(placementArr[0] === "bottom") top = ((elementHeight + tooltipHeight) / 2) + (offsetY)
+	if (placementArr[0] === "top") top = -(((elementHeight + tooltipHeight) / 2) + (offsetY))
+	if (placementArr[0] === "bottom") top = ((elementHeight + tooltipHeight) / 2) + (offsetY)
 
-	if(placementArr[1] === "left") left = -(((elementWidth + tooltipWidth) / 2) + (offsetX))
-	if(placementArr[1] === "right") left = ((elementWidth + tooltipWidth) / 2) + (offsetX)
+	if (placementArr[1] === "left") left = -(((elementWidth + tooltipWidth) / 2) + (offsetX))
+	if (placementArr[1] === "right") left = ((elementWidth + tooltipWidth) / 2) + (offsetX)
 
 	return { left, top }
 }
 
 interface TooltipProps extends HTMLMotionProps<"div">, TooltipContainerProps {
+	wrapperClassName?: string
 	dark?: boolean
 	color?: SingleColorOptions
 	colorDark?: SingleColorOptions
 	tooltip: ReactNode | number | string
 	placement: Placement
+	hideTooltip?: boolean
 	offsetX?: number
 	offsetY?: number
 	noShadow?: boolean
@@ -75,45 +79,47 @@ interface TooltipProps extends HTMLMotionProps<"div">, TooltipContainerProps {
 	isPersistentOnMobile?: boolean
 }
 
-const Tooltip = (
+const Tooltip = forwardRef<HTMLDivElement, TooltipProps> ((
 	{
 		children,
+		wrapperClassName,
 		tooltip,
 		placement,
+		hideTooltip = false,
 		dark = undefined,
 		offsetX = 15,
 		offsetY = 15,
-		color = 'colorScheme.body2',
-		colorDark = 'colorScheme.accent',
+		color = "colorScheme.body2",
+		colorDark = "colorScheme.accent",
 		isClickableOnMobile = false,
 		isPersistentOnMobile = false,
 		preventDefaultEvent = true,
 		mobileTimeout = 1000,
 		mobileThreshold = 500,
 		...restProps
-	}: TooltipProps) => {
-	const { isTouchable } = useMain()
+	}, ref) => {
+	const { isTouchable } = useMain ()
 
 
-	const globalIsDarkMode                          = useIsDark()
-	const isDarkMode                                = dark || globalIsDarkMode
-	const [visible, setVisible]                     = useState(false)
-	const [top, setTop]                             = useState<number>()
-	const [left, setLeft]                           = useState<number>()
-	const elementWrapper                            = useRef<HTMLDivElement>(null)
-	const tooltipElement                            = useRef<HTMLDivElement>(null)
-	const [hasFocusableChild, setHasFocusableChild] = useState(false)
+	const globalIsDarkMode = useIsDark ()
+	const isDarkMode = dark || globalIsDarkMode
+	const [visible, setVisible] = useState (false)
+	const [top, setTop] = useState<number> ()
+	const [left, setLeft] = useState<number> ()
+	const elementWrapper = useRef<HTMLDivElement> (null)
+	const tooltipElement = useRef<HTMLDivElement> (null)
+	const [hasFocusableChild, setHasFocusableChild] = useState (false)
 
-	const callback = useCallback((event: LongPressEvent) => {
-		preventDefaultEvent && event.preventDefault()
-		setVisible(true)
+	const callback = useCallback ((event: LongPressEvent) => {
+		preventDefaultEvent && event.preventDefault ()
+		setVisible (true)
 	}, [])
 
-	const longPress = useLongPress(callback, {
+	const longPress = useLongPress (callback, {
 		onFinish:         () => {
-			if(isTouchable && !isPersistentOnMobile){
-				setTimeout(() => {
-					setVisible(false)
+			if (isTouchable && !isPersistentOnMobile) {
+				setTimeout (() => {
+					setVisible (false)
 				}, mobileTimeout)
 			}
 		},
@@ -124,14 +130,14 @@ const Tooltip = (
 	})
 
 	const setPosition = () => {
-		if(elementWrapper.current && tooltipElement.current){
-			const { height, width }                              = elementWrapper.current.getBoundingClientRect()
-			const { width: tooltipWidth, height: tooltipHeight } = tooltipElement.current.getBoundingClientRect()
-			const { top, left }                                  = {
-				top:  elementWrapper.current.getBoundingClientRect().top,
-				left: elementWrapper.current.getBoundingClientRect().left,
+		if (elementWrapper.current && tooltipElement.current) {
+			const { height, width } = elementWrapper.current.getBoundingClientRect ()
+			const { width: tooltipWidth, height: tooltipHeight } = tooltipElement.current.getBoundingClientRect ()
+			const { top, left } = {
+				top:  elementWrapper.current.getBoundingClientRect ().top,
+				left: elementWrapper.current.getBoundingClientRect ().left,
 			}
-			const { top: topOffset, left: leftOffset }           = calcPlacement({
+			const { top: topOffset, left: leftOffset } = calcPlacement ({
 				placement,
 				elementWidth:  width,
 				elementHeight: height,
@@ -141,49 +147,49 @@ const Tooltip = (
 				offsetY,
 			})
 
-			const tooltipTop  = top + (height / 2) - (tooltipHeight / 2) + topOffset
+			const tooltipTop = top + (height / 2) - (tooltipHeight / 2) + topOffset
 			const tooltipLeft = left + (width / 2) - (tooltipWidth / 2) + leftOffset
 
-			const tooltipTopPreventOverflow  = Math.min(Math.max(tooltipTop, 0), window.innerHeight - tooltipHeight)
-			const tooltipLeftPreventOverflow = Math.min(Math.max(tooltipLeft, 0), window.innerWidth - tooltipWidth)
+			const tooltipTopPreventOverflow = Math.min (Math.max (tooltipTop, 0), window.innerHeight - tooltipHeight)
+			const tooltipLeftPreventOverflow = Math.min (Math.max (tooltipLeft, 0), window.innerWidth - tooltipWidth)
 
-			setTop(() => tooltipTopPreventOverflow)
-			setLeft(() => tooltipLeftPreventOverflow)
+			setTop (() => tooltipTopPreventOverflow)
+			setLeft (() => tooltipLeftPreventOverflow)
 		}
 	}
 
 	const hide = () => {
-		setVisible(false)
+		setVisible (false)
 	}
 
 
-	useEffect(() => {
-		window.addEventListener("scroll", setPosition)
-		window.addEventListener("resize", setPosition)
+	useEffect (() => {
+		window.addEventListener ("scroll", setPosition)
+		window.addEventListener ("resize", setPosition)
 		return () => {
-			window.removeEventListener("scroll", setPosition)
-			window.removeEventListener("resize", setPosition)
+			window.removeEventListener ("scroll", setPosition)
+			window.removeEventListener ("resize", setPosition)
 		}
 	}, [])
 
-	useEffect(() => {
-		if(elementWrapper.current) setHasFocusableChild(checkForFocusableChildren(elementWrapper.current))
+	useEffect (() => {
+		if (elementWrapper.current) setHasFocusableChild (checkForFocusableChildren (elementWrapper.current))
 	}, [elementWrapper])
 
 
-	useEffect(() => {
-		setPosition()
-		if(visible && isTouchable) document.body.addEventListener("click", hide)
+	useEffect (() => {
+		setPosition ()
+		if (visible && isTouchable) document.body.addEventListener ("click", hide)
 
 		return () => {
-			if(isTouchable) document.body.addEventListener("click", hide)
+			if (isTouchable) document.body.addEventListener ("click", hide)
 		}
 	}, [visible])
 
 	return (
 		<>
 			<AnimatePresence>
-				{visible ? (
+				{(!hideTooltip && visible) ? (
 					<Portal>
 						<TooltipContainer
 							role="tooltip"
@@ -207,25 +213,25 @@ const Tooltip = (
 					</Portal>
 				) : null}
 			</AnimatePresence>
-			<motion.div ref={elementWrapper}
-			            className="flex w-fit h-fit"
+			<motion.div ref={mergeRefs ([elementWrapper, ref])}
+			            className={`flex w-fit h-fit ${clsx (wrapperClassName)}`}
 			            tabIndex={hasFocusableChild ? -1 : 0}
 			            {...((isClickableOnMobile && isTouchable) && {
 				            onClick: (event) => {
-					            event.stopPropagation()
-					            setVisible(true)
-					            if(isTouchable && !isPersistentOnMobile) setTimeout(() => setVisible(false), mobileTimeout)
+					            event.stopPropagation ()
+					            setVisible (true)
+					            if (isTouchable && !isPersistentOnMobile) setTimeout (() => setVisible (false), mobileTimeout)
 				            },
 			            })}
-			            {...longPress()}
-			            onFocus={() => setVisible(true)}
-			            onBlur={() => setVisible(false)}
-			            onMouseEnter={() => !isTouchable && setVisible(true)}
-			            onMouseLeave={() => !isTouchable && setVisible(false)}>
+			            {...longPress ()}
+			            onFocus={() => setVisible (true)}
+			            onBlur={() => setVisible (false)}
+			            onMouseEnter={() => !isTouchable && setVisible (true)}
+			            onMouseLeave={() => !isTouchable && setVisible (false)}>
 				{children}
 			</motion.div>
 		</>
 	)
-}
+})
 
-export default withTheme(Tooltip)
+export default withTheme (Tooltip)

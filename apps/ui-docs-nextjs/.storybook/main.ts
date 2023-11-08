@@ -1,3 +1,4 @@
+import { dirname, join } from "path";
 import type { StorybookConfig } from "@storybook/nextjs"
 import Icons from "unplugin-icons/webpack"
 
@@ -18,19 +19,17 @@ const config: StorybookConfig = {
 		"../stories/**/*.stories.@(js|jsx|ts|tsx)"
 	],
 	addons:    [
-		"@storybook/addon-links",
-		"@storybook/addon-essentials",
-		"@storybook/addon-interactions",
-		"storybook-addon-rtl-direction",
-		// "storybook-addon-next",
-		// "storybook-addon-next-router",
-		"storybook-dark-mode",
-		"@storybook/addon-a11y" // Additional addon for accessibility
+		getAbsolutePath("@storybook/addon-links"),
+		getAbsolutePath("@storybook/addon-essentials"),
+		getAbsolutePath("@storybook/addon-interactions"),
+		getAbsolutePath("storybook-addon-rtl-direction"),
+		getAbsolutePath("storybook-dark-mode"),
+		getAbsolutePath("@storybook/addon-a11y")
 	],
 	framework: {
-		name:    "@storybook/nextjs",
+		name:    getAbsolutePath("@storybook/nextjs"),
 		options: {
-			nextConfigPath: "../next.config.cjs",
+			nextConfigPath: "../next.config.mjs",
 		},
 	},
 	core:      {
@@ -50,3 +49,7 @@ const config: StorybookConfig = {
 }
 
 export default config
+
+function getAbsolutePath(value: string): any {
+    return dirname(require.resolve(join(value, "package.json")));
+}

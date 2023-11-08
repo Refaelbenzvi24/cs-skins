@@ -7,92 +7,92 @@ export type NewSource = Parameters<typeof dbHelper.mutate.sources.insert>[0]
 export type NewQuality = InferInsert<typeof schema.qualities>
 
 const games: NewGames[] = [
-	{ name: "csgo" }
+	{ name: "CS GO" }
 ]
 
 const sources: NewSource[] = [
 	{
-		connect: { gameId: "csgo" },
+		connect: { gameId: "CS GO" },
 		data:    {
 			url:  "https://csgostash.com",
-			name: "csgostash",
+			name: "CS Go Stash",
 		}
 	},
 	{
-		connect: { gameId: "csgo" },
+		connect: { gameId: "CS GO" },
 		data:    {
 			url:  "https://bitskins.com",
-			name: "bitskins",
+			name: "Bit Skins",
 		},
 	},
 	{
-		connect: { gameId: "csgo" },
+		connect: { gameId: "CS GO" },
 		data:    {
 			url:  "https://steamcommunity.com/market",
-			name: "steam",
+			name: "Steam",
 		},
 	},
 	{
-		connect: { gameId: "csgo" },
+		connect: { gameId: "CS GO" },
 		data:    {
 			url:  "https://loot.farm/",
-			name: "lootfarm",
+			name: "Loot Farm",
 		},
 	},
 	{
-		connect: { gameId: "csgo" },
+		connect: { gameId: "CS GO" },
 		data:    {
 			url:  "https://cs.deals/",
-			name: "csdeals",
+			name: "CS Deals",
 		},
 	},
 	{
-		connect: { gameId: "csgo" },
+		connect: { gameId: "CS GO" },
 		data:    {
 			url:  "https://skinport.com/",
-			name: "skinport",
+			name: "Skin Port",
 		},
 	},
 	{
-		connect: { gameId: "csgo" },
+		connect: { gameId: "CS GO" },
 		data:    {
 			url:  "https://cs.money/",
-			name: "csmoney",
+			name: "CS Money",
 		},
 	},
 	{
-		connect: { gameId: "csgo" },
+		connect: { gameId: "CS GO" },
 		data:    {
 			url:  "https://tradeit.gg/",
-			name: "tradeit",
+			name: "Trade It",
 		},
 	},
 	{
-		connect: { gameId: "csgo" },
+		connect: { gameId: "CS GO" },
 		data:    {
 			url:  "https://swap.gg/",
-			name: "swapgg",
+			name: "Swap gg",
 		},
 	},
 	{
-		connect: { gameId: "csgo" },
+		connect: { gameId: "CS GO" },
 		data:    {
 			url:  "https://skinsjar.com/",
-			name: "skinsjar",
+			name: "Skins Jar",
 		},
 	},
 	{
-		connect: { gameId: "csgo" },
+		connect: { gameId: "CS GO" },
 		data:    {
 			url:  "https://skinbay.com/",
-			name: "skinbay",
+			name: "Skin Bay",
 		},
 	},
 	{
-		connect: { gameId: "csgo" },
+		connect: { gameId: "CS GO" },
 		data:    {
 			url:  "https://skinsmonkey.com/",
-			name: "skinsmonkey"
+			name: "Skins Monkey"
 		},
 	}
 ]

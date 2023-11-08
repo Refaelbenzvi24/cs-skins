@@ -66,37 +66,34 @@ interface TableProps<
 	borderColorDark?: string
 }
 
-const Table = <
-	DataType extends { [key in HeadersKeys]?: any }[],
-	HeadersKeys extends string | number | symbol,
->
-({
-	 headers,
-	 components,
-	 data,
-	 headersHeight,
-	 bodyHeight,
-	 autoFocus,
-	 onRowClick,
-	 translationPrefix = "",
-	 translationSuffix = "",
-	 disableHeadersTranslation = false,
-	 translationFunction,
-	 headersColor = "colorScheme.subtitle1",
-	 headersColorDark = "colorScheme.subtitle1",
-	 bodyColor = "colorScheme.header2",
-	 bodyColorDark = "colorScheme.accent",
-	 borderColor = "colorScheme.subtitle2",
-	 borderColorDark = "colorScheme.body1",
-	 ...restProps
- }:
-	 TableProps<DataType, HeadersKeys> &
-	 Omit<React.DetailedHTMLProps<React.TableHTMLAttributes<HTMLTableElement>, HTMLTableElement>, "children"> &
-	 (TablePaginationProps | { hasPagination?: false })
+const Table = <DataType extends { [key: string]: any }[]>(
+	{
+		headers,
+		components,
+		data,
+		headersHeight,
+		bodyHeight,
+		autoFocus,
+		onRowClick,
+		translationPrefix = "",
+		translationSuffix = "",
+		disableHeadersTranslation = false,
+		translationFunction,
+		headersColor = "colorScheme.subtitle1",
+		headersColorDark = "colorScheme.subtitle1",
+		bodyColor = "colorScheme.header2",
+		bodyColorDark = "colorScheme.accent",
+		borderColor = "colorScheme.subtitle2",
+		borderColorDark = "colorScheme.body1",
+		...restProps
+	}:
+		TableProps<DataType, keyof DataType[number]> &
+		Omit<React.DetailedHTMLProps<React.TableHTMLAttributes<HTMLTableElement>, HTMLTableElement>, "children"> &
+		(TablePaginationProps | { hasPagination?: false })
 ) => {
 	const props = restProps
 
-	const {t} = useMain()
+	const { t } = useMain ()
 	const translate = translationFunction ?? t
 
 	const isFirstRender = useRef (true)
@@ -124,7 +121,7 @@ const Table = <
 									color={headersColor}
 									colorDark={headersColorDark}
 									variant={"small"}>
-									{disableHeadersTranslation ? display : (translate ? translate(`${translationPrefix}${key}${translationSuffix}`) : display)}
+									{disableHeadersTranslation ? display : (translate ? translate (`${translationPrefix}${key}${translationSuffix}`) : display)}
 								</Typography>
 							</TableHeader>
 						))}

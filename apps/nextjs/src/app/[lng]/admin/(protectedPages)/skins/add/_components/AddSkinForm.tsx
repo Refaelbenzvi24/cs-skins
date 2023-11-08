@@ -10,7 +10,7 @@ import { z } from "zod"
 import { skinValidations } from "@acme/validations"
 import type { ComponentWithLocaleProps } from "~/types"
 
-const createSkinValidation = z.object (skinValidations.createSkin)
+const createSkinValidation = z.object (skinValidations.createClient)
 
 type createSkinValidationSchema = z.infer<typeof createSkinValidation>
 
@@ -32,7 +32,7 @@ const AddSkinForm = ({lng}: ComponentWithLocaleProps) => {
 
 	const onSubmit: SubmitHandler<createSkinValidationSchema> = data => {
 		const transformedData = {
-			url: data.url.map (({ value }) => value)
+			url: data.url.map(({ value }) => value)
 		}
 		createSkinMutation.mutate (transformedData)
 		reset ()

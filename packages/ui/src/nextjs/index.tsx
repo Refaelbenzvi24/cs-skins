@@ -39,6 +39,7 @@ export {default as SideBar} from './components/SideBar/SideBar'
 export {default as SideBarButton} from './components/SideBar/SideBarButton'
 export {default as SideBarLink} from './components/SideBar/SideBarLink'
 export {default as SideBarLinkWrapper} from './components/SideBar/SideBarLinkWrapper'
+export {default as SimpleSideBar} from "./components/SideBar/SimpleSideBar"
 export {default as Skeleton} from './components/Loaders/Skelton'
 export {default as Tabs} from './components/Tabs/Tabs'
 export {default as Tab} from './components/Tabs/Tab'

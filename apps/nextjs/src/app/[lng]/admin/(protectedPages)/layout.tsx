@@ -1,13 +1,15 @@
-"use client";
 import AdminAppBar from "~/components/Admin/AdminAppBar"
 import { Main } from "@acme/ui"
-import type { ReactNode } from "react"
+import type { LayoutWithLocaleProps } from "~/types"
+import SideBar from "~/components/layouts/SideBar"
 
 
-const Layout = (props: { children: ReactNode }) => {
+const Layout = (props: LayoutWithLocaleProps) => {
 	return (
 		<div className="h-full">
-			<AdminAppBar/>
+			<AdminAppBar lng={props.params.lng}/>
+			<SideBar lng={props.params.lng}/>
+
 			<Main>
 				{props.children}
 			</Main>

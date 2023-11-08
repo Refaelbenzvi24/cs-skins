@@ -49,7 +49,7 @@ const getSource = async () => {
 			name: schema.sources.name,
 		})
 		.from(schema.sources)
-		.where(({ name }) => eq(name, "csgostash"))
+		.where(({ name }) => eq(name, "CS Go Stash"))
 		.execute()
 	return source!
 }
