@@ -1,9 +1,8 @@
-import skinValidations from "./skin"
-import authValidations from "./auth"
-import adminSettingsValidations from "./adminSettingsValidations"
-
-export {
-	skinValidations,
-	authValidations,
-	adminSettingsValidations
-}
+export * as authValidations from "./auth"
+export * as adminSettingsValidations from "./adminSettingsValidations"
+export * as sourceValidations from "./source"
+export * as weaponValidations from "./weapon"
+export * as qualityValidations from "./quality"
+export * as skinValidations from "./skin"
+export * as skinDataValidations from "./skinData"
+export * as userValidations from "./user"

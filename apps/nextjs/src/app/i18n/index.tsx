@@ -21,3 +21,6 @@ export async function getTranslation(lng: string, ns?: string | string[], option
 		i18n: i18nextInstance
 	}
 }
+
+// TODO: add support for namespaces
+// TODO: log warnings when translation is missing

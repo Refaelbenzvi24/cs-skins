@@ -1,52 +1,32 @@
 import { z } from "zod"
+import * as generalValidations from "./general"
 
-const skinObject = {
-	url: z.array (
-		z
-			.string ()
-			.min (1, { message: "forms:skinData.errors.urlRequired" })
-			.url ({ message: "forms:skinData.errors.urlInvalid" })
-			.max (2000, { message: "forms:skinData.errors.urlTooLong" })
-	).or (
-		z
-			.string ()
-			.min (1, { message: "forms:skinData.errors.urlRequired" })
-			.url ({ message: "forms:skinData.errors.urlInvalid" })
-			.max (2000, { message: "forms:skinData.errors.urlTooLong" })
-	)
+
+export const createServer = {
+	url: z.array (generalValidations.urlValidation).or (generalValidations.urlValidation)
 }
 
-const listSkinObject = {
-	limit: z.number().min(1).max(100).nullish(),
-	cursor: z.string().nullish(),
+export const list = {
+	...generalValidations.infiniteQueryValidation,
 	search: z
-		        .string ()
-		        .min (2, { message: "admin:search.mustBeLongerThan2" })
-		        .or (z.string ().max (0))
-		        .optional ()
+	        .string()
+	        .min(2, { message: "common:search.mustBeLongerThan2" })
+	        .or(z.string().max(0))
+	        .optional()
 }
 
-const createSkin = {
+export const getByIdWithData = {
+	...generalValidations.infiniteQueryValidation,
+	skinId: z.string().cuid2(),
+	search: z
+	        .string()
+	        .min(2, { message: "common:search.mustBeLongerThan2" })
+	        .or(z.string().max(0))
+	        .optional()
+}
+
+export const createClient = {
 	url: z
-		     .array (z.object ({
-			     value: z
-				            .string ()
-				            .min (1, { message: "forms:skinData.errors.urlRequired" })
-				            .url ({ message: "forms:skinData.errors.urlInvalid" })
-				            .max (2000, { message: "forms:skinData.errors.urlTooLong" }),
-			     label: z
-				            .string ()
-				            .min (1, { message: "forms:skinData.errors.urlRequired" })
-				            .url ({ message: "forms:skinData.errors.urlInvalid" })
-				            .max (2000, { message: "forms:skinData.errors.urlTooLong" })
-		     }))
-		     .min (1, { message: "forms:skinData.errors.urlRequired" })
+		     .array (z.object ({ value: generalValidations.urlValidation, label: generalValidations.urlValidation }))
+		     .min (1, { message: "forms.errors.urlRequired" })
 }
-
-const skinValidations = {
-	createSkin,
-	skinObject,
-	listSkinObject
-}
-
-export default skinValidations

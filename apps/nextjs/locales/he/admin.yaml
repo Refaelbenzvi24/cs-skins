@@ -7,23 +7,54 @@ phone: טלפון
 dateCreated: תאריך יצירה
 message: הודעה
 messageStatus:
-  no: אין
-  yes: יש
+    no: אין
+    yes: יש
 addSkin: הוסף סקין
-skins: סקינים
 add: הוספה
 url: כתובות
+skinsDataTable:
+    weapon: Weapon
+    skin: Skin
+    quality: Quality
+    steamPrice: Steam Price
+    steamListings: Steam Listings
+    steamMedianPrice: Steam Median Price
+    steamVolume: Steam Volume
+    bitSkinsPrice: Bit Skins Price
+    percentChange: Percent Change
+    createdAt: Created At
+sourcesTable:
+    name: Name
+    url: Url
+    createdAt: Created At
+weaponsTable:
+    name: Name
+    createdAt: Created At
 skinsTable:
-  weapon: Weapon
-  skin: Skin
-  quality: Quality
-  steamPrice: Steam Price
-  steamListings: Steam Listings
-  steamMedianPrice: Steam Median Price
-  steamVolume: Steam Volume
-  bitSkinsPrice: Bit Skins Price
-  percentChange: Percent Change
-  createdAt: Created At
+    name: Name
+    url: Url
+    createdAt: Created At
+qualitiesTable:
+    name: Name
+    createdAt: Created At
+usersTable:
+    name: Name
+    email: Email
 metadata:
-  title: Admin
-  addSkin: Add Skin
+    title:
+        main: Admin
+        dashboard: Dashboard
+        weapons: Weapons
+        users: Users
+        sources: Sources
+        skinsData: Skins Data
+        skins: Skins
+        addSkin: Add Skin
+dashboard: דשבורד
+skinsData: נתוני סקינים
+sources: מקורות
+weapons: נשקים
+skins: סקינים
+qualities: איכויות
+users: משתמשים
+addSource: הוסף מקור

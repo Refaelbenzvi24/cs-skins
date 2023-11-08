@@ -13,12 +13,13 @@ interface SelectProviderOptions {
 	props: SelectContextProps
 }
 
-const SelectProvider = ({
-	children, dark, colors = defaultColors, colorsDark = defaultColorsDark,
-	props: { textInput }
-}: SelectProviderOptions) => {
-	const [colorsState, _setColorsState]         = useState<SelectColors>(_.extend(defaultColors, colors))
-	const [colorsDarkState, _setColorsDarkState] = useState<SelectColors>(_.extend(defaultColorsDark, colorsDark))
+const SelectProvider = (
+	{
+		children, dark, colors = defaultColors, colorsDark = defaultColorsDark,
+		props: { textInput }
+	}: SelectProviderOptions) => {
+	const [colorsState, _setColorsState] = useState<SelectColors> (_.extend (defaultColors, colors))
+	const [colorsDarkState, _setColorsDarkState] = useState<SelectColors> (_.extend (defaultColorsDark, colorsDark))
 
 	return (
 		<SelectContext.Provider value={{

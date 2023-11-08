@@ -1,5 +1,8 @@
 "use client";
-import { type ComponentProps, type ComponentRef, forwardRef, type KeyboardEventHandler, useContext, useEffect, useId, useRef, useState } from "react"
+import {
+	type ComponentProps, type ComponentRef, forwardRef, type KeyboardEventHandler, useContext, useEffect, useId, useRef,
+	useState
+} from "react"
 
 
 import clsx from "clsx"
@@ -60,12 +63,12 @@ const customComponents: ComponentProps<typeof Select>["components"] = {
 	MultiValueRemove:  components.MultiValueRemove
 }
 
-const animatedComponents = makeAnimated({
+const animatedComponents = makeAnimated ({
 	...(customComponents as Parameters<typeof makeAnimated>["0"]),
 })
 
 // TODO: Add focus indicator
-const SelectWithLabel = forwardRef<ComponentRef<typeof Select>, SelectProps>((
+const SelectWithLabel = forwardRef<ComponentRef<typeof Select>, SelectProps> ((
 	{
 		removeAnimations,
 		label,
@@ -87,71 +90,71 @@ const SelectWithLabel = forwardRef<ComponentRef<typeof Select>, SelectProps>((
 		helperTextProps,
 		...restProps
 	}, ref) => {
-	const { theme: selectTheme } = useSelect()
-	const Component              = creatable ? CreatableSelect : Select
+	const { theme: selectTheme } = useSelect ()
+	const Component = creatable ? CreatableSelect : Select
 
 	const initialValue = restProps.isMulti ? (value instanceof Array ? value : []) : value || restProps.defaultValue
 
-	const [isFocused, setIsFocused]             = useState(false)
-	const [localValue, setLocalValue]           = useState<SelectOption | SelectOption[] | undefined>(initialValue)
-	const [localInputValue, setLocalInputValue] = useState<string>("")
-	const emotionTheme                          = useContext(ThemeContext)
+	const [isFocused, setIsFocused] = useState (false)
+	const [localValue, setLocalValue] = useState<SelectOption | SelectOption[] | undefined> (initialValue)
+	const [localInputValue, setLocalInputValue] = useState<string> ("")
+	const emotionTheme = useContext (ThemeContext)
 
-	const wasFocused  = useRef(false)
-	const firstUpdate = useRef(true)
-	const sectionRef  = useRef(null)
+	const wasFocused = useRef (false)
+	const firstUpdate = useRef (true)
+	const sectionRef = useRef (null)
 
-	const { generalError } = useToasts()
+	const { generalError } = useToasts ()
 
-	const isAppDark = useIsDark()
-	const isDark    = restProps.dark ?? isAppDark
+	const isAppDark = useIsDark ()
+	const isDark = restProps.dark ?? isAppDark
 
 	const createOption = (label: string) => ({ label, value: label });
 
 	const handleKeyDown: KeyboardEventHandler = (event) => {
-		if(!localInputValue) return;
-		if(!(localValue instanceof Array)) return;
+		if (!localInputValue) return;
+		if (!(localValue instanceof Array)) return;
 		switch (event.key) {
-		case "Enter":
-		case "Tab": {
-			try {
-				const isLocalInputValueAnArray = localInputValue.startsWith("[") && localInputValue.endsWith("]")
-				if(!isLocalInputValueAnArray){
-					return setLocalValue((prev) => {
-						const newState = [...(prev as SelectOption[]), createOption(localInputValue)]
-						if(onChange) onChange(newState)
+			case "Enter":
+			case "Tab": {
+				try {
+					const isLocalInputValueAnArray = localInputValue.startsWith ("[") && localInputValue.endsWith ("]")
+					if (!isLocalInputValueAnArray) {
+						return setLocalValue ((prev) => {
+							const newState = [...(prev as SelectOption[]), createOption (localInputValue)]
+							if (onChange) onChange (newState)
+							return newState
+						})
+					}
+					const options = JSON.parse (localInputValue) as string[]
+					const newOptions = options.map (createOption)
+					setLocalValue ((prev) => {
+						const newState = [...(prev as SelectOption[]), ...newOptions]
+						if (onChange) onChange (newState)
 						return newState
 					})
+				} catch (error) {
+					void generalError ("errors.invalidJSON")
+				} finally {
+					setLocalInputValue ("")
+					event.preventDefault ()
 				}
-				const options    = JSON.parse(localInputValue) as string[]
-				const newOptions = options.map(createOption)
-				setLocalValue((prev) => {
-					const newState = [...(prev as SelectOption[]), ...newOptions]
-					if(onChange) onChange(newState)
-					return newState
-				})
-			} catch (error) {
-				void generalError("errors.invalidJSON")
-			} finally {
-				setLocalInputValue("")
-				event.preventDefault()
 			}
-		}
 		}
 	};
 
-	useEffect(() => {
+	useEffect (() => {
 		const blurController = () => {
-			if(!firstUpdate.current && wasFocused.current && !isFocused && onBlur){
-				onBlur()
+			if (!firstUpdate.current && wasFocused.current && !isFocused && onBlur) {
+				onBlur ()
 			}
-			if(!firstUpdate.current){
+			if (!firstUpdate.current) {
 				wasFocused.current = true
 			}
 			firstUpdate.current = false
 		}
 
-		blurController()
+		blurController ()
 	}, [isFocused, onBlur])
 
 	return (
@@ -168,16 +171,19 @@ const SelectWithLabel = forwardRef<ComponentRef<typeof Select>, SelectProps>((
 			               minContainerHeight={minContainerHeight}
 			               isMulti={restProps.isMulti}
 			               helperText={helperText}
-			               className={clsx(className)}>
+			               className={clsx (className)}>
 				<Component blurInputOnSelect
 				           classNames={{
 					           control: () => css`
-						           cursor: ${textInput ? "text" : "pointer"};
+                                 cursor: ${textInput ? "text" : "pointer"};
+					           `,
+					           clearIndicator: () => css`
+                                 cursor: pointer;
 					           `,
 				           }}
 				           isSearchable={creatable}
 				           placeholder={placeholder || label}
-				           instanceId={useId()}
+				           instanceId={useId ()}
 				           {...restProps}
 				           menuIsOpen={textInput ? (restProps.menuIsOpen ?? false) : restProps.menuIsOpen}
 				           theme={(theme) => ({
@@ -186,30 +192,30 @@ const SelectWithLabel = forwardRef<ComponentRef<typeof Select>, SelectProps>((
 				           })}
 				           ref={ref}
 				           onFocus={(event) => {
-					           setIsFocused(true)
-					           if(onFocus){
-						           onFocus(event)
+					           setIsFocused (true)
+					           if (onFocus) {
+						           onFocus (event)
 					           }
 				           }}
 				           onBlur={() => {
-					           setIsFocused(false)
+					           setIsFocused (false)
 				           }}
 				           onInputChange={(value, actionMeta) => {
-					           if(restProps.isMulti) setLocalInputValue(value)
-					           if(restProps.onInputChange) restProps.onInputChange(value, actionMeta)
+					           if (restProps.isMulti) setLocalInputValue (value)
+					           if (restProps.onInputChange) restProps.onInputChange (value, actionMeta)
 				           }}
 				           onChange={(value) => {
-					           if(onChange) onChange(value as SelectOption)
-					           setLocalValue(value as SelectOption | SelectOption[])
+					           if (onChange) onChange (value as SelectOption)
+					           setLocalValue (value as SelectOption | SelectOption[])
 				           }}
 				           onKeyDown={(event) => {
-					           if(restProps.isMulti) handleKeyDown(event)
-					           if(restProps.onKeyDown) restProps.onKeyDown(event)
+					           if (restProps.isMulti) handleKeyDown (event)
+					           if (restProps.onKeyDown) restProps.onKeyDown (event)
 				           }}
 				           value={localValue}
 				           inputValue={localInputValue}
 				           isRtl={dir === "rtl"}
-				           styles={selectStyles(isDark, selectTheme)}
+				           styles={selectStyles (isDark, selectTheme)}
 				           components={{
 					           ...(removeAnimations ? customComponents : animatedComponents),
 					           ...(textInput ? { DropdownIndicator: null } : {})
@@ -222,10 +228,10 @@ const SelectWithLabel = forwardRef<ComponentRef<typeof Select>, SelectProps>((
 	)
 })
 
-const SelectWithProvider = forwardRef<ComponentRef<typeof Select>, SelectProps>((props, ref) => {
+const SelectWithProvider = forwardRef<ComponentRef<typeof Select>, SelectProps> ((props, ref) => {
 	const { colors, colorsDark, dark } = props
-	const isAppDark                    = useIsDark()
-	const isDark                       = dark ?? isAppDark
+	const isAppDark = useIsDark ()
+	const isDark = dark ?? isAppDark
 	return (
 		<SelectProvider colors={colors}
 		                colorsDark={colorsDark}

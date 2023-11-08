@@ -1,5 +1,5 @@
 import React from "react"
-import {Button, Main, theme, Typography} from "@acme/ui"
+import {Button, Main, Typography} from "@acme/ui"
 import type {Story, ComponentMeta} from '@storybook/react';
 import type {ButtonProps} from "@acme/ui/src/nextjs/components/Buttons/Button";
 
@@ -30,8 +30,8 @@ const ButtonTemplate: Story<ButtonProps> = ({...args}) => {
 
 				<Button
 					{...args}
-					colorsForStates={theme.colorSchemeByState.secondary}
-					colorsForStatesDark={theme.colorSchemeByState.secondary}>
+					colorsForStates={'secondary'}
+					colorsForStatesDark={'secondary'}>
 					<Typography variant={'button'}>
 						Secondary
 					</Typography>
@@ -39,8 +39,8 @@ const ButtonTemplate: Story<ButtonProps> = ({...args}) => {
 
 				<Button
 					{...args}
-					colorsForStates={theme.colorSchemeByState.accent}
-					colorsForStatesDark={theme.colorSchemeByState.accent}>
+					colorsForStates={'accent'}
+					colorsForStatesDark={'accent'}>
 					<Typography variant={'button'}
 					            colorDark={args.text ? 'inherit': 'black'}>
 						Accent
@@ -49,8 +49,8 @@ const ButtonTemplate: Story<ButtonProps> = ({...args}) => {
 
 				<Button
 					{...args}
-					colorsForStates={theme.colorSchemeByState.body2}
-					colorsForStatesDark={theme.colorSchemeByState.body2}>
+					colorsForStates={'body2'}
+					colorsForStatesDark={'body2'}>
 					<Typography variant={'button'} color={args.text ? 'inherit': 'white'}>
 						Body2
 					</Typography>
@@ -58,8 +58,8 @@ const ButtonTemplate: Story<ButtonProps> = ({...args}) => {
 
 				<Button
 					{...args}
-					colorsForStates={theme.colorSchemeByState.success}
-					colorsForStatesDark={theme.colorSchemeByState.success}>
+					colorsForStates={'success'}
+					colorsForStatesDark={'success'}>
 					<Typography variant={'button'} color={args.text ? 'inherit': 'black'}>
 						Success
 					</Typography>
@@ -67,8 +67,8 @@ const ButtonTemplate: Story<ButtonProps> = ({...args}) => {
 
 				<Button
 					{...args}
-					colorsForStates={theme.colorSchemeByState.header1}
-					colorsForStatesDark={theme.colorSchemeByState.header1}>
+					colorsForStates={'header1'}
+					colorsForStatesDark={'header1'}>
 					<Typography variant={'button'} color={args.text ? 'inherit': 'white'}>
 						Success
 					</Typography>
@@ -76,8 +76,8 @@ const ButtonTemplate: Story<ButtonProps> = ({...args}) => {
 
 				<Button
 					{...args}
-					colorsForStates={theme.colorSchemeByState.white}
-					colorsForStatesDark={theme.colorSchemeByState.white}>
+					colorsForStates={'white'}
+					colorsForStatesDark={'white'}>
 					<Typography variant={'button'} color={args.text ? 'inherit': 'black'}>
 						Success
 					</Typography>
@@ -85,8 +85,8 @@ const ButtonTemplate: Story<ButtonProps> = ({...args}) => {
 
 				<Button
 					{...args}
-					colorsForStates={theme.colorSchemeByState.overlaysDark}
-					colorsForStatesDark={theme.colorSchemeByState.overlaysDark}>
+					colorsForStates={'overlaysDark'}
+					colorsForStatesDark={'overlaysDark'}>
 					<Typography variant={'button'} color={args.text ? 'inherit': 'white'}>
 						Success
 					</Typography>
@@ -94,8 +94,8 @@ const ButtonTemplate: Story<ButtonProps> = ({...args}) => {
 
 				<Button
 					{...args}
-					colorsForStates={theme.colorSchemeByState.light}
-					colorsForStatesDark={theme.colorSchemeByState.light}>
+					colorsForStates={'light'}
+					colorsForStatesDark={'light'}>
 					<Typography variant={'button'}
 					            color={args.text ? 'inherit': 'black'}>
 						Success

@@ -18,3 +18,5 @@ metadata:
     title: CS Skins
     appDescription: common:metadata.appDescription
 appDescription: common:appDescription
+open: Open
+close: Close

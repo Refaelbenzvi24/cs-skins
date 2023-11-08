@@ -4,12 +4,6 @@
 	"description": "",
 	"main": "src/nextjs/index.tsx",
 	"types": "src/nextjs/index.tsx",
-	"babelMacros": {
-		"twin": {
-			"preset": "emotion",
-			"config": "tailwind.config.ts"
-		}
-	},
 	"files": [
 		"src/nextjs/index.tsx",
 		"src/nextjs/globals.css"

@@ -1,15 +1,13 @@
 "use client";
-import { Card, Row, Table, TextField, Typography } from "@acme/ui"
+import { ATagButton, Card, Row, Table, TextField, Typography } from "@acme/ui"
 import { api } from "~/utils/api"
 import type { FormEvent } from "react";
-import { useCallback, useMemo } from "react"
+import { useMemo } from "react"
 import type { trpcRsc } from "~/utils/apiServer"
-import i18next from "i18next"
-import { useRouter, useSearchParams } from "next/navigation"
-import { debounce } from "~/utils/helpers"
-import { useGetSearchParams } from "~/hooks"
+import { useSearchParamState } from "~/hooks"
 import type { ComponentWithLocaleProps } from "~/types"
 import { useTranslation } from "~/app/i18n/client"
+import { useRouter } from "next/navigation"
 
 
 interface SkinsTableProps extends ComponentWithLocaleProps {
@@ -17,10 +15,21 @@ interface SkinsTableProps extends ComponentWithLocaleProps {
 	initialData?: Awaited<ReturnType<typeof trpcRsc.skin.list.fetch>>
 }
 
-const SkinsTable = ({ searchQuery = "", initialData, lng }: SkinsTableProps) => {
+const SkinsTable = ({ searchQuery, initialData, lng }: SkinsTableProps) => {
+	const { search, searchHandler } = useSearchParamState ({
+		route:                              "/admin/skins",
+		key:                                "search",
+		valueGetter:                        ({ target }: FormEvent<HTMLInputElement>) => (target as HTMLInputElement).value,
+		beforeRouteChangeParamsTransformer: (params, value) => {
+			if (value.length <= 2) {
+				params.delete ("search")
+			} else {
+				params.set ("search", value)
+			}
+		}
+	})
+
 	const router = useRouter ()
-	const searchParams = useSearchParams ()
-	const search = useGetSearchParams ("search")
 
 	const { t } = useTranslation (lng, ["common", "admin"])
 
@@ -39,20 +48,6 @@ const SkinsTable = ({ searchQuery = "", initialData, lng }: SkinsTableProps) => 
 		...item
 	})) ?? [], [skinsList])
 
-	const handleSearch = ({ target }: FormEvent<HTMLInputElement>) => {
-		const searchText = (target as HTMLInputElement).value
-		const params = new URLSearchParams (searchParams)
-		if (searchText.length < 2 && searchText.length !== 0) {
-			params.set ("search", "")
-		} else {
-			params.set ("search", searchText)
-		}
-
-		return router.push (`/${i18next.language}/admin?${params.toString ()}`)
-	}
-
-	const debouncedSearchHandler = useCallback (debounce (handleSearch, 500), [])
-
 	return (
 		<Card
 			className="flex-col mt-[20px] w-full"
@@ -62,7 +57,7 @@ const SkinsTable = ({ searchQuery = "", initialData, lng }: SkinsTableProps) => 
 			height="100%">
 			<Row className="justify-end px-5 pt-4 pb-5">
 				<TextField
-					onChange={debouncedSearchHandler}
+					onChange={searchHandler}
 					hideHelperText
 					removeShadow
 					initialValue={searchQuery}
@@ -79,43 +74,15 @@ const SkinsTable = ({ searchQuery = "", initialData, lng }: SkinsTableProps) => 
 				hasPagination
 				hasNextPage={hasNextPage}
 				onNextPage={fetchNextPage}
-				// onRowClick={(skinData) => void ``}
+				onRowClick={(skinData) => router.push (`/${lng}/admin/skins/${skinData.id}`)}
 				headers={[
 					{
-						key:     "weapon",
-						display: "Weapon"
+						key:     "name",
+						display: "Name"
 					},
 					{
-						key:     "skin",
-						display: "Skin"
-					},
-					{
-						key:     "quality",
-						display: "Quality"
-					},
-					{
-						key:     "steamPrice",
-						display: "Steam Price"
-					},
-					{
-						key:     "steamListings",
-						display: "Steam Listings"
-					},
-					{
-						key:     "steamMedianPrice",
-						display: "Steam Median Price"
-					},
-					{
-						key:     "steamVolume",
-						display: "Steam Volume"
-					},
-					{
-						key:     "bitSkinsPrice",
-						display: "BitSkins Price"
-					},
-					{
-						key:     "percentChange",
-						display: "Percent"
+						key:     "url",
+						display: "url"
 					},
 					{
 						key:     "createdAt",
@@ -123,6 +90,26 @@ const SkinsTable = ({ searchQuery = "", initialData, lng }: SkinsTableProps) => 
 					}
 				]}
 				components={{
+					url:       ({ url }, { bodyColor, bodyColorDark }) => (
+						<ATagButton
+							className="flex whitespace-nowrap"
+							href={url}
+							text
+							target="_blank"
+							rel="noopener noreferrer"
+							noPadding
+							height={"100%"}
+							width="fit-content"
+							color={bodyColor}
+							colorDark={bodyColorDark}
+							variant={"small"}>
+							<Typography
+								className="whitespace-nowrap"
+								variant={"small"}>
+								{url}
+							</Typography>
+						</ATagButton>
+					),
 					createdAt: ({ createdAt }, { bodyColor, bodyColorDark }) => (
 						<Typography
 							className="whitespace-nowrap"

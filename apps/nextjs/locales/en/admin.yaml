@@ -7,23 +7,56 @@ phone: Phone
 dateCreated: Date Created
 message: Message
 messageStatus:
-  no: No
-  yes: Yes
-skins: Skins
+    no: No
+    yes: Yes
 addSkin: Add Skin
 add: Add
 url: Url
+skinsDataTable:
+    weapon: Weapon
+    skin: Skin
+    quality: Quality
+    steamPrice: Steam Price
+    steamListings: Steam Listings
+    steamMedianPrice: Steam Median Price
+    steamVolume: Steam Volume
+    bitSkinsPrice: Bit Skins Price
+    percentChange: Percent Change
+    createdAt: Created At
+sourcesTable:
+    name: Name
+    url: Url
+    createdAt: Created At
+weaponsTable:
+    name: Name
+    createdAt: Created At
 skinsTable:
-  weapon: Weapon
-  skin: Skin
-  quality: Quality
-  steamPrice: Steam Price
-  steamListings: Steam Listings
-  steamMedianPrice: Steam Median Price
-  steamVolume: Steam Volume
-  bitSkinsPrice: Bit Skins Price
-  percentChange: Percent Change
-  createdAt: Created At
+    name: Name
+    url: Url
+    createdAt: Created At
+qualitiesTable:
+    name: Name
+    createdAt: Created At
+usersTable:
+    name: Name
+    email: Email
 metadata:
-  title: Admin
-  addSkin: Add Skin
+    title:
+        main: Admin
+        dashboard: Dashboard
+        skinsData: Skins Data
+        sources: Sources
+        weapons: Weapons
+        skins: Skins
+        users: Users
+        addSkin: Add Skin
+dashboard: Dashboard
+skinsData: Skins Data
+sources: Sources
+weapons: Weapons
+skins: Skins
+qualities: Qualities
+users: Users
+home: Home
+addSource: Add Source
+
