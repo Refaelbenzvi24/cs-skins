@@ -15,7 +15,7 @@ interface QualitiesTableProps extends ComponentWithLocaleProps {
 }
 
 const QualitiesTable = ({ searchQuery, initialData, lng }: QualitiesTableProps) => {
-	const { search, searchHandler } = useSearchParamState({
+	const { value, onChange } = useSearchParamState({
 		route:                              "/admin/qualities",
 		key:                                "search",
 		valueGetter:                        ({ target }: FormEvent<HTMLInputElement>) => (target as HTMLInputElement).value,
@@ -34,7 +34,7 @@ const QualitiesTable = ({ searchQuery, initialData, lng }: QualitiesTableProps) 
 		      data: qualitiesList,
 		      fetchNextPage,
 		      hasNextPage
-	      } = api.quality.list.useInfiniteQuery({ search: search ?? searchQuery, limit: 20 }, {
+	      } = api.quality.list.useInfiniteQuery({ search: value ?? searchQuery, limit: 20 }, {
 		getNextPageParam: (lastPage, allPages) => {
 			if(allPages[allPages.length - 1]?.items.length === 0) return undefined
 			return lastPage.nextCursor
@@ -54,7 +54,7 @@ const QualitiesTable = ({ searchQuery, initialData, lng }: QualitiesTableProps) 
 			height="100%">
 			<Row className="justify-end px-5 pt-4 pb-5">
 				<TextField
-					onChange={searchHandler}
+					onChange={onChange}
 					hideHelperText
 					removeShadow
 					initialValue={searchQuery}

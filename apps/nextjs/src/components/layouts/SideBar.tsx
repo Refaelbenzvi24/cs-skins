@@ -36,7 +36,7 @@ const sideBarOptions = [
 	{
 		href:                  "/skins",
 		icon:                  <IconAntDesignSkinOutlined/>,
-		displayTranslationKey: "admin:skins",
+		displayTranslationKey: "admin:skins.title",
 	},
 	{
 		href:                  "/qualities",

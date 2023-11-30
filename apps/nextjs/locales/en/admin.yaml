@@ -54,7 +54,17 @@ dashboard: Dashboard
 skinsData: Skins Data
 sources: Sources
 weapons: Weapons
-skins: Skins
+skins:
+    title: Skins
+    skinId:
+        tabs:
+            table: Table
+            charts: Charts
+        tableHeaders:
+            weaponName: Weapon Name
+            skinName: Skin Name
+            quality: Quality
+            skinDataCreatedAt: Skin Data Created At
 qualities: Qualities
 users: Users
 home: Home

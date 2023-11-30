@@ -9,6 +9,7 @@ import type { StyledFunction } from "../../types";
 import { shouldForwardProp } from "../../Utils/StyledUtils";
 import { ColorByStateOptions, SingleColorOptions } from "../Theme/types"
 import { getColorByStateFromPath, getSingleColorFromPath } from "../../Utils/colors"
+import tw from "twin.macro"
 
 export interface ButtonProps {
 	dark?: boolean
@@ -51,6 +52,7 @@ export const ButtonStyles: StyledFunction<ButtonProps> = (
 	const resolvedColor = getSingleColorFromPath(color, theme.config)
 	const resolvedColorDark = getSingleColorFromPath(colorDark, theme.config)
 	return [
+		tw`rounded`,
 		css`
           cursor: pointer;
           border: none;

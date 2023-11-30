@@ -54,7 +54,17 @@ dashboard: דשבורד
 skinsData: נתוני סקינים
 sources: מקורות
 weapons: נשקים
-skins: סקינים
+skins:
+    title: סקינים
+    skinId:
+        tabs:
+            table: טבלה
+            charts: גרפים
+        tableHeaders:
+            weaponName: Weapon Name
+            skinName: Skin Name
+            quality: Quality
+            skinDataCreatedAt: Skin Data Created At
 qualities: איכויות
 users: משתמשים
 addSource: הוסף מקור

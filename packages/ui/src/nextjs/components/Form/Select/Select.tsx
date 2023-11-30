@@ -13,7 +13,7 @@ import type { Props } from "react-select"
 import CreatableSelect from "react-select/creatable"
 import * as components from "./"
 import { ThemeContext } from "@emotion/react"
-import { useIsDark } from "../../../index"
+import { useIsDark, useMain } from "../../../index"
 import useToasts from "../../../hooks/useToasts"
 import { type HelperTextProps } from "../HelperText"
 import { type LabelProps } from "../Label"
@@ -24,17 +24,36 @@ import ConditionalHelperText from "../ConditionalHelperText"
 import { selectStyles, useSelect } from "./"
 import SelectWrapper from "./SelectWrapper"
 import { css } from "@emotion/css"
+import { variants } from "./variants"
+import { ExtraStyles } from "./SelectStyles"
 
 
 export interface SelectOption {
+	[key: string]: any
+
 	label: string
 	value: string
+	extraDetails?: string
+	bottomDivider?: boolean
 }
 
-interface SelectProps extends Omit<Props, "isRtl" | "onChange"> {
+export type UngroupedSelectOptions = SelectOption[] | readonly SelectOption[]
+
+export type GroupedSelectOptions =
+	readonly {
+		label: string,
+		options: UngroupedSelectOptions
+	}[]
+	| {
+	label: string,
+	options: UngroupedSelectOptions
+}[]
+
+export interface SelectProps extends Omit<Props, "isRtl" | "onChange"> {
 	removeAnimations?: boolean
 	creatable?: boolean
 	label?: string
+	hideHelperText?: boolean
 	persistentLabel?: boolean
 	minContainerHeight?: string
 	dir?: "rtl" | "ltr"
@@ -42,8 +61,9 @@ interface SelectProps extends Omit<Props, "isRtl" | "onChange"> {
 	menuIsOpen?: boolean
 	colors?: SelectColors
 	colorsDark?: SelectColors
-	options?: SelectOption[] | readonly SelectOption[]
+	options?: GroupedSelectOptions | UngroupedSelectOptions
 	error?: boolean
+	menuAnchor?: ExtraStyles["menuAnchor"]
 	textInput?: boolean
 	value?: SelectOption | SelectOption[]
 	defaultValue?: SelectOption
@@ -52,6 +72,11 @@ interface SelectProps extends Omit<Props, "isRtl" | "onChange"> {
 	helperText?: string
 	wrapperProps?: HTMLMotionProps<"div">
 	labelProps?: LabelProps
+	elevation?: ComponentProps<typeof SelectWrapper>["elevation"]
+	focusedElevation?: ComponentProps<typeof SelectWrapper>["focusedElevation"]
+	menuWidth?: ExtraStyles["menuWidth"]
+	menuMinWidth?: ExtraStyles["menuMinWidth"]
+	menuMaxWidth?: ExtraStyles["menuMaxWidth"]
 	helperTextProps?: HelperTextProps
 }
 
@@ -60,15 +85,15 @@ const customComponents: ComponentProps<typeof Select>["components"] = {
 	Option:            components.Option,
 	Control:           components.Control,
 	MultiValue:        components.MultiValue,
-	MultiValueRemove:  components.MultiValueRemove
+	MultiValueRemove:  components.MultiValueRemove,
+	GroupHeading:      components.GroupHeading
+
 }
 
 const animatedComponents = makeAnimated ({
 	...(customComponents as Parameters<typeof makeAnimated>["0"]),
 })
-
-// TODO: Add focus indicator
-const SelectWithLabel = forwardRef<ComponentRef<typeof Select>, SelectProps> ((
+export const SelectWithLabel = forwardRef<ComponentRef<typeof Select>, SelectProps> ((
 	{
 		removeAnimations,
 		label,
@@ -85,11 +110,18 @@ const SelectWithLabel = forwardRef<ComponentRef<typeof Select>, SelectProps> ((
 		onChange,
 		error,
 		value,
+		required,
 		helperText,
 		labelProps,
 		helperTextProps,
+		hideHelperText,
+		menuWidth,
+		menuMinWidth,
+		menuMaxWidth,
+		menuAnchor,
 		...restProps
 	}, ref) => {
+	const { isServer } = useMain ()
 	const { theme: selectTheme } = useSelect ()
 	const Component = creatable ? CreatableSelect : Select
 
@@ -108,6 +140,10 @@ const SelectWithLabel = forwardRef<ComponentRef<typeof Select>, SelectProps> ((
 
 	const isAppDark = useIsDark ()
 	const isDark = restProps.dark ?? isAppDark
+
+	const requiredStar = required ? "*" : ""
+	const localLabel = label ? `${label}${requiredStar}` : ""
+	const localPlaceholder = placeholder ? `${placeholder}${requiredStar}` : (!persistentLabel ? localLabel : "")
 
 	const createOption = (label: string) => ({ label, value: label });
 
@@ -134,7 +170,7 @@ const SelectWithLabel = forwardRef<ComponentRef<typeof Select>, SelectProps> ((
 						return newState
 					})
 				} catch (error) {
-					void generalError ("errors.invalidJSON")
+					void generalError ("ui:errors.invalidJSON")
 				} finally {
 					setLocalInputValue ("")
 					event.preventDefault ()
@@ -145,36 +181,38 @@ const SelectWithLabel = forwardRef<ComponentRef<typeof Select>, SelectProps> ((
 
 	useEffect (() => {
 		const blurController = () => {
-			if (!firstUpdate.current && wasFocused.current && !isFocused && onBlur) {
-				onBlur ()
-			}
-			if (!firstUpdate.current) {
-				wasFocused.current = true
-			}
+			if (!firstUpdate.current && wasFocused.current && !isFocused && onBlur) onBlur ()
+			if (!firstUpdate.current) wasFocused.current = true
 			firstUpdate.current = false
 		}
-
 		blurController ()
 	}, [isFocused, onBlur])
 
+	useEffect (() => {
+		setLocalValue (value)
+	}, [value]);
+
 	return (
 		<section ref={sectionRef}>
-			<ConditionalLabel
-				condition={persistentLabel ? true : !!localValue}
-				{...labelProps}>
-				{label}
-			</ConditionalLabel>
+			{!!label && (
+				<ConditionalLabel
+					condition={persistentLabel ? true : !!localValue}
+					{...labelProps}>
+					{localLabel}
+				</ConditionalLabel>
+			)}
 			<SelectWrapper {...wrapperProps}
-			               label={label}
+			               label={localLabel}
 			               value={localValue}
 			               persistentLabel={persistentLabel}
 			               minContainerHeight={minContainerHeight}
+			               isFocused={isFocused}
 			               isMulti={restProps.isMulti}
 			               helperText={helperText}
 			               className={clsx (className)}>
 				<Component blurInputOnSelect
 				           classNames={{
-					           control: () => css`
+					           control:        () => css`
                                  cursor: ${textInput ? "text" : "pointer"};
 					           `,
 					           clearIndicator: () => css`
@@ -182,8 +220,10 @@ const SelectWithLabel = forwardRef<ComponentRef<typeof Select>, SelectProps> ((
 					           `,
 				           }}
 				           isSearchable={creatable}
-				           placeholder={placeholder || label}
+				           placeholder={localPlaceholder || localLabel}
 				           instanceId={useId ()}
+				           menuPosition="absolute"
+				           menuPortalTarget={isServer ? (document.querySelector ("#portals-root") as HTMLElement) : null}
 				           {...restProps}
 				           menuIsOpen={textInput ? (restProps.menuIsOpen ?? false) : restProps.menuIsOpen}
 				           theme={(theme) => ({
@@ -215,31 +255,36 @@ const SelectWithLabel = forwardRef<ComponentRef<typeof Select>, SelectProps> ((
 				           value={localValue}
 				           inputValue={localInputValue}
 				           isRtl={dir === "rtl"}
-				           styles={selectStyles (isDark, selectTheme)}
+				           styles={selectStyles ({ menuAnchor, menuWidth, menuMinWidth, menuMaxWidth, textInput }) (isDark, selectTheme)}
 				           components={{
 					           ...(removeAnimations ? customComponents : animatedComponents),
-					           ...(textInput ? { DropdownIndicator: null } : {})
+					           ...(textInput ? { DropdownIndicator: null } : {}),
+					           ...restProps.components
 				           }}/>
 			</SelectWrapper>
-			<ConditionalHelperText condition={!!helperText} {...{ ...helperTextProps, error }}>
-				{helperText}
-			</ConditionalHelperText>
+			{!hideHelperText && (
+				<ConditionalHelperText condition={!!helperText} {...{ ...helperTextProps, error }}>
+					{helperText}
+				</ConditionalHelperText>
+			)}
 		</section>
 	)
 })
 
-const SelectWithProvider = forwardRef<ComponentRef<typeof Select>, SelectProps> ((props, ref) => {
-	const { colors, colorsDark, dark } = props
+const SelectWithProvider = forwardRef<ComponentRef<typeof Select>, SelectProps & {
+	variant?: keyof typeof variants
+}> ((props, ref) => {
+	const { variant = "default", colors, colorsDark, dark } = props
 	const isAppDark = useIsDark ()
 	const isDark = dark ?? isAppDark
+	const Component = variants[variant] === "default" ? SelectWithLabel : variants[variant]
+
 	return (
 		<SelectProvider colors={colors}
 		                colorsDark={colorsDark}
 		                dark={isDark}
-		                props={{
-			                textInput: props.textInput
-		                }}>
-			<SelectWithLabel ref={ref} {...props}/>
+		                props={{ textInput: props.textInput }}>
+			<SelectWithLabel {...props} ref={ref}/>
 		</SelectProvider>
 	)
 })

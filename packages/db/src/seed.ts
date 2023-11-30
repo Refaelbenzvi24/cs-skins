@@ -94,6 +94,13 @@ const sources: NewSource[] = [
 			url:  "https://skinsmonkey.com/",
 			name: "Skins Monkey"
 		},
+	},
+	{
+		connect: { gameId: "CS GO" },
+		data: {
+			url: "https://waxpeer.com/",
+			name: "Waxpeer"
+		}
 	}
 ]
 

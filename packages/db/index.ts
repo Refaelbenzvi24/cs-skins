@@ -16,7 +16,16 @@ export { dbOperators }
 export { extraDbOperators }
 
 const connectionString = process.env.DATABASE_URL!
-const client           = postgres(connectionString)
+let client: ReturnType<typeof postgres>
+if (process.env.NODE_ENV === "production") {
+	client = postgres(connectionString);
+} else {
+	if (!global.client) {
+		global.client = postgres(connectionString);
+	}
+
+	client = global.client;
+}
 export const db        = drizzle(client, { schema });
 
 export { dbHelper } from "./src/dbHelper"

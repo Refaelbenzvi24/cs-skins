@@ -15,7 +15,7 @@ interface SourcesTableProps extends ComponentWithLocaleProps {
 }
 
 const SourcesTable = ({ searchQuery, initialData, lng }: SourcesTableProps) => {
-	const { search, searchHandler } = useSearchParamState({
+	const { value, onChange } = useSearchParamState({
 		route:                              "/admin/sources",
 		key:                                "search",
 		valueGetter:                        ({ target }: FormEvent<HTMLInputElement>) => (target as HTMLInputElement).value,
@@ -34,7 +34,7 @@ const SourcesTable = ({ searchQuery, initialData, lng }: SourcesTableProps) => {
 		      data: sourcesList,
 		      fetchNextPage,
 		      hasNextPage
-	      } = api.source.list.useInfiniteQuery({ search: search ?? searchQuery, limit: 20 }, {
+	      } = api.source.list.useInfiniteQuery({ search: value ?? searchQuery, limit: 20 }, {
 		getNextPageParam: (lastPage, allPages) => {
 			if(allPages[allPages.length - 1]?.items.length === 0) return undefined
 			return lastPage.nextCursor
@@ -54,7 +54,7 @@ const SourcesTable = ({ searchQuery, initialData, lng }: SourcesTableProps) => {
 			height="100%">
 			<Row className="justify-end px-5 pt-4 pb-5">
 				<TextField
-					onChange={searchHandler}
+					onChange={onChange}
 					hideHelperText
 					removeShadow
 					initialValue={searchQuery}
@@ -92,6 +92,7 @@ const SourcesTable = ({ searchQuery, initialData, lng }: SourcesTableProps) => {
 							className="flex whitespace-nowrap"
 							href={url}
 							text
+							onClick={(e) => e.stopPropagation()}
 							target="_blank"
 							rel="noopener noreferrer"
 							noPadding

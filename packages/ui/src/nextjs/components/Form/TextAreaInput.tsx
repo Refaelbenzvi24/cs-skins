@@ -44,7 +44,7 @@ export const TextAreaInput = styled ("textarea", {
 	const resolvedBackgroundColorDisabled = getDisabledColorFromPath (backgroundColorDisabled, theme.config.disabledState)
 	const resolvedBackgroundColorDisabledDark = getDisabledColorFromPath (backgroundColorDisabledDark, theme.config.disabledState)
 	return [
-		tw`w-full py-[7px] border-0 place-self-center h-[45px] min-h-[45px]`,
+		tw`w-full py-[7px] border-0 place-self-center h-[45px] min-h-[45px] rounded`,
 
 		hasBeforeIcon ? tw`ltr:pl-[54px] rtl:pr-[54px] ltr:pr-[10px] rtl:pl-[10px]` : tw`ltr:pl-[22px] rtl:pr-[22px] ltr:pr-[10px] rtl:pl-[10px]`,
 

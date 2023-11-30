@@ -24,9 +24,9 @@ export async function generateMetadata(props: GenerateMetadataWithLocaleProps){
 
 const Page = async ({ params: { lng }, searchParams }: AdminPageProps) => {
 	const session = await auth();
-	if(!session) redirect(`/${lng}/admin/login`)
+	if(!session) return redirect(`/${lng}/admin/login`)
 
-	const skinsList = await trpcRsc.skin.list.fetch({ search: searchParams.search, limit: 20 })
+	const skinsList = await trpcRsc.skin.list.fetch({ value: searchParams.search, limit: 20 })
 
 	const { t } = await getTranslation(lng, 'admin')
 
@@ -37,7 +37,7 @@ const Page = async ({ params: { lng }, searchParams }: AdminPageProps) => {
 					<Typography variant={'h2'}
 					            color={'colorScheme.subtitle2'}
 					            colorDark={'colorScheme.body2'}>
-						{t('admin:skins')}
+						{t('admin:skins.title')}
 					</Typography>
 
 					<LinkButton href={`/${lng}/admin/skins/add`}>

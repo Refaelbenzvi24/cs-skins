@@ -23,7 +23,7 @@ export interface SelectColors {
 		menuBackgroundColor: string
 	},
 	multiValue: {
-		multiValueBgColor: string
+		multiValueBackgroundColor: string
 		multiValueTextColor: string
 		multiValueRemoveHoverBackground: string
 		multiValueRemoveHoverIconColor: string
@@ -67,7 +67,7 @@ export const defaultColors = {
 		menuBackgroundColor: theme.colorScheme.accent
 	},
 	multiValue:         {
-		multiValueBgColor:               theme.colorScheme.light,
+		multiValueBackgroundColor:       theme.colorScheme.light,
 		multiValueTextColor:             theme.colorScheme.header2,
 		multiValueRemoveHoverBackground: theme.colorScheme.light2,
 		multiValueRemoveHoverIconColor:  theme.colorScheme.header2
@@ -112,7 +112,7 @@ export const defaultColorsDark = {
 		menuBackgroundColor: theme.colorScheme.overlaysDark
 	},
 	multiValue:         {
-		multiValueBgColor:               theme.colorScheme.overlaysDark2,
+		multiValueBackgroundColor:       theme.colorScheme.overlaysDark2,
 		multiValueTextColor:             theme.colorScheme.light,
 		multiValueRemoveHoverBackground: theme.colorScheme.body1,
 		multiValueRemoveHoverIconColor:  theme.colorScheme.light

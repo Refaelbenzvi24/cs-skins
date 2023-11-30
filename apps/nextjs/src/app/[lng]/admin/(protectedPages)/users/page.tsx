@@ -23,9 +23,9 @@ export async function generateMetadata(props: GenerateMetadataWithLocaleProps){
 
 const Page = async ({ params: { lng }, searchParams }: AdminPageProps) => {
 	const session = await auth();
-	if(!session) redirect(`/${lng}/admin/login`)
+	if(!session) return redirect(`/${lng}/admin/login`)
 
-	const usersList = await trpcRsc.user.list.fetch({ search: searchParams.search, limit: 20 })
+	const usersList = await trpcRsc.user.list.fetch({ value: searchParams.search, limit: 20 })
 
 	const { t } = await getTranslation(lng, 'admin')
 

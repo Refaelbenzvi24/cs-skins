@@ -47,7 +47,7 @@ export const TextFieldInput = styled(motion.input, {
 	const resolvedBackgroundColorDisabled     = getDisabledColorFromPath(backgroundColorDisabled, theme.config.disabledState)
 	const resolvedBackgroundColorDisabledDark = getDisabledColorFromPath(backgroundColorDisabledDark, theme.config.disabledState)
 	return [
-		tw`w-full py-[7px] resize-none place-self-center`,
+		tw`w-full py-[7px] resize-none place-self-center rounded`,
 
 		hasBeforeIcon ? tw`ltr:pl-[54px] rtl:pr-[54px] ltr:pr-[10px] rtl:pl-[10px]` : tw`ltr:pl-[22px] rtl:pr-[22px] ltr:pr-[10px] rtl:pl-[10px]`,
 

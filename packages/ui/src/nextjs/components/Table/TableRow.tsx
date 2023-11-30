@@ -1,19 +1,20 @@
-import {HTMLMotionProps} from "framer-motion";
-import {useEffect, useRef} from "react";
+import { HTMLMotionProps } from "framer-motion";
+import { useEffect, useRef } from "react";
 import StyledTableRow, { StyledTableRowProps } from "./StyledTableRow"
 import { withTheme } from "@emotion/react"
+import Link from "next/link"
 
 interface TableRowProps {
 	autoFocus?: boolean
 }
 
 const TableRow = (props: HTMLMotionProps<"tr"> & StyledTableRowProps & TableRowProps) => {
-	const {children, autoFocus, ...restProps} = props
+	const { children, autoFocus, ...restProps } = props
 
-	const tableRowRef = useRef<HTMLTableRowElement>(null)
+	const tableRowRef = useRef<HTMLTableRowElement> (null)
 
-	useEffect(() => {
-		if (tableRowRef.current && props.clickable && props.autoFocus) tableRowRef.current.focus()
+	useEffect (() => {
+		if (tableRowRef.current && props.clickable && props.autoFocus) tableRowRef.current.focus ()
 	}, [tableRowRef, props.clickable, props.autoFocus])
 
 	// const [isPresent, safeToRemove] = usePresence()
@@ -54,15 +55,15 @@ const TableRow = (props: HTMLMotionProps<"tr"> & StyledTableRowProps & TableRowP
 			{...restProps}
 			ref={tableRowRef}
 			onKeyDown={(e) => {
-				if (e.key === 'Enter' || e.key === ' ') {
-					e.preventDefault()
-					props.onClick?.(e as any)
+				if (e.key === "Enter" || e.key === " ") {
+					e.preventDefault ()
+					props.onClick?. (e as any)
 				}
-				if (props.onKeyDown) props.onKeyDown(e as any)
+				if (props.onKeyDown) props.onKeyDown (e as any)
 			}}>
 			{children}
 		</StyledTableRow>
 	)
 }
 
-export default withTheme(TableRow)
+export default withTheme (TableRow)

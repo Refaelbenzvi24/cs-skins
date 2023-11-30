@@ -1,43 +1,68 @@
 "use client";
 import styled from "@emotion/styled"
-import { HTMLMotionProps, motion } from "framer-motion"
+import { AnimatePresence } from "framer-motion"
 import tw from "twin.macro"
-import { withTheme } from "@emotion/react"
+import { css, withTheme } from "@emotion/react"
 import { shouldForwardProp } from "../../Utils/StyledUtils"
-import { useTabs } from "./TabsContext"
-import { useEffect, useMemo, useRef } from "react"
-import _ from "lodash"
+import { ReactNode } from "react"
+
+import clsx from "clsx"
+import ActiveTabIndicator from "./ActiveTabIndicator"
+import Link, { LinkProps } from "next/link"
+
 
 interface TabProps {
-
+	isActive?: boolean
+	activeTabIndex?: number
+	index?: number
+	lastActiveTabIndex?: number
 }
 
 
-const StyledTab = styled(motion.a, {
+const StyledTab = styled(Link, {
 	shouldForwardProp: (props) => shouldForwardProp<TabProps>(
-		[]
+		["isActive", "index", "activeTabIndex", "lastActiveTabIndex"]
 	)(props as keyof TabProps)
 })(() => [
-	tw`cursor-pointer z-[11] !bg-transparent w-full`,
+	tw`relative flex cursor-pointer z-[11] !bg-transparent w-full h-full`,
+
+	css`
+		& > span {
+			z-index: -1;
+		}
+	`
 ])
 
-const Tab = (props: TabProps & HTMLMotionProps<"a">) => {
-	const tabId = useRef(_.uniqueId())
-	const { registerTab, unregisterTab } = useTabs()
-
-	useEffect (() => {
-		registerTab({
-			id: tabId.current,
-
-		})
-		return () => {
-			unregisterTab(tabId.current)
-		};
-	}, []);
-
-
+const Tab = (
+	{
+		children,
+		className,
+		index,
+		isActive,
+		activeTabIndex,
+		lastActiveTabIndex,
+		...restProps
+	}: TabProps
+	   & React.DetailedHTMLProps<React.AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>
+	   & LinkProps
+	   & { children?: ReactNode }) => {
 	return (
-		<StyledTab {...props} />
+		<StyledTab className={clsx(className)} {...restProps}>
+			{children}
+			<AnimatePresence initial={false}>
+				{isActive && (
+					<ActiveTabIndicator
+						initial={{
+							opacity:    1,
+							translateX: `${(lastActiveTabIndex! - index!) * 100}%`,
+						}}
+						animate={{
+							opacity:    1,
+							translateX: 0,
+						}}/>
+				)}
+			</AnimatePresence>
+		</StyledTab>
 	)
 }
 

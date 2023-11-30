@@ -16,7 +16,7 @@ interface SkinsDataTableProps extends ComponentWithLocaleProps {
 }
 
 const SkinsDataTable = ({ searchQuery, initialData, lng }: SkinsDataTableProps) => {
-	const { search, searchHandler } = useSearchParamState({
+	const { value, onChange } = useSearchParamState({
 		route:                              "/admin/skins-data",
 		key:                                "search",
 		valueGetter:                        ({ target }: FormEvent<HTMLInputElement>) => (target as HTMLInputElement).value,
@@ -35,7 +35,7 @@ const SkinsDataTable = ({ searchQuery, initialData, lng }: SkinsDataTableProps) 
 		      data: skinsList,
 		      fetchNextPage,
 		      hasNextPage
-	      } = api.skinData.list.useInfiniteQuery({ search: search ?? searchQuery, limit: 20 }, {
+	      } = api.skinData.list.useInfiniteQuery({ search: value ?? searchQuery, limit: 20 }, {
 		getNextPageParam: (lastPage, allPages) => {
 			if(allPages[allPages.length - 1]?.items.length === 0) return undefined
 			return lastPage.nextCursor
@@ -55,7 +55,7 @@ const SkinsDataTable = ({ searchQuery, initialData, lng }: SkinsDataTableProps) 
 				height="100%">
 				<Row className="justify-end px-5 pt-4 pb-5">
 					<TextField
-						onChange={searchHandler}
+						onChange={onChange}
 						hideHelperText
 						removeShadow
 						initialValue={searchQuery}
