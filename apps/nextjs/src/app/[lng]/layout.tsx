@@ -58,7 +58,7 @@ export default function Layout(props: LayoutWithLocaleProps){
 			<NextTopLoader/>
 			<TRPCReactProvider headers={headers()}>
 				<SessionProvider>
-					<UiProviders theme={theme}>
+					<UiProviders lng={lng} theme={theme}>
 						<div id="portals-root"></div>
 						{props.children}
 					</UiProviders>

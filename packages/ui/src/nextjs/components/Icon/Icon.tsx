@@ -8,13 +8,14 @@ import theme from "../../Utils/theme"
 import { getSingleColorFromPath } from "../../Utils/colors"
 import { StyledProps } from "../../types"
 import { shouldForwardProp } from "../../Utils/StyledUtils"
+import { SingleColorOptions } from "../Theme/types"
 
 
 interface IconProps {
 	size?: number
 	fab?: boolean
-	color?: string
-	colorDark?: string
+	color?: SingleColorOptions
+	colorDark?: SingleColorOptions
 	backgroundColor?: string
 	backgroundColorDark?: string
 	dark?: boolean

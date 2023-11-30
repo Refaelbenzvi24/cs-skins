@@ -15,33 +15,33 @@ interface WeaponsTableProps extends ComponentWithLocaleProps {
 }
 
 const WeaponsTable = ({ searchQuery, initialData, lng }: WeaponsTableProps) => {
-	const { search, searchHandler } = useSearchParamState ({
+	const { value, onChange } = useSearchParamState({
 		route:                              "/admin/weapons",
 		key:                                "search",
 		valueGetter:                        ({ target }: FormEvent<HTMLInputElement>) => (target as HTMLInputElement).value,
 		beforeRouteChangeParamsTransformer: (params, value) => {
-			if (value.length <= 2) {
+			if(value.length <= 2){
 				params.delete("search")
 			} else {
-				params.set ("search", value)
+				params.set("search", value)
 			}
 		}
 	})
 
-	const { t } = useTranslation (lng, ["common", "admin"])
+	const { t } = useTranslation(lng, ["common", "admin"])
 
 	const {
 		      data: weaponsList,
 		      fetchNextPage,
 		      hasNextPage
-	      } = api.weapon.list.useInfiniteQuery ({ search: search ?? searchQuery, limit: 20 }, {
+	      } = api.weapon.list.useInfiniteQuery({ search: value ?? searchQuery, limit: 20 }, {
 		getNextPageParam: (lastPage, allPages) => {
-			if (allPages[allPages.length - 1]?.items.length === 0) return undefined
+			if(allPages[allPages.length - 1]?.items.length === 0) return undefined
 			return lastPage.nextCursor
 		}
 	})
 
-	const weapons = useMemo (() => weaponsList?.pages.flatMap (page => page.items).map (item => ({
+	const weapons = useMemo(() => weaponsList?.pages.flatMap(page => page.items).map(item => ({
 		...item
 	})) ?? [], [weaponsList])
 
@@ -54,14 +54,14 @@ const WeaponsTable = ({ searchQuery, initialData, lng }: WeaponsTableProps) => {
 			height="100%">
 			<Row className="justify-end px-5 pt-4 pb-5">
 				<TextField
-					onChange={searchHandler}
+					onChange={onChange}
 					hideHelperText
 					removeShadow
 					initialValue={searchQuery}
 					backgroundColor={"colorScheme.light"}
 					backgroundColorDark={"colorScheme.dark"}
 					beforeIcon={<IconCarbonSearch/>}
-					placeholder={t ("admin:search")}
+					placeholder={t("admin:search")}
 					height={"28px"}/>
 			</Row>
 			<Table
@@ -74,7 +74,7 @@ const WeaponsTable = ({ searchQuery, initialData, lng }: WeaponsTableProps) => {
 				// onRowClick={(skinData) => void ``}
 				headers={[
 					{
-						key: "name",
+						key:     "name",
 						display: "Name"
 					},
 					{
@@ -89,7 +89,7 @@ const WeaponsTable = ({ searchQuery, initialData, lng }: WeaponsTableProps) => {
 							color={bodyColor}
 							colorDark={bodyColorDark}
 							variant={"small"}>
-							{createdAt?.toLocaleDateString ()}
+							{createdAt?.toLocaleDateString()}
 						</Typography>
 					)
 				}}/>

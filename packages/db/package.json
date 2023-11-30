@@ -16,7 +16,7 @@
 	},
 	"dependencies": {
 		"@paralleldrive/cuid2": "^2.2.2",
-		"drizzle-orm": "^0.28.6",
+		"drizzle-orm": "^0.29.1",
 		"postgres": "^3.4.0"
 	},
 	"devDependencies": {
@@ -25,7 +25,7 @@
 		"@acme/tsconfig": "^0.1.0",
 		"@types/node": "^18.0.0",
 		"dotenv-cli": "^7.3.0",
-		"drizzle-kit": "^0.19.13",
+		"drizzle-kit": "^0.20.6",
 		"eslint": "^8.50.0",
 		"pg": "^8.11.3",
 		"prettier": "^3.0.3",

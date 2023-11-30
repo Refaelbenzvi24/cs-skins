@@ -19,7 +19,6 @@ const Control = (props: ComponentProps<typeof components.Control>) => {
 
 	return (
 		<components.Control {...{ ...restProps, isFocused }}
-		                    className={clsx(textInput ? "cursor-text" : "cursor-pointer")}
 		                    theme={produce(props.theme, (draft) => {
 			                    draft.borderRadius = 5
 			                    /** inputActiveBorder */

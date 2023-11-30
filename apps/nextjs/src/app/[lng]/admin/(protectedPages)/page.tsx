@@ -23,7 +23,7 @@ export async function generateMetadata(props: GenerateMetadataWithLocaleProps) {
 
 const Page = async ({ params: { lng } }: AdminPageProps) => {
 	const session = await auth ();
-	if (!session) redirect (`/${lng}/admin/login`)
+	if (!session) return redirect (`/${lng}/admin/login`)
 
 	return (
 		<main className="h-full">

@@ -31,6 +31,7 @@ export interface MainContextType extends MainDataType {
 	setSideBarOpts: Dispatch<SetStateAction<SideBarOptions>>
 	setOverlayState: Dispatch<SetStateAction<boolean>>
 	setIsAnimationsActive: Dispatch<SetStateAction<boolean | undefined>>
+	isServer: boolean
 	t: (key: string) => string
 	language: string
 	dir: 'ltr' | 'rtl'

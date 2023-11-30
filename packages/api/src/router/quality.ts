@@ -12,7 +12,7 @@ export const qualityRouter = createTRPCRouter({
 		.input(z.object(qualityValidations.list))
 		.query(async ({ ctx, input }) => {
 			const { qualities }               = schema
-			const { gt, desc, like, or, and } = dbOperators
+			const { gt, desc, like, and } = dbOperators
 
 			const { limit, search } = input
 			const cursor                   = input.cursor ?? "0"

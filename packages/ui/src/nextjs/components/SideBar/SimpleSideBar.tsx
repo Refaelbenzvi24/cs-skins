@@ -46,7 +46,6 @@ const StyledSimpleSideBar = styled(motion.div, {
 			width: ${getCssUnit(width)};
 			box-shadow: ${theme.config.shadows[4]};
 
-
 			& ~ #main {
 				[dir="ltr"] & {
 					padding-left: ${getCssUnit(width)};

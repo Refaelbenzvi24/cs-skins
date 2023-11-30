@@ -39,7 +39,7 @@ const MultiValue = (props: ComponentProps<typeof components.MultiValue>) => {
 		                       `} ${className}`)}
 		                       theme={produce (props.theme, (draft) => {
 			                       /** multiValueBgColor */
-			                       draft.colors.neutral10 = theme.colors.multiValue.multiValueBgColor
+			                       draft.colors.neutral10 = theme.colors.multiValue.multiValueBackgroundColor
 			                       /** multiValueTextColor */
 			                       draft.colors.neutral80 = theme.colors.multiValue.multiValueTextColor
 			                       /** multiValueRemoveHoverBackground */
@@ -49,7 +49,7 @@ const MultiValue = (props: ComponentProps<typeof components.MultiValue>) => {
 
 			                       if (isDark) {
 				                       /** multiValueBgColor */
-				                       draft.colors.neutral10 = theme.colorsDark.multiValue.multiValueBgColor
+				                       draft.colors.neutral10 = theme.colorsDark.multiValue.multiValueBackgroundColor
 				                       /** multiValueTextColor */
 				                       draft.colors.neutral80 = theme.colorsDark.multiValue.multiValueTextColor
 				                       /** multiValueRemoveHoverBackground */

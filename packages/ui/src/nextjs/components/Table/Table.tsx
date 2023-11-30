@@ -1,8 +1,8 @@
 import Typography from "../Typograpy/Typogrphy";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, HTMLMotionProps } from "framer-motion";
 import TableRow from "./TableRow";
 import TableHeader, { TableHeaderProps } from "./TableHeader";
-import { ComponentProps, ReactNode, useEffect, useRef } from "react";
+import React, { ComponentProps, ReactNode, useEffect, useRef } from "react";
 import theme from "../../Utils/theme";
 import TableData from "./TableData";
 import styled from "@emotion/styled";
@@ -13,6 +13,7 @@ import { motion } from "framer-motion"
 import ImpulseSpinner from "../Loaders/Impulse";
 import { v3 as uuidv3 } from "uuid";
 import { useMain } from "../../index"
+import Link from "next/link"
 
 
 interface TableHeaderOptions<KeysOptions extends string | number | symbol> extends TableHeaderProps {
@@ -55,7 +56,8 @@ interface TableProps<
 			bodyColorDark: string
 		}) => ReactNode
 	}
-	onRowClick?: (item: DataType[number]) => void
+	hrefCreator?: (item: DataType[number]) => string
+	onRowClick?: (item: DataType[number], event: KeyboardEvent) => void
 	headersColor?: string
 	headersColorDark?: string
 	bodyColor?: string
@@ -74,6 +76,7 @@ const Table = <DataType extends { [key: string]: any }[]>(
 		headersHeight,
 		bodyHeight,
 		autoFocus,
+		hrefCreator,
 		onRowClick,
 		translationPrefix = "",
 		translationSuffix = "",
@@ -134,9 +137,10 @@ const Table = <DataType extends { [key: string]: any }[]>(
 					{data.map ((item, index) => (
 						<TableRow
 							height={bodyHeight}
-							clickable={!!onRowClick}
+							data-href={hrefCreator?. (item)}
+							clickable={!!onRowClick || !!hrefCreator}
 							autoFocus={index === 0 && autoFocus && !isFirstRender.current}
-							onClick={() => onRowClick?. (item)}
+							onClick={(event) => onRowClick?. (item, event)}
 							key={`${uuidv3 (JSON.stringify (item), uuidv3.URL)}:${index}`}>
 							{headers.map (({ key, tableDataProps }) => (
 								<TableData

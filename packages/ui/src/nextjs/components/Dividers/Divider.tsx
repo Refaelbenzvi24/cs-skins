@@ -8,14 +8,15 @@ import theme from "../../Utils/theme"
 import { shouldForwardProp } from "../../Utils/StyledUtils";
 import { getSingleColorFromPath, getZIndexFromPath } from "../../Utils/colors"
 import { StyledProps } from "../../types"
+import { SingleColorOptions } from "../Theme/types"
 
 
 interface DividerProps extends StyledProps {
 	vertical?: boolean
 	size?: string
 	thickness?: string
-	color?: string
-	colorDark?: string
+	color?: SingleColorOptions
+	colorDark?: SingleColorOptions
 	opacity?: string
 	dark?: boolean
 }

@@ -16,7 +16,7 @@ interface SkinsTableProps extends ComponentWithLocaleProps {
 }
 
 const SkinsTable = ({ searchQuery, initialData, lng }: SkinsTableProps) => {
-	const { search, searchHandler } = useSearchParamState ({
+	const { value, onChange } = useSearchParamState ({
 		route:                              "/admin/skins",
 		key:                                "search",
 		valueGetter:                        ({ target }: FormEvent<HTMLInputElement>) => (target as HTMLInputElement).value,
@@ -37,7 +37,7 @@ const SkinsTable = ({ searchQuery, initialData, lng }: SkinsTableProps) => {
 		data: skinsList,
 		fetchNextPage,
 		hasNextPage
-	} = api.skin.list.useInfiniteQuery ({ search: search ?? searchQuery, limit: 20 }, {
+	} = api.skin.list.useInfiniteQuery ({ search: value ?? searchQuery, limit: 20 }, {
 		getNextPageParam: (lastPage, allPages) => {
 			if (allPages[allPages.length - 1]?.items.length === 0) return undefined
 			return lastPage.nextCursor
@@ -57,7 +57,7 @@ const SkinsTable = ({ searchQuery, initialData, lng }: SkinsTableProps) => {
 			height="100%">
 			<Row className="justify-end px-5 pt-4 pb-5">
 				<TextField
-					onChange={searchHandler}
+					onChange={onChange}
 					hideHelperText
 					removeShadow
 					initialValue={searchQuery}
@@ -74,7 +74,13 @@ const SkinsTable = ({ searchQuery, initialData, lng }: SkinsTableProps) => {
 				hasPagination
 				hasNextPage={hasNextPage}
 				onNextPage={fetchNextPage}
-				onRowClick={(skinData) => router.push (`/${lng}/admin/skins/${skinData.id}`)}
+				hrefCreator={(skinData) => `/${lng}/admin/skins/${skinData.id}/table`}
+				onRowClick={(skinData, event) => {
+					if (event.metaKey || event.ctrlKey) {
+						return window.open (`/${lng}/admin/skins/${skinData.id}/table`, "_blank")
+					}
+					router.push (`/${lng}/admin/skins/${skinData.id}/table`)
+				}}
 				headers={[
 					{
 						key:     "name",
@@ -95,14 +101,14 @@ const SkinsTable = ({ searchQuery, initialData, lng }: SkinsTableProps) => {
 							className="flex whitespace-nowrap"
 							href={url}
 							text
+							onClick={(e) => e.stopPropagation ()}
 							target="_blank"
 							rel="noopener noreferrer"
 							noPadding
 							height={"100%"}
 							width="fit-content"
 							color={bodyColor}
-							colorDark={bodyColorDark}
-							variant={"small"}>
+							colorDark={bodyColorDark}>
 							<Typography
 								className="whitespace-nowrap"
 								variant={"small"}>

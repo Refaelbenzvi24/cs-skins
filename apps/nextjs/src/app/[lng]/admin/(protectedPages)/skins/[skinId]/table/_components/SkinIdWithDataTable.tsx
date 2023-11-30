@@ -1,5 +1,5 @@
 "use client";
-import { Card, Row, Tab, Table, Tabs, TextField, Typography } from "@acme/ui"
+import { Card, Row, Table, TextField, Typography } from "@acme/ui"
 import { api } from "~/utils/api"
 import type { FormEvent } from "react";
 import { useMemo } from "react"
@@ -7,7 +7,7 @@ import type { trpcRsc } from "~/utils/apiServer"
 import type { ComponentWithLocaleProps } from "~/types"
 import { useTranslation } from "~/app/i18n/client"
 import moment from "moment"
-import { useSearchParamState } from "~/hooks"
+import { useGetSearchParams, useSearchParamState } from "~/hooks"
 
 
 interface SkinIdWithDataProps extends ComponentWithLocaleProps {
@@ -17,33 +17,41 @@ interface SkinIdWithDataProps extends ComponentWithLocaleProps {
 }
 
 const SkinIdWithDataTable = ({ initialData, lng, skinId, searchQuery }: SkinIdWithDataProps) => {
-	const { search, searchHandler } = useSearchParamState ({
-		route:                              `/admin/skins/${skinId}`,
+	const { value, onChange }    = useSearchParamState({
 		key:                                "search",
 		valueGetter:                        ({ target }: FormEvent<HTMLInputElement>) => (target as HTMLInputElement).value,
 		beforeRouteChangeParamsTransformer: (params, value) => {
-			if (value.length <= 2) {
-				params.delete ("search")
+			if(value.length <= 2){
+				params.delete("search")
 			} else {
-				params.set ("search", value)
+				params.set("search", value)
 			}
 		}
 	})
+	const { startDate, endDate } = useGetSearchParams("startDate", "endDate")
 
-	const { t } = useTranslation (lng, ["common", "admin"])
+	const { t } = useTranslation(lng, ["common", "admin"])
 
 	const {
-		data: skinIdWithDataList,
-		fetchNextPage,
-		hasNextPage
-	} = api.skin.getByIdWithData.useInfiniteQuery ({ search: search ?? searchQuery, skinId, limit: 20 }, {
+		      data: skinIdWithDataList,
+		      fetchNextPage,
+		      hasNextPage
+	      } = api.skin.getByIdWithData.useInfiniteQuery({
+		search:    value ?? searchQuery,
+		skinId,
+		limit:     20,
+		dateRange: {
+			start: startDate ? moment(startDate).toDate() : undefined,
+			end:   endDate ? moment(endDate).toDate() : undefined
+		}
+	}, {
 		getNextPageParam: (lastPage, allPages) => {
-			if (allPages[allPages.length - 1]?.items.length === 0) return undefined
+			if(allPages[allPages.length - 1]?.items.length === 0) return undefined
 			return lastPage.nextCursor
 		}
 	})
 
-	const SkinIdWithData = useMemo (() => skinIdWithDataList?.pages.flatMap (page => page.items).map (item => ({
+	const SkinIdWithData = useMemo(() => skinIdWithDataList?.pages.flatMap(page => page.items).map(item => ({
 		...item
 	})) ?? [], [skinIdWithDataList])
 
@@ -56,19 +64,19 @@ const SkinIdWithDataTable = ({ initialData, lng, skinId, searchQuery }: SkinIdWi
 			height="100%">
 			<Row className="justify-end px-5 pt-4 pb-5">
 				<TextField
-					onChange={searchHandler}
+					onChange={onChange}
 					hideHelperText
 					removeShadow
 					initialValue={searchQuery}
 					backgroundColor={"colorScheme.light"}
 					backgroundColorDark={"colorScheme.dark"}
 					beforeIcon={<IconCarbonSearch/>}
-					placeholder={t ("admin:search")}
+					placeholder={t("admin:search")}
 					height={"28px"}/>
 			</Row>
 			<Table
 				data={SkinIdWithData.length > 0 ? SkinIdWithData : initialData?.items ?? []}
-				translationPrefix={"admin:skinIdWithDataTable."}
+				translationPrefix={"admin:skins.skinId.tableHeaders."}
 				translationFunction={t}
 				hasPagination
 				hasNextPage={hasNextPage}
@@ -98,7 +106,7 @@ const SkinIdWithDataTable = ({ initialData, lng, skinId, searchQuery }: SkinIdWi
 							color={bodyColor}
 							colorDark={bodyColorDark}
 							variant={"small"}>
-							{moment (skinDataCreatedAt).format ("DD/MM/YYYY HH:mm:ss")}
+							{moment(skinDataCreatedAt).format("DD/MM/YYYY HH:mm:ss")}
 						</Typography>
 					)
 				}}/>
