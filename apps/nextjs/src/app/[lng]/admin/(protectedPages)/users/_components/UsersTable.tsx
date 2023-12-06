@@ -7,6 +7,7 @@ import type { trpcRsc } from "~/utils/apiServer"
 import { useSearchParamState } from "~/hooks"
 import type { ComponentWithLocaleProps } from "~/types"
 import { useTranslation } from "~/app/i18n/client"
+import { getNextPageParam } from "~/utils/apiHelpers"
 
 
 interface UsersTableProps extends ComponentWithLocaleProps {
@@ -15,33 +16,27 @@ interface UsersTableProps extends ComponentWithLocaleProps {
 }
 
 const UsersTable = ({ searchQuery, initialData, lng }: UsersTableProps) => {
-	const { value, onChange } = useSearchParamState ({
+	const { value, onChange } = useSearchParamState({
 		route:                              "/admin/users",
 		key:                                "search",
 		valueGetter:                        ({ target }: FormEvent<HTMLInputElement>) => (target as HTMLInputElement).value,
 		beforeRouteChangeParamsTransformer: (params, value) => {
-			if (value.length <= 2) {
+			if(value.length <= 2){
 				params.delete("search")
 			} else {
-				params.set ("search", value)
+				params.set("search", value)
 			}
 		}
 	})
 
-	const { t } = useTranslation (lng, ["common", "admin"])
+	const { t } = useTranslation(lng, ["common", "admin"])
 
-	const {
-		      data: usersList,
-		      fetchNextPage,
-		      hasNextPage
-	      } = api.user.list.useInfiniteQuery ({ search: value ?? searchQuery, limit: 20 }, {
-		getNextPageParam: (lastPage, allPages) => {
-			if (allPages[allPages.length - 1]?.items.length === 0) return undefined
-			return lastPage.nextCursor
-		}
-	})
+	const { data: usersList, fetchNextPage, hasNextPage } = api.user.list.useInfiniteQuery({
+		search: value ?? searchQuery,
+		limit:  20
+	}, { getNextPageParam })
 
-	const users = useMemo (() => usersList?.pages.flatMap (page => page.items).map (item => ({
+	const users = useMemo(() => usersList?.pages.flatMap(page => page.items).map(item => ({
 		...item
 	})) ?? [], [usersList])
 
@@ -61,7 +56,7 @@ const UsersTable = ({ searchQuery, initialData, lng }: UsersTableProps) => {
 					backgroundColor={"colorScheme.light"}
 					backgroundColorDark={"colorScheme.dark"}
 					beforeIcon={<IconCarbonSearch/>}
-					placeholder={t ("admin:search")}
+					placeholder={t("admin:search")}
 					height={"28px"}/>
 			</Row>
 			<Table
@@ -74,11 +69,11 @@ const UsersTable = ({ searchQuery, initialData, lng }: UsersTableProps) => {
 				// onRowClick={(skinData) => void ``}
 				headers={[
 					{
-						key: "name",
+						key:     "name",
 						display: "Name"
 					},
 					{
-						key: "email",
+						key:     "email",
 						display: "Email"
 					},
 				]}/>

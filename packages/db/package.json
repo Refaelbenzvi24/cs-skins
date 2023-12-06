@@ -9,15 +9,19 @@
 		"lint": "eslint .",
 		"format": "prettier --check \"**/*.{mjs,ts,md,json}\"",
 		"generate": "drizzle-kit generate:pg",
+		"migrate": "ts-node-dev ./migarte.ts",
+		"playground": "ts-node-dev ./playground.ts",
 		"push": "drizzle-kit push:pg",
 		"studio": "drizzle-kit studio",
 		"typecheck": "tsc --noEmit",
 		"seed": "ts-node-dev src/seed.ts"
 	},
 	"dependencies": {
+		"@auth/core": "^0.15.2",
 		"@paralleldrive/cuid2": "^2.2.2",
 		"drizzle-orm": "^0.29.1",
-		"postgres": "^3.4.0"
+		"postgres": "^3.4.0",
+		"lodash": "^4.17.21"
 	},
 	"devDependencies": {
 		"@acme/eslint-config": "^0.2.0",

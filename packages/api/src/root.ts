@@ -1,6 +1,5 @@
 import { authRouter } from "./router/auth"
 import { skinDataRouter } from "./router/skinData"
-import { postRouter } from "./router/post"
 import { createTRPCRouter } from "./trpc"
 import { skinRouter } from "./router/skin"
 import { sourceRouter } from "./router/source"
@@ -15,7 +14,6 @@ export const appRouter = createTRPCRouter ({
 	skinData: skinDataRouter,
 	quality: qualityRouter,
 	auth: authRouter,
-	post: postRouter,
 	user: userRouter,
 })
 

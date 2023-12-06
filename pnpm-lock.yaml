@@ -38,6 +38,9 @@ importers:
       cron:
         specifier: ^2.1.0
         version: 2.4.4
+      cron-converter:
+        specifier: ^2.0.1
+        version: 2.0.1
       ts-node:
         specifier: ^10.9.1
         version: 10.9.1(@types/node@18.18.9)(typescript@5.2.2)
@@ -879,12 +882,18 @@ importers:
 
   packages/db:
     dependencies:
+      '@auth/core':
+        specifier: ^0.15.2
+        version: 0.15.2
       '@paralleldrive/cuid2':
         specifier: ^2.2.2
         version: 2.2.2
       drizzle-orm:
         specifier: ^0.29.1
         version: 0.29.1(pg@8.11.3)(postgres@3.4.3)
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
       postgres:
         specifier: ^3.4.0
         version: 3.4.3
@@ -12812,6 +12821,12 @@ packages:
 
   /create-require@1.1.1:
     resolution: {integrity: sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==}
+
+  /cron-converter@2.0.1:
+    resolution: {integrity: sha512-2wjThrhVfy4OukXV9IPhqne11MnEqN0dzMvcR7m1cK2CJj/rC3S9Ns1AbA7pW+ao488V99Sk6vjo2119LcoGbA==}
+    dependencies:
+      luxon: 3.3.0
+    dev: false
 
   /cron@2.4.4:
     resolution: {integrity: sha512-MHlPImXJj3K7x7lyUHjtKEOl69CSlTOWxS89jiFgNkzXfvhVjhMz/nc7/EIfN9vgooZp8XTtXJ1FREdmbyXOiQ==}

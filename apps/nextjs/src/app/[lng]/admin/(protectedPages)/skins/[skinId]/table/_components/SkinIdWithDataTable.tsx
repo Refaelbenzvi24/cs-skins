@@ -8,6 +8,7 @@ import type { ComponentWithLocaleProps } from "~/types"
 import { useTranslation } from "~/app/i18n/client"
 import moment from "moment"
 import { useGetSearchParams, useSearchParamState } from "~/hooks"
+import { getNextPageParam } from "~/utils/apiHelpers"
 
 
 interface SkinIdWithDataProps extends ComponentWithLocaleProps {
@@ -32,24 +33,13 @@ const SkinIdWithDataTable = ({ initialData, lng, skinId, searchQuery }: SkinIdWi
 
 	const { t } = useTranslation(lng, ["common", "admin"])
 
-	const {
-		      data: skinIdWithDataList,
-		      fetchNextPage,
-		      hasNextPage
-	      } = api.skin.getByIdWithData.useInfiniteQuery({
-		search:    value ?? searchQuery,
-		skinId,
-		limit:     20,
+	const { data: skinIdWithDataList, fetchNextPage, hasNextPage } = api.skin.getByIdWithData.useInfiniteQuery({
+		search:    value ?? searchQuery, skinId, limit: 20,
 		dateRange: {
 			start: startDate ? moment(startDate).toDate() : undefined,
 			end:   endDate ? moment(endDate).toDate() : undefined
 		}
-	}, {
-		getNextPageParam: (lastPage, allPages) => {
-			if(allPages[allPages.length - 1]?.items.length === 0) return undefined
-			return lastPage.nextCursor
-		}
-	})
+	}, { getNextPageParam })
 
 	const SkinIdWithData = useMemo(() => skinIdWithDataList?.pages.flatMap(page => page.items).map(item => ({
 		...item

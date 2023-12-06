@@ -1,35 +1,37 @@
 {
-	"$schema": "https://turborepo.org/schema.json",
-	"globalDependencies": [
+	"$schema" :            "https://turborepo.org/schema.json",
+	"globalDependencies" : [
 		"**/.env"
 	],
-	"pipeline": {
-		"topo": {
-			"dependsOn": ["^topo"]
+	"pipeline" :           {
+		"topo" :          {
+			"dependsOn" : [
+				"^topo"
+			]
 		},
-		"db:generate": {
-			"cache":  false
+		"db:generate" :   {
+			"cache" : false
 		},
-		"db:push":     {
-			"cache":  false
+		"db:push" :       {
+			"cache" : false
 		},
-		"db:playground": {
-			"cache":  false
+		"db:playground" : {
+			"cache" : false
 		},
-		"dev":         {
-			"persistent": true,
-			"cache":      false
+		"dev" :           {
+			"persistent" : true,
+			"cache" :      false
 		},
-		"start":       {
-			"persistent": true,
-			"cache":      false
+		"start" :         {
+			"persistent" : true,
+			"cache" :      false
 		},
-		"build":       {
-			"dependsOn": [
+		"build" :         {
+			"dependsOn" : [
 				"^build",
 				"^db:generate"
 			],
-			"outputs":   [
+			"outputs" :   [
 				".next/**",
 				"!.next/cache/**",
 				"next-env.d.ts",
@@ -37,55 +39,57 @@
 				"storybook-static/**"
 			]
 		},
-		"test":        {
-			"persistent": true,
-			"cache":      false
+		"test" :          {
+			"persistent" : true,
+			"cache" :      false
 		},
-		"test:ci":     {
-			"persistent": true,
-			"cache":      false
+		"test:ci" :       {
+			"persistent" : true,
+			"cache" :      false
 		},
-		"test:watch":  {
-			"persistent": true,
-			"cache":      false
+		"test:watch" :    {
+			"persistent" : true,
+			"cache" :      false
 		},
-		"format": {
-			"outputs": ["node_modules/.cache/.prettiercache"],
-			"outputMode": "new-only"
+		"format" :        {
+			"outputs" :    [
+				"node_modules/.cache/.prettiercache"
+			],
+			"outputMode" : "new-only"
 		},
-		"lint":        {
-			"dependsOn": [
+		"lint" :          {
+			"dependsOn" : [
 				"^topo"
 			],
-			"outputs":   [
+			"outputs" :   [
 				"node_modules/.cache/.eslintcache"
 			]
 		},
-		"typecheck":   {
-			"dependsOn": [
+		"typecheck" :     {
+			"dependsOn" : [
 				"^topo"
 			],
-			"outputs":   [
+			"outputs" :   [
 				"node_modules/.cache/tsbuildinfo.json"
 			]
 		},
-		"clean":       {
-			"cache": false
+		"clean" :         {
+			"cache" : false
 		},
-		"//#clean":    {
-			"cache": false
+		"//#clean" :      {
+			"cache" : false
 		},
-		"//#clean":    {
-			"cache": false
+		"//#clean" :      {
+			"cache" : false
 		},
-		"type-check":  {
-			"dependsOn": [
+		"type-check" :    {
+			"dependsOn" : [
 				"^db:generate"
 			],
-			"cache":     false
+			"cache" :     false
 		}
 	},
-	"globalEnv": [
+	"globalEnv" :          [
 		"DATABASE_URL",
 		"DISCORD_CLIENT_ID",
 		"DISCORD_CLIENT_SECRET",
