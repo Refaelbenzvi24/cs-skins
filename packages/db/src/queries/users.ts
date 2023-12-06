@@ -1,36 +1,31 @@
-import { db, dbOperators, schema as schemaList } from "../../index"
-import { eq } from "drizzle-orm"
 import type { PaginateWithSearchParams } from "../../types/queryParams"
+import { db, dbOperators, schema as schemaList } from "../../index"
 import { addOperatorByParametersNil } from "../helpers"
 
 
-const tableName: keyof typeof schemaList = "sources"
+const tableName: keyof typeof schemaList = "users"
 
 const getSchema = () => schemaList[tableName]
-
-const list = ({ cursor, search, limit }: PaginateWithSearchParams) => {
+const list      = ({ cursor, search, limit }: PaginateWithSearchParams) => {
 	const schema                      = getSchema()
+	const { users }                   = schemaList
 	const { gt, desc, like, or, and } = dbOperators
 	return db
-	.select()
+	.select({
+		id:    users.id,
+		name:  users.name,
+		email: users.email
+	})
 	.from(schema)
 	.orderBy(({ id }) => desc(id))
 	.where((queryData) => and(
 		addOperatorByParametersNil({ cursor }, ({ cursor }) => gt(queryData.id, cursor)),
 		addOperatorByParametersNil({ search }, ({ search }) => or(
 			like(queryData.name, `${search}`),
-			like(queryData.url, `${search}`)
+			like(queryData.email, `${search}`),
 		))
 	))
 	.limit(limit ?? 20)
 }
 
-const findOne = () => {
-	const schema = getSchema()
-	return db
-	.select()
-	.from(schema)
-	.where(({ url }) => eq(url, "https://csgostash.com/"))
-}
-
-export default { list, findOne }
+export default { list }

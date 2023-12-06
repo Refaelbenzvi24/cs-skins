@@ -6,7 +6,7 @@
 		"rootDir":            "./",
 		"sourceMap":          true,
 		"moduleResolution":   "node",
-		"target":             "es5",
+		"target":             "es6",
 		"module":             "commonjs",
 		"esModuleInterop":    true,
 		"skipLibCheck":       true,

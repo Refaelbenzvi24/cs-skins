@@ -22,7 +22,6 @@ COPY .gitignore .gitignore
 COPY --from=builder /app/out/full/ .
 RUN yarn global add pnpm
 RUN pnpm install
-RUN pnpm db:generate
 
 # Build the project and its dependencies
 COPY turbo.json turbo.json

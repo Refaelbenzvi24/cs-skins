@@ -8,6 +8,7 @@ import { useSearchParamState } from "~/hooks"
 import type { ComponentWithLocaleProps } from "~/types"
 import { useTranslation } from "~/app/i18n/client"
 import { useRouter } from "next/navigation"
+import { getNextPageParam } from "~/utils/apiHelpers"
 
 
 interface SkinsTableProps extends ComponentWithLocaleProps {
@@ -16,35 +17,29 @@ interface SkinsTableProps extends ComponentWithLocaleProps {
 }
 
 const SkinsTable = ({ searchQuery, initialData, lng }: SkinsTableProps) => {
-	const { value, onChange } = useSearchParamState ({
+	const { value, onChange } = useSearchParamState({
 		route:                              "/admin/skins",
 		key:                                "search",
 		valueGetter:                        ({ target }: FormEvent<HTMLInputElement>) => (target as HTMLInputElement).value,
 		beforeRouteChangeParamsTransformer: (params, value) => {
-			if (value.length <= 2) {
-				params.delete ("search")
+			if(value.length <= 2){
+				params.delete("search")
 			} else {
-				params.set ("search", value)
+				params.set("search", value)
 			}
 		}
 	})
 
-	const router = useRouter ()
+	const router = useRouter()
 
-	const { t } = useTranslation (lng, ["common", "admin"])
+	const { t } = useTranslation(lng, ["common", "admin"])
 
-	const {
-		data: skinsList,
-		fetchNextPage,
-		hasNextPage
-	} = api.skin.list.useInfiniteQuery ({ search: value ?? searchQuery, limit: 20 }, {
-		getNextPageParam: (lastPage, allPages) => {
-			if (allPages[allPages.length - 1]?.items.length === 0) return undefined
-			return lastPage.nextCursor
-		}
-	})
+	const { data: skinsList, fetchNextPage, hasNextPage } = api.skin.list.useInfiniteQuery({
+		search: value ?? searchQuery,
+		limit:  20
+	}, { getNextPageParam })
 
-	const skins = useMemo (() => skinsList?.pages.flatMap (page => page.items).map (item => ({
+	const skins = useMemo(() => skinsList?.pages.flatMap(page => page.items).map(item => ({
 		...item
 	})) ?? [], [skinsList])
 
@@ -64,7 +59,7 @@ const SkinsTable = ({ searchQuery, initialData, lng }: SkinsTableProps) => {
 					backgroundColor={"colorScheme.light"}
 					backgroundColorDark={"colorScheme.dark"}
 					beforeIcon={<IconCarbonSearch/>}
-					placeholder={t ("admin:search")}
+					placeholder={t("admin:search")}
 					height={"28px"}/>
 			</Row>
 			<Table
@@ -76,10 +71,10 @@ const SkinsTable = ({ searchQuery, initialData, lng }: SkinsTableProps) => {
 				onNextPage={fetchNextPage}
 				hrefCreator={(skinData) => `/${lng}/admin/skins/${skinData.id}/table`}
 				onRowClick={(skinData, event) => {
-					if (event.metaKey || event.ctrlKey) {
-						return window.open (`/${lng}/admin/skins/${skinData.id}/table`, "_blank")
+					if(event.metaKey || event.ctrlKey){
+						return window.open(`/${lng}/admin/skins/${skinData.id}/table`, "_blank")
 					}
-					router.push (`/${lng}/admin/skins/${skinData.id}/table`)
+					router.push(`/${lng}/admin/skins/${skinData.id}/table`)
 				}}
 				headers={[
 					{
@@ -101,7 +96,7 @@ const SkinsTable = ({ searchQuery, initialData, lng }: SkinsTableProps) => {
 							className="flex whitespace-nowrap"
 							href={url}
 							text
-							onClick={(e) => e.stopPropagation ()}
+							onClick={(e) => e.stopPropagation()}
 							target="_blank"
 							rel="noopener noreferrer"
 							noPadding
@@ -122,7 +117,7 @@ const SkinsTable = ({ searchQuery, initialData, lng }: SkinsTableProps) => {
 							color={bodyColor}
 							colorDark={bodyColorDark}
 							variant={"small"}>
-							{createdAt?.toLocaleDateString ()}
+							{createdAt?.toLocaleDateString()}
 						</Typography>
 					)
 				}}/>

@@ -281,8 +281,6 @@ interface ChartProps {
 }
 
 const Chart = (props: ChartProps) => {
-	console.log(props)
-
 	return (
 		<ResponsiveLine
 			data={props.data}

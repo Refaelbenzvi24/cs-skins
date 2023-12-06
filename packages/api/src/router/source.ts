@@ -2,8 +2,7 @@ import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "../trpc"
 import { skinValidations } from "@acme/validations"
-import { dbOperators, schema } from "@acme/db"
-import _ from "lodash"
+import { getPaginationReturning } from "../apiHelpers"
 
 
 export const sourceRouter = createTRPCRouter({
@@ -11,36 +10,15 @@ export const sourceRouter = createTRPCRouter({
 		protectedProcedure
 		.input(z.object(skinValidations.list))
 		.query(async ({ ctx, input }) => {
-			const { sources }                 = schema
-			const { gt, desc, like, or, and } = dbOperators
-
 			const { limit, search } = input
 			const cursor            = input.cursor ?? "0"
 			const items             = await ctx
-			.db
-			.select()
-			.from(sources)
-			.orderBy(({ id }) => desc(id))
-			.where((queryData) => and(
-				gt(queryData.id, cursor),
-				...(search ? [or(
-					like(queryData.name, `${search}`),
-					like(queryData.url, `${search}`)
-				)] : [])
-			))
-			.limit(limit ?? 20)
+			.dbHelper
+			.query
+			.sources
+			.list({ limit, search, cursor })
 			.execute()
 
-			if(items.length !== limit){
-				return {
-					items,
-					nextCursor: null
-				}
-			}
-
-			return {
-				items,
-				nextCursor: items.length > 0 ? _.last(items)!.id : null
-			};
+			return getPaginationReturning(items, limit ?? 20)
 		})
 })

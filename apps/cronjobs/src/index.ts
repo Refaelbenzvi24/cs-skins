@@ -22,7 +22,7 @@ export const cronJobsInitializer = () => {
 	const cronInterval   = getCronIntervalString({ minutes: 5 });
 
 	const job = new CronJob(cronInterval, () => {
-		console.log("sending intervaled message...");
+		console.log("sending interval message...");
 		void (async () => await publishScrapingMessage(intervalInMili))();
 	})
 	job.start()

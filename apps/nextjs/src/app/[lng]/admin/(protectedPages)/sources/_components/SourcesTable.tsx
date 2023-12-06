@@ -7,6 +7,7 @@ import type { trpcRsc } from "~/utils/apiServer"
 import { useSearchParamState } from "~/hooks"
 import type { ComponentWithLocaleProps } from "~/types"
 import { useTranslation } from "~/app/i18n/client"
+import { getNextPageParam } from "~/utils/apiHelpers"
 
 
 interface SourcesTableProps extends ComponentWithLocaleProps {
@@ -30,16 +31,10 @@ const SourcesTable = ({ searchQuery, initialData, lng }: SourcesTableProps) => {
 
 	const { t } = useTranslation(lng, ["common", "admin"])
 
-	const {
-		      data: sourcesList,
-		      fetchNextPage,
-		      hasNextPage
-	      } = api.source.list.useInfiniteQuery({ search: value ?? searchQuery, limit: 20 }, {
-		getNextPageParam: (lastPage, allPages) => {
-			if(allPages[allPages.length - 1]?.items.length === 0) return undefined
-			return lastPage.nextCursor
-		}
-	})
+	const { data: sourcesList, fetchNextPage, hasNextPage } = api.source.list.useInfiniteQuery({
+		search: value ?? searchQuery,
+		limit:  20
+	}, { getNextPageParam })
 
 	const sources = useMemo(() => sourcesList?.pages.flatMap(page => page.items).map(item => ({
 		...item

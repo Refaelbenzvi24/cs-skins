@@ -20,6 +20,7 @@
 		"@acme/message-broker": "0.1.0",
 		"axios": "^1.5.1",
 		"cron": "^2.1.0",
+		"cron-converter": "^2.0.1",
 		"ts-node": "^10.9.1"
 	}
 }

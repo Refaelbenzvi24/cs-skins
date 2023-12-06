@@ -43,7 +43,7 @@ const Tab = (
 		lastActiveTabIndex,
 		...restProps
 	}: TabProps
-	   & React.DetailedHTMLProps<React.AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>
+	   & Omit<React.DetailedHTMLProps<React.AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>, 'ref'>
 	   & LinkProps
 	   & { children?: ReactNode }) => {
 	return (
