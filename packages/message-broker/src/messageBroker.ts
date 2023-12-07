@@ -10,9 +10,11 @@ export class Producer {
 	static channel: Channel;
 	queue: Replies.AssertQueue | undefined;
 	queueName: string;
+	options?: Options.AssertQueue;
 
-	constructor(queueName: string) {
-		this.queueName = queueName;
+	constructor(queueName: string, options?: Options.AssertQueue) {
+		this.queueName = queueName
+		this.options = options
 	}
 
 	async initializeProducer(connectionParameters: BuildConnectionStringProps) {
@@ -22,11 +24,11 @@ export class Producer {
 		}
 		if (!Producer.channel) Producer.channel = await Producer.connection.createChannel ();
 
-		this.queue = await Producer.channel.assertQueue (this.queueName);
+		this.queue = await Producer.channel.assertQueue (this.queueName, this.options);
 	}
 
-	sendMessage(message: MessageBrokerPayloads) {
-		Producer.channel.sendToQueue (this.queueName, Buffer.from (JSON.stringify (message)))
+	sendMessage(message: MessageBrokerPayloads, options?: Options.Publish) {
+		Producer.channel.sendToQueue (this.queueName, Buffer.from (JSON.stringify (message)), options)
 	}
 }
 

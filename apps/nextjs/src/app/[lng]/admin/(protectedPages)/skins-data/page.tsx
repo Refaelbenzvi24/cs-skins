@@ -1,4 +1,4 @@
-import { Col, Icon, LinkButton, Row, Typography } from "@acme/ui"
+import { Col, Row, Typography } from "@acme/ui"
 import { redirect } from "next/navigation"
 import SkinsDataTable from "~/app/[lng]/admin/(protectedPages)/skins-data/_components/SkinsDataTable"
 import { trpcRsc } from "~/utils/apiServer"
@@ -25,7 +25,7 @@ const Page = async ({ params: { lng }, searchParams }: AdminPageProps) => {
 	const session = await auth ();
 	if (!session) redirect (`/${lng}/admin/login`)
 
-	const skinsDataList = await trpcRsc.skinData.list.fetch ({ value: searchParams.search, limit: 20 })
+	const skinsDataList = await trpcRsc.skinData.list.fetch ({ search: searchParams.search, limit: 20 })
 
 	const { t } = await getTranslation (lng, "admin")
 

@@ -25,7 +25,7 @@ const Page = async ({ params: { lng }, searchParams }: AdminPageProps) => {
 	const session = await auth();
 	if(!session) return redirect(`/${lng}/admin/login`)
 
-	const weaponsList = await trpcRsc.weapon.list.fetch({ value: searchParams.search, limit: 20 })
+	const weaponsList = await trpcRsc.weapon.list.fetch({ search: searchParams.search, limit: 20 })
 
 	const { t } = await getTranslation(lng, 'admin')
 

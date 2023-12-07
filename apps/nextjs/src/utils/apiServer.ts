@@ -10,6 +10,6 @@ export const trpcRsc = createTRPCNextLayout({
 	router: appRouter,
 	transformer: superjson,
 	createContext: async () => {
-		return createTRPCContext({ auth: await auth(), req: (null as unknown as Request) }, { messageBrokerConnectionParams, emailProvider: getEmailProvider() })
+		return createTRPCContext({ auth: await auth(), req: (null as unknown as Request) }, { messageBrokerConnectionParams, emailProvider: await getEmailProvider() })
 	},
 });

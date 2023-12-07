@@ -12,37 +12,33 @@ import { useRouter } from "next/navigation"
 import { useTranslation } from "~/app/i18n/client"
 import i18next from "i18next"
 
-const loginValidation = z.object (authValidations.loginObject)
+
+const loginValidation = z.object(authValidations.loginObject)
 
 type LoginValidationSchema = z.infer<typeof loginValidation>
 // TODO: make server component and move form into separate component
 const Page = () => {
-	const router = useRouter()
-	const { status } = useSession ()
-	const { t, i18n } = useTranslation(i18next.language, 'forms')
-	const [formHasSubmitted, setFormHasSubmitted] = useState (false)
+	const router                                  = useRouter()
+	const { status }                              = useSession()
+	const { t, i18n }                             = useTranslation(i18next.language, 'forms')
+	const [formHasSubmitted, setFormHasSubmitted] = useState(false)
 
-	const {
-		handleSubmit,
-		reset,
-		formState: { errors, isSubmitting, isDirty, isValid },
-		register
-	} = useForm<LoginValidationSchema> ({
-		resolver: zodResolver (loginValidation),
+	const { handleSubmit, reset, formState: { errors, isSubmitting, isDirty, isValid }, register } = useForm<LoginValidationSchema>({
+		resolver: zodResolver(loginValidation),
 		mode:     "onChange"
 	})
 
 	const onSubmit: SubmitHandler<LoginValidationSchema> = async (data) => {
-		await signIn ("credentials", {
+		await signIn("credentials", {
 			redirect: false,
 			username: data.email,
 			...data
 		})
-		reset ()
+		reset()
 	}
 
-	useEffect (() => {
-		if (status === "authenticated") router.push (`/${i18n.language}/admin`)
+	useEffect(() => {
+		if(status === "authenticated") router.push(`/${i18n.language}/admin`)
 	}, [i18n.language, router, status])
 
 	return (
@@ -61,7 +57,7 @@ const Page = () => {
 						<Typography className="whitespace-nowrap mx-[18px]"
 						            variant="h2"
 						            color={theme.colorScheme.primary}>
-							{t ("common:login")}
+							{t("common:login")}
 						</Typography>
 						<Divider className="max-[800px]:hidden"
 						         thickness={"2px"}/>
@@ -69,26 +65,26 @@ const Page = () => {
 
 					<form className="flex flex-col w-full items-center justify-center"
 					      onSubmit={(event) => {
-						      if (!formHasSubmitted) setFormHasSubmitted (() => true)
-						      void handleSubmit (onSubmit) (event)
+						      if(!formHasSubmitted) setFormHasSubmitted(() => true)
+						      void handleSubmit(onSubmit)(event)
 					      }}>
 						<Col className="space-y-1 w-full pb-[60px]">
 							<TextField
-								{...register ("email")}
+								{...register("email")}
 								id="email"
 								disabled={isSubmitting}
-								label={t ("forms:admin.login.labels.email")}
+								label={t("forms:admin.login.labels.email")}
 								error={!!errors.email}
-								helperText={errors.email?.message ? t (errors.email?.message) : ""}/>
+								helperText={errors.email?.message ? t(errors.email?.message) : ""}/>
 
 							<TextField
-								{...register ("password")}
+								{...register("password")}
 								type="password"
 								id="password"
 								disabled={isSubmitting}
-								label={t ("forms:admin.login.labels.password")}
+								label={t("forms:admin.login.labels.password")}
 								error={!!errors.password}
-								helperText={errors.password?.message ? t (errors.password?.message) : ""}/>
+								helperText={errors.password?.message ? t(errors.password?.message) : ""}/>
 						</Col>
 
 						<Button
@@ -97,7 +93,7 @@ const Page = () => {
 							height="40px"
 							disabled={formHasSubmitted ? isSubmitting || !isDirty || !isValid : false}>
 							<Typography variant={"bold"} color={theme.colorScheme.light}>
-								{t ("common:login")}
+								{t("common:login")}
 							</Typography>
 						</Button>
 					</form>
