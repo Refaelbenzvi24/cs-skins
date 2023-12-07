@@ -34,7 +34,9 @@ const SkinIdWithDataTable = ({ initialData, lng, skinId, searchQuery }: SkinIdWi
 	const { t } = useTranslation(lng, ["common", "admin"])
 
 	const { data: skinIdWithDataList, fetchNextPage, hasNextPage } = api.skin.getByIdWithData.useInfiniteQuery({
-		search:    value ?? searchQuery, skinId, limit: 20,
+		search:    value ?? searchQuery,
+		skinId,
+		limit:     20,
 		dateRange: {
 			start: startDate ? moment(startDate).toDate() : undefined,
 			end:   endDate ? moment(endDate).toDate() : undefined
@@ -83,6 +85,30 @@ const SkinIdWithDataTable = ({ initialData, lng, skinId, searchQuery }: SkinIdWi
 					{
 						key:     "quality",
 						display: "Quality"
+					},
+					{
+						key:     "steamPrice",
+						display: "Steam Price"
+					},
+					{
+						key:     "steamListings",
+						display: "Steam Listings"
+					},
+					{
+						key:     "steamMedianPrice",
+						display: "Steam Median Price"
+					},
+					{
+						key:     "steamVolume",
+						display: "Steam Volume"
+					},
+					{
+						key:     "bitSkinsPrice",
+						display: "BitSkins Price"
+					},
+					{
+						key:     "percentChange",
+						display: "Percent"
 					},
 					{
 						key:     "skinDataCreatedAt",

@@ -8,7 +8,9 @@ export const publishScrapingMessage = async (interval: number) => {
 	console.log(`sending message for scrape with interval ${interval}...`);
 	const producer = new Producer("scraper");
 	await producer.initializeProducer(messageBrokerConnectionParams);
-	producer.sendMessage({ payload: "interval_scrape" });
+	producer.sendMessage({ payload: "interval_scrape" }, {
+		expiration: interval.toString()
+	});
 };
 
 export const initialJob = async () => {

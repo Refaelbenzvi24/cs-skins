@@ -64,6 +64,12 @@ skins:
             weaponName: Weapon Name
             skinName: Skin Name
             quality: Quality
+            steamPrice: Steam Price
+            steamListings: Steam Listings
+            steamMedianPrice: Steam Median Price
+            steamVolume: Steam Volume
+            bitSkinsPrice: Bit Skins Price
+            percentChange: Percent Change
             skinDataCreatedAt: Skin Data Created At
 qualities: איכויות
 users: משתמשים

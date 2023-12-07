@@ -25,7 +25,7 @@ const Page = async ({ params: { lng }, searchParams }: AdminPageProps) => {
 	const session = await auth();
 	if(!session) return redirect(`/${lng}/admin/login`)
 
-	const qualitiesList = await trpcRsc.quality.list.fetch({ value: searchParams.search, limit: 20 })
+	const qualitiesList = await trpcRsc.quality.list.fetch({ search: searchParams.search, limit: 20 })
 
 	const { t } = await getTranslation(lng, 'admin')
 

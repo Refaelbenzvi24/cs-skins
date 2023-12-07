@@ -26,7 +26,7 @@ const Page = async ({ params: { lng }, searchParams }: AdminPageProps) => {
 	const session = await auth();
 	if(!session) return redirect(`/${lng}/admin/login`)
 
-	const skinsList = await trpcRsc.skin.list.fetch({ value: searchParams.search, limit: 20 })
+	const skinsList = await trpcRsc.skin.list.fetch({ search: searchParams.search, limit: 20 })
 
 	const { t } = await getTranslation(lng, 'admin')
 

@@ -94,8 +94,7 @@ const SourcesTable = ({ searchQuery, initialData, lng }: SourcesTableProps) => {
 							width="fit-content"
 							height={"100%"}
 							color={bodyColor}
-							colorDark={bodyColorDark}
-							variant={"small"}>
+							colorDark={bodyColorDark}>
 							<Typography
 								className="whitespace-nowrap"
 								variant={"small"}>

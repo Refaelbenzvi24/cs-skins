@@ -1,6 +1,6 @@
 import { dbHelper } from "./src/dbHelper"
 
-const playground = async () => {
+const index = async () => {
 	const skinId = 'x6rjptv4pjdhips9wwfrjans'
 	const search = undefined
 	const cursor = "0"
@@ -14,4 +14,4 @@ const playground = async () => {
 	console.log(data)
 }
 
-void playground ()
+void index ()

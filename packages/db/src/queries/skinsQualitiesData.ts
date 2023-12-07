@@ -51,7 +51,7 @@ const list = ({ limit, search, cursor }: PaginateWithSearchParams) => {
 }
 
 const getBySkinIdWithData = ({ limit, skinId, search, dateRange, cursor }: PaginateWithSearchAndDateRangeParams & {
-	skinId?: string | null,
+	skinId: string,
 }) => {
 	const schema                                                                          = getSchema()
 	const { skins, weaponsSkins, weapons, skinsQualitiesData, skinsQualities, qualities } = schemaList
@@ -68,7 +68,7 @@ const getBySkinIdWithData = ({ limit, skinId, search, dateRange, cursor }: Pagin
 		         bitSkinsPrice:     skinsQualitiesData.bitSkinsPrice,
 		         percentChange:     skinsQualitiesData.percentChange,
 		         steamListings:     skinsQualitiesData.steamListings,
-		         steamMediaPrice:   skinsQualitiesData.steamMedianPrice,
+		         steamMedianPrice:  skinsQualitiesData.steamMedianPrice,
 		         steamVolume:       skinsQualitiesData.steamVolume,
 		         steamPrice:        skinsQualitiesData.steamPrice,
 		         createdAt:         skins.createdAt,
@@ -82,7 +82,7 @@ const getBySkinIdWithData = ({ limit, skinId, search, dateRange, cursor }: Pagin
 	         .leftJoin(weapons, eq(weapons.id, weaponsSkins.weaponId))
 	         .where((queryData) => and(
 		         addOperatorByParametersNil({ cursor }, ({ cursor }) => gt(queryData.id, cursor)),
-		         addOperatorByParametersNil({ skinId }, ({ skinId }) => eq(queryData.skinId, skinId)),
+		         eq(queryData.skinId, skinId),
 		         addOperatorByParametersNil({ search }, ({ search }) => like(queryData.quality, `${search}`)),
 		         addOperatorByParametersNil({ start: dateRange?.start, end: dateRange?.end }, ({ start, end }) => and(
 			         gte(queryData.skinDataCreatedAt, start),
@@ -90,7 +90,7 @@ const getBySkinIdWithData = ({ limit, skinId, search, dateRange, cursor }: Pagin
 		         ))
 	         ))
 	         .orderBy(({ skinDataCreatedAt }) => desc(skinDataCreatedAt))
-	// .groupBy(skins.id, skinsQualitiesData.id, weapons.name, skins.name, qualities.name, skinsQualitiesData.bitSkinsPrice, skinsQualitiesData.percentChange, skinsQualitiesData.steamListings, skinsQualitiesData.steamMedianPrice, skinsQualitiesData.steamVolume, skinsQualitiesData.steamPrice, skins.createdAt, skinsQualitiesData.createdAt)
+	         .groupBy(skins.id, skinsQualitiesData.id, weapons.name, skins.name, qualities.name, skinsQualitiesData.bitSkinsPrice, skinsQualitiesData.percentChange, skinsQualitiesData.steamListings, skinsQualitiesData.steamMedianPrice, skinsQualitiesData.steamVolume, skinsQualitiesData.steamPrice, skins.createdAt, skinsQualitiesData.createdAt)
 	         .limit(limit ?? 20)
 }
 

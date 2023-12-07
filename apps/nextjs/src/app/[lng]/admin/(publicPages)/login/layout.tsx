@@ -1,14 +1,15 @@
 "use client";
 import AdminAppBar from "~/components/Admin/AdminAppBar"
 import { Main } from "@acme/ui"
-import type { ReactNode } from "react"
+import type { LayoutWithLocaleProps } from "~/types"
 
-const Layout = (props: { children: ReactNode }) => {
+
+const Layout = ({ children, params: { lng } }: LayoutWithLocaleProps) => {
 	return (
 		<div className="h-full">
-			<AdminAppBar removeSettingsButton={true} removeLogoutButton={true}/>
+			<AdminAppBar lng={lng} removeSettingsButton={true} removeLogoutButton={true}/>
 			<Main>
-				{props.children}
+				{children}
 			</Main>
 		</div>
 	);
