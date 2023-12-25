@@ -7,7 +7,6 @@ const delayManager = new DelayManager({
 	delayInMili: 700
 })
 
-
 export const getSkinHtml = async (skinUrl: string) => {
 	return await delayManager.push(async () => {
 		try {

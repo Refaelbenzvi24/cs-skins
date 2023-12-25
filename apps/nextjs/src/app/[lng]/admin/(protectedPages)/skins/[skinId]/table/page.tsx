@@ -15,7 +15,6 @@ const Page = async ({ params: { lng, skinId }, searchParams: { startDate, endDat
 	const session = await auth();
 	// TODO: refactor all redirect to be with return
 	if(!session) return redirect(`/${lng}/admin/login`)
-	console.log({ startDate, endDate })
 	const skinData = await trpcRsc.skin.getByIdWithData.fetch({
 		skinId,
 		limit:     20,

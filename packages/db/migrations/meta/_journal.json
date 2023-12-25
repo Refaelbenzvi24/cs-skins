@@ -15,6 +15,13 @@
       "when": 1701534757285,
       "tag": "0001_broad_sprite",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1703327838666,
+      "tag": "0002_opposite_mauler",
+      "breakpoints": true
     }
   ]
 }

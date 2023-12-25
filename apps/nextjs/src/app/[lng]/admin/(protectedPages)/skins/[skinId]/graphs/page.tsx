@@ -16,8 +16,8 @@ const Page = async ({ params: { lng, skinId } }: AdminPageProps) => {
 	const session = await auth();
 	if(!session) return redirect(`/${lng}/admin/login`)
 	const { startDate, endDate } = getSearchParams("startDate", "endDate")
-	const chartData              = await trpcRsc.skin.getByIdWithData.fetch({
-		limit:     100,
+	const chartData              = await trpcRsc.skin.getByIdWithDataForChart.fetch({
+		limit:     50,
 		skinId,
 		dateRange: {
 			start: startDate ? moment(startDate).toDate() : undefined,
@@ -25,62 +25,77 @@ const Page = async ({ params: { lng, skinId } }: AdminPageProps) => {
 		}
 	})
 
-	const steamListings = _(chartData.items)
+	const steamListings = _(chartData)
 	.groupBy(({ quality }) => quality)
 	.map((items, quality) => ({
 		id:   quality,
-		data: _(items).map(({ steamListings, skinDataCreatedAt }) => ({ x: skinDataCreatedAt, y: steamListings })).value()
+		data: _(items)
+		      .orderBy(({ createdAt }) => moment(createdAt).unix(), "asc")
+		      .map(({ steamListingsAvg, createdAt }) => ({ x: createdAt, y: steamListingsAvg }))
+		      .value()
 	}))
 	.value()
 
-	const bitSkinPrice = _(chartData.items)
+	const bitSkinPrice = _(chartData)
 	.groupBy(({ quality }) => quality)
 	.map((items, quality) => ({
 		id:   quality,
-		data: _(items).map(({ bitSkinsPrice, skinDataCreatedAt }) => ({ x: skinDataCreatedAt, y: bitSkinsPrice })).value()
+		data: _(items)
+		      .orderBy(({ createdAt }) => moment(createdAt).unix(), "asc")
+		      .map(({ bitSkinPriceAvg, createdAt }) => ({ x: createdAt, y: bitSkinPriceAvg }))
+		      .value()
 	}))
 	.value()
 
-	const percentChange = _(chartData.items)
+	const percentChange = _(chartData)
 	.groupBy(({ quality }) => quality)
 	.map((items, quality) => ({
 		id:   quality,
-		data: _(items).map(({ percentChange, skinDataCreatedAt }) => ({ x: skinDataCreatedAt, y: percentChange })).value()
+		data: _(items)
+		      .orderBy(({ createdAt }) => moment(createdAt).unix(), "asc")
+		      .map(({ percentChangeAvg, createdAt }) => ({ x: createdAt, y: percentChangeAvg }))
+		      .value()
 	}))
 	.value()
 
-	const steamMediaPrice = _(chartData.items)
+	const steamMediaPrice = _(chartData)
 	.groupBy(({ quality }) => quality)
 	.map((items, quality) => ({
 		id:   quality,
-		data: _(items).map(({ steamMediaPrice, skinDataCreatedAt }) => ({ x: skinDataCreatedAt, y: steamMediaPrice })).value()
+		data: _(items)
+		      .orderBy(({ createdAt }) => moment(createdAt).unix(), "asc")
+		      .map(({ steamMedianPriceAvg, createdAt }) => ({ x: createdAt, y: steamMedianPriceAvg }))
+		      .value()
 	}))
 	.value()
 
-	const steamVolume = _(chartData.items)
+	const steamVolume = _(chartData)
 	.groupBy(({ quality }) => quality)
 	.map((items, quality) => ({
 		id:   quality,
-		data: _(items).map(({ steamVolume, skinDataCreatedAt }) => ({ x: skinDataCreatedAt, y: steamVolume })).value()
+		data: _(items)
+		      .orderBy(({ createdAt }) => moment(createdAt).unix(), "asc")
+		      .map(({ steamVolumeAvg, createdAt }) => ({ x: createdAt, y: steamVolumeAvg }))
+		      .value()
 	}))
 	.value()
 
 	return (
 		<div className="flex h-full w-full">
-			<Col className="w-full h-full">
+			<Col className="w-full h-full pb-4">
 				<Row className="min-h-[50%] w-full">
-					<Chart data={steamListings}/>
-					<Chart data={bitSkinPrice}/>
+					<Chart data={steamListings} xText="Time" yText="Steam Listing"/>
+					<Chart data={bitSkinPrice} xText="Time" yText="Bit Skin Price"/>
 				</Row>
 
 				<Row className="min-h-[50%] w-full">
-					<Chart data={percentChange}/>
-					<Chart data={steamMediaPrice}/>
+					<Chart data={percentChange} xText="Time" yText="Percent Change"/>
+					<Chart data={steamMediaPrice} xText="Time" yText="Steam Median Price"/>
 				</Row>
 
 				<Row className="min-h-[50%] w-full">
-					<Chart data={bitSkinPrice}/>
-					<Chart data={steamVolume}/>
+					<Chart data={bitSkinPrice} xText="Time" yText="Bit Skin Price"/>
+					<Chart data={steamVolume} xText="Time" yText="Steam Volume"/>
 				</Row>
 			</Col>
 		</div>

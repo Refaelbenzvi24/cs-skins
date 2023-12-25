@@ -75,14 +75,6 @@ const SkinIdWithDataTable = ({ initialData, lng, skinId, searchQuery }: SkinIdWi
 				onNextPage={fetchNextPage}
 				headers={[
 					{
-						key:     "weaponName",
-						display: "Weapon Name"
-					},
-					{
-						key:     "skinName",
-						display: "Skin Name"
-					},
-					{
 						key:     "quality",
 						display: "Quality"
 					},

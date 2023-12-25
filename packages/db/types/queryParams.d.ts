@@ -1,20 +1,34 @@
-export interface PaginateParams {
+export interface WithLimitParam {
 	limit?: number | null | undefined
+}
+
+export interface WithDateRangeParam {
+	dateRange?: DateRange | null | undefined
+}
+
+export interface WithCursorParam {
 	cursor?: string | null | undefined
 }
 
-interface PaginateWithSearchParams extends PaginateParams {
+export interface WithSearchParam {
 	search?: string | null | undefined
 }
 
-interface DateRange {
+export interface DateRange {
 	start?: Date | null | undefined
 	end?: Date | null | undefined
 }
 
-interface PaginateWithDateRangeParams extends PaginateParams {
-	dateRange?: DateRange | null | undefined
+export type WithIdParam<IDKey extends string | number | symbol> = Record<IDKey, string>;
+
+export interface PaginateParams extends WithLimitParam, WithCursorParam {
 }
 
-interface PaginateWithSearchAndDateRangeParams extends PaginateWithSearchParams,PaginateWithDateRangeParams {
+interface PaginateWithSearchParams extends PaginateParams, WithSearchParam {
+}
+
+interface PaginateWithDateRangeParams extends PaginateParams, WithDateRangeParam {
+}
+
+interface PaginateWithSearchAndDateRangeParams extends PaginateWithSearchParams, PaginateWithDateRangeParams {
 }
