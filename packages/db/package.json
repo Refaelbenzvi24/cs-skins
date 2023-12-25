@@ -1,46 +1,46 @@
 {
-	"name": "@acme/db",
-	"version": "0.1.0",
-	"private": true,
-	"main": "./index.ts",
-	"types": "./index.ts",
-	"scripts": {
-		"clean": "rm -rf .turbo node_modules",
-		"lint": "eslint .",
-		"format": "prettier --check \"**/*.{mjs,ts,md,json}\"",
-		"generate": "drizzle-kit generate:pg",
-		"migrate": "ts-node-dev ./migarte.ts",
-		"playground": "ts-node-dev ./playground.ts",
-		"push": "drizzle-kit push:pg",
-		"studio": "drizzle-kit studio",
-		"typecheck": "tsc --noEmit",
-		"seed": "ts-node-dev src/seed.ts"
+	"name" :            "@acme/db",
+	"version" :         "0.1.0",
+	"private" :         true,
+	"main" :            "./index.ts",
+	"types" :           "./index.ts",
+	"scripts" :         {
+		"clean" :      "rm -rf .turbo node_modules",
+		"lint" :       "eslint .",
+		"format" :     "prettier --check \"**/*.{mjs,ts,md,json}\"",
+		"generate" :   "drizzle-kit generate:pg",
+		"migrate" :    "ts-node-dev ./migarte.ts",
+		"playground" : "ts-node-dev ./playground/index.ts",
+		"push" :       "drizzle-kit push:pg",
+		"studio" :     "drizzle-kit studio",
+		"typecheck" :  "tsc --noEmit",
+		"seed" :       "ts-node-dev src/seed.ts"
 	},
-	"dependencies": {
-		"@auth/core": "^0.15.2",
-		"@paralleldrive/cuid2": "^2.2.2",
-		"drizzle-orm": "^0.29.1",
-		"postgres": "^3.4.0",
-		"lodash": "^4.17.21"
+	"dependencies" :    {
+		"@auth/core" :           "^0.15.2",
+		"@paralleldrive/cuid2" : "^2.2.2",
+		"drizzle-orm" :          "^0.29.1",
+		"postgres" :             "^3.4.0",
+		"lodash" :               "^4.17.21"
 	},
-	"devDependencies": {
-		"@acme/eslint-config": "^0.2.0",
-		"@acme/prettier-config": "^0.1.0",
-		"@acme/tsconfig": "^0.1.0",
-		"@types/node": "^18.0.0",
-		"dotenv-cli": "^7.3.0",
-		"drizzle-kit": "^0.20.6",
-		"eslint": "^8.50.0",
-		"pg": "^8.11.3",
-		"prettier": "^3.0.3",
-		"ts-node-dev": "^2.0.0",
-		"typescript": "^5.2.2"
+	"devDependencies" : {
+		"@acme/eslint-config" :   "^0.2.0",
+		"@acme/prettier-config" : "^0.1.0",
+		"@acme/tsconfig" :        "^0.1.0",
+		"@types/node" :           "^18.0.0",
+		"dotenv-cli" :            "^7.3.0",
+		"drizzle-kit" :           "^0.20.6",
+		"eslint" :                "^8.50.0",
+		"pg" :                    "^8.11.3",
+		"prettier" :              "^3.0.3",
+		"ts-node-dev" :           "^2.0.0",
+		"typescript" :            "^5.2.2"
 	},
-	"eslintConfig": {
-		"root": true,
-		"extends": [
+	"eslintConfig" :    {
+		"root" :    true,
+		"extends" : [
 			"@acme/eslint-config/base"
 		]
 	},
-	"prettier": "@acme/prettier-config"
+	"prettier" :        "@acme/prettier-config"
 }

@@ -1,6 +1,6 @@
 import type { PaginateWithSearchParams } from "../../types/queryParams"
 import { db, dbOperators, schema as schemaList } from "../../index"
-import { addOperatorByParametersNil } from "../helpers"
+import { addOperatorByParametersNil } from "../utils"
 
 
 const tableName: keyof typeof schemaList = "users"

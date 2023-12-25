@@ -1,6 +1,10 @@
 import { db, dbOperators, schema, schema as schemaList } from "../../index"
-import { addOperatorByParametersNil } from "../helpers"
-import type { PaginateWithSearchAndDateRangeParams, PaginateWithSearchParams } from "../../types/queryParams"
+import { addOperatorByParametersNil } from "../utils"
+import type {
+	PaginateWithSearchAndDateRangeParams, PaginateWithSearchParams, WithLimitParam, WithIdParam, WithDateRangeParam
+} from "../../types/queryParams"
+import { addAsToSelectKeys } from "../utils/helpers"
+import whereClauses from "../utils/whereClauses"
 
 
 const tableName: keyof typeof schemaList = "skinsQualitiesData"
@@ -55,16 +59,13 @@ const getBySkinIdWithData = ({ limit, skinId, search, dateRange, cursor }: Pagin
 }) => {
 	const schema                                                                          = getSchema()
 	const { skins, weaponsSkins, weapons, skinsQualitiesData, skinsQualities, qualities } = schemaList
-	const { eq, gt, gte, avg, avgDistinct, desc, like, and, lte, sql }                    = dbOperators
+	const { eq, gt, gte, desc, like, and, lte }                                           = dbOperators
 	return db.select({
-		         id:         skinsQualitiesData.id,
-		         skinId:     skins.id,
-		         weaponName: weapons.name,
-		         skinName:   skins.name,
-		         quality:    qualities.name,
-		         // avgPrice:          avg(skinsQualitiesData.bitSkinsPrice),
-		         // avgListing:        avg(skinsQualitiesData.steamListings),
-		         // avgListing2:       sql<string>`AVG(${skinsQualitiesData.steamMedianPrice}) OVER (PARTITION BY EXTRACT('hour' FROM ${skinsQualitiesData.createdAt}), EXTRACT('day' FROM ${skinsQualitiesData.createdAt}))`,
+		         id:                skinsQualitiesData.id,
+		         skinId:            skins.id,
+		         weaponName:        weapons.name,
+		         skinName:          skins.name,
+		         quality:           qualities.name,
 		         bitSkinsPrice:     skinsQualitiesData.bitSkinsPrice,
 		         percentChange:     skinsQualitiesData.percentChange,
 		         steamListings:     skinsQualitiesData.steamListings,
@@ -81,8 +82,8 @@ const getBySkinIdWithData = ({ limit, skinId, search, dateRange, cursor }: Pagin
 	         .leftJoin(weaponsSkins, eq(weaponsSkins.skinId, skins.id))
 	         .leftJoin(weapons, eq(weapons.id, weaponsSkins.weaponId))
 	         .where((queryData) => and(
-		         addOperatorByParametersNil({ cursor }, ({ cursor }) => gt(queryData.id, cursor)),
 		         eq(queryData.skinId, skinId),
+		         addOperatorByParametersNil({ cursor }, ({ cursor }) => gt(queryData.id, cursor)),
 		         addOperatorByParametersNil({ search }, ({ search }) => like(queryData.quality, `${search}`)),
 		         addOperatorByParametersNil({ start: dateRange?.start, end: dateRange?.end }, ({ start, end }) => and(
 			         gte(queryData.skinDataCreatedAt, start),
@@ -94,4 +95,58 @@ const getBySkinIdWithData = ({ limit, skinId, search, dateRange, cursor }: Pagin
 	         .limit(limit ?? 20)
 }
 
-export default { list, getBySkinIdWithData }
+const skinsDataAggregationPartitionedByDays = ({ skinId, dateRange }: WithIdParam<"skinId"> & WithDateRangeParam) => {
+	const schema                                                                          = getSchema()
+	const { skins, weaponsSkins, weapons, skinsQualitiesData, skinsQualities, qualities } = schemaList
+	const { eq, desc, sql, rowNumber, over, avgPartitionedOverTimeStamp, and }            = dbOperators
+	const { dateRange: whereDateRange }                    = whereClauses
+	return db
+	.select({
+		id:        schema.id,
+		quality:   qualities.name,
+		createdAt: skinsQualitiesData.createdAt,
+		...addAsToSelectKeys({
+			steamPriceAvg:       avgPartitionedOverTimeStamp(skinsQualitiesData.steamPrice, skinsQualitiesData.createdAt),
+			steamListingsAvg:    avgPartitionedOverTimeStamp(skinsQualitiesData.steamListings, skinsQualitiesData.createdAt),
+			steamVolumeAvg:      avgPartitionedOverTimeStamp(skinsQualitiesData.steamVolume, skinsQualitiesData.createdAt),
+			steamMedianPriceAvg: avgPartitionedOverTimeStamp(skinsQualitiesData.steamMedianPrice, skinsQualitiesData.createdAt),
+			bitSkinPriceAvg:     avgPartitionedOverTimeStamp(skinsQualitiesData.bitSkinsPrice, skinsQualitiesData.createdAt),
+			percentChangeAvg:    avgPartitionedOverTimeStamp(skinsQualitiesData.percentChange, skinsQualitiesData.createdAt),
+			rowNumber:           rowNumber(undefined, over(sql`ORDER BY ${skinsQualitiesData.createdAt}`)),
+			totalCount:          sql`count(*) OVER ()`.mapWith(Number)
+		})
+	})
+	.from(schema)
+	.leftJoin(skinsQualities, eq(skinsQualities.id, skinsQualitiesData.skinQualityId))
+	.leftJoin(skins, eq(skins.id, skinsQualities.skinId))
+	.leftJoin(qualities, eq(qualities.id, skinsQualities.qualityId))
+	.leftJoin(weaponsSkins, eq(weaponsSkins.skinId, skins.id))
+	.leftJoin(weapons, eq(weapons.id, weaponsSkins.weaponId))
+	.where(and(
+		eq(skins.id, skinId),
+		addOperatorByParametersNil({ start: dateRange?.start, end: dateRange?.end }, ({ start, end }) =>
+			whereDateRange(skinsQualitiesData.createdAt, { start, end })
+		)
+	))
+	.orderBy(({ createdAt }) => desc(createdAt))
+}
+
+const getBySkinIdWithDataForChart = ({ limit, skinId, dateRange }: WithLimitParam & WithDateRangeParam & WithIdParam<"skinId">) => {
+	// const { withEquallyDistributedByRowNumber, withDateRange } = dynamicQueries
+	const { and }                           = dbOperators
+	const { equallyDistributedByRowNumber } = whereClauses
+
+	const skinsDataAggregatedPartitionedByDays = db
+	.$with("skinsDataAggregatedPartitionedByDays")
+	.as(skinsDataAggregationPartitionedByDays({ skinId, dateRange }))
+
+	return db
+	.with(skinsDataAggregatedPartitionedByDays)
+	.select()
+	.from(skinsDataAggregatedPartitionedByDays)
+	.where(({ rowNumber, totalCount }) => and(
+		equallyDistributedByRowNumber(rowNumber, totalCount, { limit })
+	))
+}
+
+export default { list, getBySkinIdWithData, getBySkinIdWithDataForChart }

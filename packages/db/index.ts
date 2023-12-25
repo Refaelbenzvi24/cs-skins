@@ -9,10 +9,12 @@ export const schema = { ...auth, ...skin };
 
 export { pgTable as tableCreator } from "./src/schema/_table";
 
-import * as dbOperators from "drizzle-orm";
-import * as extraDbOperators from "./src/helpers";
+import * as drizzleDbOperators from "drizzle-orm";
 
-export { dbOperators }
+import * as extraDbOperators from "./src/utils";
+import { extendedDbOperators } from "./src/utils"
+
+export const dbOperators = { ...drizzleDbOperators, ...extendedDbOperators }
 export { extraDbOperators }
 
 const connectionString = process.env.DATABASE_URL!

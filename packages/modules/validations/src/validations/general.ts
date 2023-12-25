@@ -1,9 +1,16 @@
 import { z } from "zod"
 
+export const withLimit = {
+	limit:  z.number().min(1).max(100).nullish(),
+}
+
+export const withCursor = {
+	cursor: z.string().nullish(),
+}
 
 export const infiniteQueryValidation = {
-	limit:  z.number().min(1).max(10000).nullish(),
-	cursor: z.string().nullish(),
+	...withLimit,
+	...withCursor
 }
 
 export const search = z

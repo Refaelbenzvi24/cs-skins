@@ -1,5 +1,5 @@
 import { db, dbOperators, schema as schemaList } from "../../index"
-import { addOperatorByParametersNil } from "../helpers"
+import { addOperatorByParametersNil } from "../utils"
 import type { PaginateWithSearchParams } from "../../types/queryParams"
 
 const tableName: keyof typeof db.query = "skins"

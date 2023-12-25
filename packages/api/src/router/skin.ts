@@ -12,19 +12,18 @@ export const skinRouter = createTRPCRouter({
 		protectedProcedure
 		.input(z.object(skinValidations.createServer))
 		.mutation(async ({ ctx, input }) => {
-			if(input.url instanceof Array){
+			if(Array.isArray(input.url)){
 				await Promise.all(input.url.map(async (url) => {
 					const producer = new Producer("scraper")
 					await producer.initializeProducer(ctx.messageBrokerConnectionParams)
-					producer.sendMessage({ payload: "initial_scrape", url })
+					await producer.sendMessage({ payload: "initial_scrape", url })
 				}))
 			}
 			if(typeof input.url === "string"){
 				const producer = new Producer("scraper")
 				await producer.initializeProducer(ctx.messageBrokerConnectionParams)
-				producer.sendMessage({ payload: "initial_scrape", url: input.url })
+				await producer.sendMessage({ payload: "initial_scrape", url: input.url })
 			}
-
 			return { message: "Sent to scraper service for creation" }
 		}),
 	getById:
@@ -53,6 +52,19 @@ export const skinRouter = createTRPCRouter({
 			.getBySkinIdWithData({ skinId, search, dateRange, cursor, limit })
 			.execute()
 			return getPaginationReturning(items, limit ?? 20)
+		}),
+	getByIdWithDataForChart:
+		protectedProcedure
+		.input(z.object(skinValidations.getByIdWithDataForChart))
+		.query(async ({ ctx, input }) => {
+			const { skinId, limit, dateRange } = input
+			const items                        = await ctx
+			.dbHelper
+			.query
+			.skinsQualitiesData
+			.getBySkinIdWithDataForChart({ skinId, limit, dateRange })
+			.execute()
+			return items
 		}),
 	list:
 		protectedProcedure

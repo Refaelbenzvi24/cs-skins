@@ -153,7 +153,7 @@ export const skinsQualities = pgTable(
 	"skin_quality",
 	{
 		id:        text("id").$default(createId).primaryKey(),
-		skinId:    text("weapon_id").references(() => skins.id).notNull(),
+		skinId:    text("skin_id").references(() => skins.id).notNull(),
 		qualityId: text("quality_id").references(() => qualities.id).notNull(),
 		createdAt: timestamp("created_at")
 		           .default(sql`CURRENT_TIMESTAMP`)

@@ -1,7 +1,7 @@
 import { db, dbOperators, schema as schemaList } from "../../index"
 import { eq } from "drizzle-orm"
 import type { PaginateWithSearchParams } from "../../types/queryParams"
-import { addOperatorByParametersNil } from "../helpers"
+import { addOperatorByParametersNil } from "../utils"
 
 
 const tableName: keyof typeof schemaList = "sources"

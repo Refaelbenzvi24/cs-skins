@@ -18,21 +18,21 @@ import sha256 from "crypto-js/sha256"
 declare module "next-auth" {
 	interface Session {
 		user: {
-			id: string;
-		} & DefaultSession["user"];
+			      id: string;
+		      } & DefaultSession["user"];
 	}
 }
 
 const hashPassword = (password: string) => {
-	return sha256 (password).toString ();
+	return sha256(password).toString();
 }
 
 export const {
-	handlers: { GET, POST },
-	auth,
-	CSRF_experimental,
-} = NextAuth ({
-	adapter:   DrizzleAdapter (db, tableCreator),
+	             handlers: { GET, POST },
+	             auth,
+	             CSRF_experimental,
+             } = NextAuth({
+	adapter:   DrizzleAdapter(db, tableCreator),
 	secret:    process.env.NEXTAUTH_SECRET,
 	session:   { strategy: "jwt" },
 	providers: [
@@ -40,7 +40,7 @@ export const {
 		// 	clientId:     env.DISCORD_CLIENT_ID,
 		// 	clientSecret: env.DISCORD_CLIENT_SECRET,
 		// }),
-		CredentialProvider ({
+		CredentialProvider({
 			// The name to display on the sign in form (e.g. "Sign in with...")
 			id:   "credentials",
 			name: "credentials",
@@ -54,7 +54,7 @@ export const {
 			},
 
 			authorize: async (credentials, _req) => {
-				if (!credentials?.username || !credentials?.password) {
+				if(!credentials?.username || !credentials?.password){
 					return null;
 				}
 
@@ -62,12 +62,12 @@ export const {
 				const { eq } = dbOperators
 				const [user] = await
 					db
-						.select ()
-						.from (schema.users)
-						.where ((user) => eq (user.email, (credentials.username as string)))
-						.execute ()
+					.select()
+					.from(schema.users)
+					.where((user) => eq(user.email, (credentials.username as string)))
+					.execute()
 
-				if (user && user.password == hashPassword ((credentials?.password as string))) {
+				if(user && user.password == hashPassword((credentials?.password as string))){
 					return user;
 				}
 

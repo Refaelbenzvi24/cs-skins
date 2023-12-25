@@ -42,7 +42,6 @@ export const useSearchParamState = <ValueGetterArgs extends unknown[]>(
 
 		return router.push (`${route ? `/${i18next.language}${route}` : pathname}?${(searchParamsStateHelper.currentSearchParams ?? '').toString ()}`)
 	}
-
 	const onChange = useCallback (useDebounce ? debounce (handleSearch, debounceTimeout) : handleSearch, [pathname, searchParams])
 
 	return { value, onChange }

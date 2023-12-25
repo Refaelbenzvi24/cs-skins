@@ -14,7 +14,7 @@
 		"db:generate": "pnpm -F db generate",
 		"db:migrate": "pnpm with-env pnpm -F db migrate",
 		"db:format": "pnpm --filter db db:format",
-		"db:playground": "pnpm with-env pnpm -F db playground",
+		"playground": "pnpm with-env turbo playground --parallel",
 		"db:studio": "pnpm -F db studio",
 		"db:seed": "pnpm with-env pnpm -F db seed",
 		"db:push": "pnpm with-env pnpm -F db push",
