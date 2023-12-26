@@ -46,7 +46,7 @@ const sideBarOptions = [
 	{
 		href:                  "/users",
 		icon:                  <IconCarbonUserAvatar/>,
-		displayTranslationKey: "admin:users",
+		displayTranslationKey: "admin:users.title",
 	},
 ] as const
 

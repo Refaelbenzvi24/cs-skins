@@ -1,24 +1,31 @@
 {
-  "name": "@acme/email-templates",
-  "version": "1.0.0",
-  "description": "",
-  "main": "src/index.tsx",
-  "types": "src/index.tsx",
-  "scripts": {
-    "clean": "rm -rf .turbo node_modules",
-    "lint": "eslint .",
-    "lint:fix": "pnpm lint --fix",
-    "type-check": "tsc --noEmit"
-  },
-  "keywords": [],
-  "author": "",
-  "dependencies": {
-    "@acme/ui": "*",
-    "@react-email/components": "0.0.4",
-    "@react-email/render": "0.0.6"
-  },
-  "devDependencies": {
-    "@acme/validations": "*",
-    "typescript": "^5.2.2"
-  }
+	"name" :            "@acme/email-templates",
+	"version" :         "1.0.0",
+	"description" :     "",
+	"main" :            "src/index.tsx",
+	"types" :           "src/index.tsx",
+	"scripts" :         {
+		"clean" :      "rm -rf .turbo node_modules",
+		"lint" :       "eslint .",
+		"lint:fix" :   "pnpm lint --fix",
+		"type-check" : "tsc --noEmit"
+	},
+	"keywords" :        [],
+	"author" :          "",
+	"dependencies" :    {
+		"@acme/ui" :                "*",
+		"@react-email/components" : "0.0.4",
+		"@react-email/render" :     "0.0.6"
+	},
+	"devDependencies" : {
+		"@acme/eslint-config" :   "0.2.0",
+		"@acme/prettier-config" : "0.1.0",
+		"@acme/tsconfig" :        "0.1.0",
+		"@acme/validations" :     "0.1.0",
+		"@types/node" :           "^18.0.0",
+		"eslint" :                "^8.50.0",
+		"prettier" :              "^3.0.3",
+		"typescript" :            "^5.2.2",
+		"zod" :                   "^3.22.2"
+	}
 }

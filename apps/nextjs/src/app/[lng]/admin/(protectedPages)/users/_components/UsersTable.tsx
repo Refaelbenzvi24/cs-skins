@@ -8,6 +8,8 @@ import { useSearchParamState } from "~/hooks"
 import type { ComponentWithLocaleProps } from "~/types"
 import { useTranslation } from "~/app/i18n/client"
 import { getNextPageParam } from "~/utils/apiHelpers"
+import { useSession } from "next-auth/react"
+import useCheckForPermissions from "~/hooks/useCheckForPermissions"
 
 
 interface UsersTableProps extends ComponentWithLocaleProps {

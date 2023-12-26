@@ -769,6 +769,9 @@ importers:
       '@acme/validations':
         specifier: '*'
         version: link:../modules/validations
+      '@react-email/render':
+        specifier: 0.0.6
+        version: 0.0.6
       '@trpc/client':
         specifier: ^10.41.0
         version: 10.43.2(@trpc/server@10.43.2)
@@ -944,12 +947,33 @@ importers:
         specifier: 0.0.6
         version: 0.0.6
     devDependencies:
+      '@acme/eslint-config':
+        specifier: 0.2.0
+        version: link:../../tooling/eslint
+      '@acme/prettier-config':
+        specifier: 0.1.0
+        version: link:../../tooling/prettier
+      '@acme/tsconfig':
+        specifier: 0.1.0
+        version: link:../../tooling/typescript
       '@acme/validations':
-        specifier: '*'
+        specifier: 0.1.0
         version: link:../modules/validations
+      '@types/node':
+        specifier: ^18.0.0
+        version: 18.18.9
+      eslint:
+        specifier: ^8.50.0
+        version: 8.53.0
+      prettier:
+        specifier: ^3.0.3
+        version: 3.0.3
       typescript:
         specifier: ^5.2.2
         version: 5.2.2
+      zod:
+        specifier: ^3.22.2
+        version: 3.22.4
 
   packages/message-broker:
     dependencies:
@@ -1044,6 +1068,27 @@ importers:
       typescript:
         specifier: ^5.2.2
         version: 5.2.2
+
+  packages/modules/permissionsManager:
+    devDependencies:
+      '@acme/eslint-config':
+        specifier: ^0.2.0
+        version: link:../../../tooling/eslint
+      '@acme/prettier-config':
+        specifier: ^0.1.0
+        version: link:../../../tooling/prettier
+      '@acme/tsconfig':
+        specifier: ^0.1.0
+        version: link:../../../tooling/typescript
+      '@types/node':
+        specifier: ^18.0.0
+        version: 18.18.9
+      typescript:
+        specifier: ^5.2.2
+        version: 5.2.2
+      zod:
+        specifier: ^3.22.2
+        version: 3.22.4
 
   packages/modules/validations:
     dependencies:

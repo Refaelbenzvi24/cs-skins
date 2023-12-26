@@ -5,6 +5,7 @@ import * as skins from "./skins"
 import * as quality from "./skinsQualities"
 import * as qualities from "./qualities"
 import * as skinsQualities from "./skinsQualities"
+import * as users from "./users"
 
 export default {
 	games,
@@ -14,4 +15,5 @@ export default {
 	quality,
 	qualities,
 	skinsQualities,
+	users
 }

@@ -50,6 +50,7 @@ metadata:
         skins: Skins
         users: Users
         addSkin: Add Skin
+        createUser: Create User
 dashboard: Dashboard
 skinsData: Skins Data
 sources: Sources
@@ -72,7 +73,9 @@ skins:
             percentChange: Percent Change
             skinDataCreatedAt: Skin Data Created At
 qualities: Qualities
-users: Users
+users:
+    title: Users
+    create: Create User
 home: Home
 addSource: Add Source
 

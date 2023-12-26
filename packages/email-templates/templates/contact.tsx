@@ -1,6 +1,5 @@
-import type {leadsValidations} from "@acme/validations"
-import {z} from "zod"
-import * as React from "react";
+import type { leadsValidations } from "@acme/validations"
+import { z } from "zod";
 import {
 	Body,
 	Button,
@@ -15,6 +14,7 @@ import {
 	Tailwind,
 	Text,
 } from '@react-email/components';
+
 
 const baseUrl = process.env.VERCEL_URL
 	? `https://${process.env.VERCEL_URL}`
@@ -35,7 +35,7 @@ const Contact = (
 		leadId = "123456789"
 	}: ContactEmailProps) => {
 	const previewText = `New lead from ${name}`;
-	
+
 	return (
 		<Html dir="ltr">
 			<Head/>
@@ -68,18 +68,18 @@ const Contact = (
 								</Link>
 								) left you a message on your website.
 							</Text>
-							
+
 							<Text className="text-black text-[16px] leading-[24px]">
 								Phone: <strong>{phone}</strong>
 							</Text>
-							
+
 							<Text className="text-black text-[16px] leading-[24px] my-2">
 								This is the message content :
 							</Text>
 							<Text className="text-black text-[16px] leading-[24px] my-2">
 								{message}
 							</Text>
-							
+
 							<Button
 								className="block bg-[#5F9BF3] text-white font-bold text-center w-full"
 								href={`${baseUrl}/admin/lead/${leadId}`}

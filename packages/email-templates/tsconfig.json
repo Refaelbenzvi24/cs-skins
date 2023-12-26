@@ -1,4 +1,12 @@
 {
-  "extends": "../../tsconfig.json",
-  "include": ["index.tsx", "templates"]
+	"extends" : "@acme/tsconfig/nextjs.json",
+	"compilerOptions" : {
+		"types" : [
+			"node"
+		]
+	},
+	"include" : [
+		"index.tsx",
+		"templates"
+	]
 }

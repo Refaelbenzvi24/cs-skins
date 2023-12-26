@@ -14,6 +14,9 @@ import type { Session } from "@acme/auth";
 import { db, dbHelper } from "@acme/db";
 import type { EmailProvider } from "./services/email/emailProvider";
 import type { BuildConnectionStringProps } from "@acme/message-broker"
+import { Paths } from "@acme/db/types/objectHelpers"
+import { Permissions } from "@acme/db/src/schema/auth"
+import _ from "lodash"
 
 
 /**
@@ -60,7 +63,10 @@ const createInnerTRPCContext = (opts: CreateContextOptions) => {
 export const createTRPCContext = async (opts: {
 	req?: Request;
 	auth?: Session;
-}, { emailProvider, messageBrokerConnectionParams }: { emailProvider?: EmailProvider, messageBrokerConnectionParams: BuildConnectionStringProps }) => {
+}, { emailProvider, messageBrokerConnectionParams }: {
+	emailProvider?: EmailProvider,
+	messageBrokerConnectionParams: BuildConnectionStringProps
+}) => {
 	const session = opts.auth ?? (await auth());
 	const source  = opts.req?.headers.get("x-trpc-source") ?? "unknown";
 
@@ -80,15 +86,14 @@ export const createTRPCContext = async (opts: {
  * This is where the trpc api is initialized, connecting the context and
  * transformer
  */
-export const t = initTRPC.context<typeof createTRPCContext> ().create ({
+export const t = initTRPC.context<typeof createTRPCContext>().create({
 	transformer: superjson,
-	errorFormatter({ shape, error }) {
+	errorFormatter({ shape, error }){
 		return {
 			...shape,
 			data: {
 				...shape.data,
-				zodError:
-					error.cause instanceof ZodError ? error.cause.flatten () : null,
+				zodError: error.cause instanceof ZodError ? error.cause.flatten() : null,
 			},
 		};
 	},
@@ -113,23 +118,37 @@ export const createTRPCRouter = t.router;
  * tRPC API. It does not guarantee that a user querying is authorized, but you
  * can still access user session data if they are logged in
  */
-export const publicProcedure = t.procedure;
+export const publicProcedure  = t.procedure;
 
 /**
  * Reusable middleware that enforces users are logged in before running the
  * procedure
  */
 const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
-	if (!ctx.session?.user) {
+	if(!ctx.session?.user){
 		throw new TRPCError({ code: "UNAUTHORIZED" });
 	}
 	return next({
 		ctx: {
-			// infers the `session` as non-nullable
 			session: { ...ctx.session, user: ctx.session.user },
 		},
 	});
 });
+
+export type UserPermissions = (Paths<Permissions> | 'admin')[]
+const enforceUserPermissions = (permissions: UserPermissions) => t.middleware(({ ctx, next }) => {
+	if(!ctx.session?.user){
+		throw new TRPCError({ code: "UNAUTHORIZED" });
+	}
+	if(!permissions.includes('admin') && !permissions.every((permission) => _.get(ctx.session?.user?.permissions, permission))){
+		throw new TRPCError({ code: "UNAUTHORIZED" });
+	}
+	return next({
+		ctx: {
+			session: { ...ctx.session, user: ctx.session.user },
+		},
+	});
+})
 
 /**
  * Protected (authed) procedure
@@ -140,4 +159,10 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
  *
  * @see https://trpc.io/docs/procedures
  */
-export const protectedProcedure = t.procedure.use(enforceUserIsAuthed)
+export const protectedProcedure = t
+.procedure
+.use(enforceUserIsAuthed)
+
+export const protectedProcedureWithPermissions = (permissions: UserPermissions) => t
+.procedure
+.use(enforceUserPermissions(permissions))

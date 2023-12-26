@@ -1,7 +1,8 @@
 import { z } from "zod"
 
+
 export const withLimit = {
-	limit:  z.number().min(1).max(100).nullish(),
+	limit: z.number().min(1).max(100).nullish(),
 }
 
 export const withCursor = {
@@ -32,3 +33,12 @@ export const urlValidation = z
 .min(1, { message: "forms:errors.urlRequired" })
 .url({ message: "forms:errors.urlInvalid" })
 .max(2083, { message: "forms:errors.urlTooLong" })
+
+export const email = z
+.string()
+.email({ message: "forms:errors.emailInvalid" })
+
+export const password = z
+.string()
+.min(8, { message: "forms:errors.passwordTooShort" })
+.max(128, { message: "forms:errors.passwordTooLong" })
