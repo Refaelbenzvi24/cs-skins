@@ -11,7 +11,7 @@ export const sendContactEmail = async ({emailProvider, data}: { emailProvider: n
 			emailProvider,
 			data: {
 				from: data.email,
-				to: process.env.EMAIL_USER as string,
+				to: process.env.EMAIL_USER!,
 				html: render(ContactEmail(data)),
 				subject: `New lead from ${data.name}`,
 			}

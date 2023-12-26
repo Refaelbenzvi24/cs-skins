@@ -8,7 +8,7 @@ export const useToasts = () => {
 	const { isTouchable }  = useMain()
 	const { windowWidth }  = useDimensions()
 	const { t, i18n }      = useTranslation()
-	const { generalError } = libUseToasts()
+	const { generalError, generalSuccess } = libUseToasts()
 
 	const dir = i18n.language === 'he' ? 'rtl' : 'ltr'
 
@@ -119,6 +119,7 @@ export const useToasts = () => {
 
 	return {
 		sendEmail,
-		generalError
+		generalError,
+		generalSuccess
 	}
 }

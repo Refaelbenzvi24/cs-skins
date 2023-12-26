@@ -81,20 +81,24 @@ const Page = async ({ params: { lng, skinId } }: AdminPageProps) => {
 	.value()
 
 	return (
-		<div className="flex h-full w-full">
-			<Col className="w-full h-full pb-4">
-				<Row className="min-h-[50%] w-full">
+		<div className="flex min-h-full w-full">
+			<Col className="w-full h-full pb-10">
+				<Row className="min-h-[80%] w-full">
 					<Chart data={steamListings} xText="Time" yText="Steam Listing"/>
+				</Row>
+				<Row className="min-h-[80%] w-full">
 					<Chart data={bitSkinPrice} xText="Time" yText="Bit Skin Price"/>
 				</Row>
-
-				<Row className="min-h-[50%] w-full">
+				<Row className="min-h-[80%] w-full">
 					<Chart data={percentChange} xText="Time" yText="Percent Change"/>
+				</Row>
+				<Row className="min-h-[80%] w-full">
 					<Chart data={steamMediaPrice} xText="Time" yText="Steam Median Price"/>
 				</Row>
-
-				<Row className="min-h-[50%] w-full">
+				<Row className="min-h-[80%] w-full">
 					<Chart data={bitSkinPrice} xText="Time" yText="Bit Skin Price"/>
+				</Row>
+				<Row className="min-h-[80%] w-full">
 					<Chart data={steamVolume} xText="Time" yText="Steam Volume"/>
 				</Row>
 			</Col>

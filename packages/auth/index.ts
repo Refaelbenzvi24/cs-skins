@@ -1,6 +1,4 @@
 // import Discord from "@auth/core/providers/discord";
-import type { DefaultSession } from "@auth/core/types";
-import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import NextAuth from "next-auth";
 import CredentialProvider from "next-auth/providers/credentials";
 
@@ -13,17 +11,9 @@ export type { Session } from "next-auth";
 export const providers = ["discord"] as const;
 export type OAuthProviders = (typeof providers)[number];
 import sha256 from "crypto-js/sha256"
+import { DrizzleAdapter } from "@auth/drizzle-adapter"
 
-
-declare module "next-auth" {
-	interface Session {
-		user: {
-			      id: string;
-		      } & DefaultSession["user"];
-	}
-}
-
-const hashPassword = (password: string) => {
+export const hashPassword = (password: string) => {
 	return sha256(password).toString();
 }
 
@@ -74,30 +64,22 @@ export const {
 				return null
 			},
 		}),
-
 	],
-	// callbacks: {
-	// 	session: ({ session, user }) => ({
-	// 		...session,
-	// 		user: {
-	// 			...session.user,
-	// 			id: user.id,
-	// 		},
-	// 	}),
-	//
-	// 	jwt: ({ token, profile }) => {
-	// 		if (profile?.id) {
-	// 			token.id = profile.id;
-	// 			token.image = profile.picture;
-	// 		}
-	// 		return token;
-	// 	},
-	//
-	// 	authorized({ request, auth }) {
-	// 		console.log('authorized')
-	// 		console.log(auth)
-	// 		console.log(request)
-	// 		return !!auth?.user
-	// 	}
-	// },
+	callbacks: {
+		session: ({ session, user }) => ({
+			...session
+		}),
+		//
+		jwt: ({ token, user }) => ({
+			permissions: user?.permissions,
+			...token
+		}),
+		//
+		// authorized({ request, auth }) {
+		// 	console.log('authorized')
+		// 	console.log(auth)
+		// 	console.log(request)
+		// 	return !!auth?.user
+		// }
+	},
 });

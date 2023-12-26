@@ -1,6 +1,6 @@
 "use client";
 import { Button, Col, Select, theme, Typography } from "@acme/ui"
-import type { SubmitHandler} from "react-hook-form";
+import type { SubmitHandler } from "react-hook-form";
 import { Controller, useForm } from "react-hook-form"
 import { api } from "~/utils/api"
 import { useTranslation } from "~/app/i18n/client"
@@ -9,41 +9,43 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { skinValidations } from "@acme/validations"
 import type { ComponentWithLocaleProps } from "~/types"
+import { useToasts } from "~/hooks"
 
-const createSkinValidation = z.object (skinValidations.createClient)
+
+const createSkinValidation = z.object(skinValidations.createClient)
 
 type createSkinValidationSchema = z.infer<typeof createSkinValidation>
 
-const AddSkinForm = ({lng}: ComponentWithLocaleProps) => {
-	const createSkinMutation = api.skin.create.useMutation ()
-	const { t } = useTranslation (lng, ["admin"])
+const AddSkinForm = ({ lng }: ComponentWithLocaleProps) => {
+	const createSkinMutation = api.skin.create.useMutation()
+	const { t }              = useTranslation(lng, ["admin"])
 
-	const [formHasSubmitted, setFormHasSubmitted] = useState (false)
+	const [formHasSubmitted, setFormHasSubmitted] = useState(false)
 
 	const {
-		handleSubmit,
-		reset,
-		control,
-		formState: { errors, isSubmitting, isDirty, isValid }
-	} = useForm<createSkinValidationSchema> ({
-		resolver: zodResolver (createSkinValidation),
+		      handleSubmit,
+		      reset,
+		      control,
+		      formState: { errors, isSubmitting, isDirty, isValid }
+	      } = useForm<createSkinValidationSchema>({
+		resolver: zodResolver(createSkinValidation),
 		mode:     "onChange"
 	})
 
-	const onSubmit: SubmitHandler<createSkinValidationSchema> = data => {
+	const onSubmit: SubmitHandler<createSkinValidationSchema> = async (data) => {
 		const transformedData = {
 			url: data.url.map(({ value }) => value)
 		}
-		createSkinMutation.mutate (transformedData)
-		reset ()
+		await createSkinMutation.mutateAsync(transformedData)
+		reset()
 	}
 
 	return (
 		<form
 			className="flex w-full flex-col items-center justify-center"
 			onSubmit={event => {
-				if (!formHasSubmitted) setFormHasSubmitted (() => true)
-				void handleSubmit (onSubmit) (event)
+				if(!formHasSubmitted) setFormHasSubmitted(() => true)
+				void handleSubmit(onSubmit)(event)
 			}}>
 			<Col className="w-full space-y-1 pb-[60px]">
 				<Controller
@@ -65,9 +67,9 @@ const AddSkinForm = ({lng}: ComponentWithLocaleProps) => {
 							name={name}
 							ref={ref}
 							id="url"
-							label={t ("admin:url")}
+							label={t("admin:url")}
 							error={!!errors.url}
-							helperText={errors.url?.message ? t (errors.url?.message) : ""}
+							helperText={errors.url?.message ? t(errors.url?.message) : ""}
 						/>
 					)}/>
 
@@ -83,7 +85,7 @@ const AddSkinForm = ({lng}: ComponentWithLocaleProps) => {
 						: false
 				}>
 				<Typography variant="bold" color={theme.colorScheme.light}>
-					{t ("admin:add")}
+					{t("admin:add")}
 				</Typography>
 			</Button>
 		</form>

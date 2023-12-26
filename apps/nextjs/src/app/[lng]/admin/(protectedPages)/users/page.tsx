@@ -1,4 +1,4 @@
-import { Col, Row, Typography } from "@acme/ui"
+import { Col, Icon, LinkButton, Row, Typography } from "@acme/ui"
 import { redirect } from "next/navigation"
 import { trpcRsc } from "~/utils/apiServer"
 import { getTranslation } from "~/app/i18n"
@@ -13,10 +13,10 @@ interface AdminPageProps extends TranslatedRouteProps {
 
 export async function generateMetadata(props: GenerateMetadataWithLocaleProps){
 	const { params: { lng } } = props;
-	const { t } = await getTranslation(lng, ['common', 'admin'])
+	const { t }               = await getTranslation(lng, ['common', 'admin'])
 
 	return {
-		title:       `${t('common:metadata.title')} | ${t ("admin:metadata.title.main")} - ${t ("admin:metadata.title.users")}`,
+		title:       `${t('common:metadata.title')} | ${t("admin:metadata.title.main")} - ${t("admin:metadata.title.users")}`,
 		description: t('common:metadata.appDescription')
 	};
 }
@@ -36,8 +36,19 @@ const Page = async ({ params: { lng }, searchParams }: AdminPageProps) => {
 					<Typography variant={'h2'}
 					            color={'colorScheme.subtitle2'}
 					            colorDark={'colorScheme.body2'}>
-						{t('admin:users')}
+						{t('admin:users.title')}
 					</Typography>
+
+					<LinkButton href={`/${lng}/admin/users/create`}>
+						<Row className="items-center justify-center space-x-1">
+							<Icon color={'colorScheme.accent'}>
+								<IconCarbonAdd/>
+							</Icon>
+							<Typography variant={'body'} color={'colorScheme.accent'}>
+								{t('admin:users.create')}
+							</Typography>
+						</Row>
+					</LinkButton>
 				</Row>
 
 				<UsersTable searchQuery={searchParams.search} initialData={usersList} lng={lng}/>

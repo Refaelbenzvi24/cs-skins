@@ -8,8 +8,8 @@ import { auth } from "@acme/auth"
 setDefaultHeadersInjector(async () => {
 	const session = await auth()
 	return {
-		userID:     session.user.id,
-		sentByUser: session.user.id ? "user" : "public"
+		userID:     session.user?.id,
+		sentByUser: session.user?.id ? "user" : "public"
 	}
 })
 
