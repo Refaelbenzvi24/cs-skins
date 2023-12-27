@@ -1,6 +1,7 @@
 import * as generalValidations from "./general"
 import { z } from "zod"
 
+
 const { search } = generalValidations
 
 export const list = {
@@ -9,7 +10,9 @@ export const list = {
 }
 
 export const create = {
-	email: generalValidations.email,
+	email:    generalValidations.email,
 	password: generalValidations.password,
-	name: z.string().min(1).max(64)
+	name:     z.string()
+	           .min(3, { message: "forms:errors.nameTooShort" })
+	           .max(64, { message: "forms:errors.nameTooLong" })
 }

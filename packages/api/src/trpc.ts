@@ -15,7 +15,7 @@ import { db, dbHelper } from "@acme/db";
 import type { EmailProvider } from "./services/email/emailProvider";
 import type { BuildConnectionStringProps } from "@acme/message-broker"
 import { Paths } from "@acme/db/types/objectHelpers"
-import { Permissions } from "@acme/db/src/schema/auth"
+import { PermissionsType } from "@acme/db/src/schema/auth"
 import _ from "lodash"
 
 
@@ -135,17 +135,20 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
 	});
 });
 
-export type UserPermissions = (Paths<Permissions> | 'admin')[]
-const enforceUserPermissions = (permissions: UserPermissions) => t.middleware(({ ctx, next }) => {
-	if(!ctx.session?.user){
-		throw new TRPCError({ code: "UNAUTHORIZED" });
-	}
-	if(!permissions.includes('admin') && !permissions.every((permission) => _.get(ctx.session?.user?.permissions, permission))){
-		throw new TRPCError({ code: "UNAUTHORIZED" });
+export type PermissionsFilter = Paths<PermissionsType>
+const enforceUserPermissions = (permissions: PermissionsFilter[]) => t.middleware(({ ctx, next }) => {
+	const userPermissions = ctx.session?.user?.permissions ?? {}
+	if(!_.get(userPermissions, 'admin')){
+		if(!ctx.session?.user){
+			throw new TRPCError({ code: "UNAUTHORIZED" });
+		}
+		if(!permissions.every((permission) => !!_.get(userPermissions, permission))){
+			throw new TRPCError({ code: "UNAUTHORIZED" });
+		}
 	}
 	return next({
 		ctx: {
-			session: { ...ctx.session, user: ctx.session.user },
+			session: { ...ctx.session, user: ctx.session?.user },
 		},
 	});
 })
@@ -163,6 +166,6 @@ export const protectedProcedure = t
 .procedure
 .use(enforceUserIsAuthed)
 
-export const protectedProcedureWithPermissions = (permissions: UserPermissions) => t
+export const protectedProcedureWithPermissions = (permissions: PermissionsFilter[]) => t
 .procedure
 .use(enforceUserPermissions(permissions))

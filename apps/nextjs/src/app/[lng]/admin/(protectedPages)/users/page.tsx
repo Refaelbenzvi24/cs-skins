@@ -5,6 +5,7 @@ import { getTranslation } from "~/app/i18n"
 import { auth } from "@acme/auth"
 import type { GenerateMetadataWithLocaleProps, TranslatedRouteProps } from "~/types"
 import UsersTable from "~/app/[lng]/admin/(protectedPages)/users/_components/UsersTable"
+import checkForServerPermissions from "~/hooks/useCheckForServerPermissions"
 
 
 interface AdminPageProps extends TranslatedRouteProps {
@@ -27,7 +28,10 @@ const Page = async ({ params: { lng }, searchParams }: AdminPageProps) => {
 
 	const usersList = await trpcRsc.user.list.fetch({ search: searchParams.search, limit: 20 })
 
-	const { t } = await getTranslation(lng, 'admin')
+	const { isAdmin } = await checkForServerPermissions({
+		isAdmin: 'admin'
+	})
+	const { t }       = await getTranslation(lng, 'admin')
 
 	return (
 		<main className="h-full">
@@ -39,16 +43,19 @@ const Page = async ({ params: { lng }, searchParams }: AdminPageProps) => {
 						{t('admin:users.title')}
 					</Typography>
 
-					<LinkButton href={`/${lng}/admin/users/create`}>
-						<Row className="items-center justify-center space-x-1">
-							<Icon color={'colorScheme.accent'}>
-								<IconCarbonAdd/>
-							</Icon>
-							<Typography variant={'body'} color={'colorScheme.accent'}>
-								{t('admin:users.create')}
-							</Typography>
-						</Row>
-					</LinkButton>
+
+					{isAdmin && (
+						<LinkButton href={`/${lng}/admin/users/create`}>
+							<Row className="items-center justify-center space-x-1">
+								<Icon color={'colorScheme.accent'}>
+									<IconCarbonAdd/>
+								</Icon>
+								<Typography variant={'body'} color={'colorScheme.accent'}>
+									{t('admin:users.create')}
+								</Typography>
+							</Row>
+						</LinkButton>
+					)}
 				</Row>
 
 				<UsersTable searchQuery={searchParams.search} initialData={usersList} lng={lng}/>
