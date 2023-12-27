@@ -1,23 +1,26 @@
 import _ from "lodash"
-import type { UserPermissions } from "@acme/api/src/trpc"
+import type { PermissionsFilter } from "@acme/api/src/trpc"
 import type { Session } from "@acme/auth"
 
 
-export type PermissionsToCheckType = Record<string, UserPermissions>
+export type PermissionsToCheckType = Record<string, PermissionsFilter>
 export const handlePermissionsToCheck = <PermissionsToCheck extends PermissionsToCheckType>(session: Session | null, permissionsToCheck: PermissionsToCheck) => {
-	if(!session?.user){
-		return Object.entries(permissionsToCheck).reduce((acc, [key]) => {
-			return {
-				...acc,
-				[key]: false
-			}
-		}, {}) as Record<keyof PermissionsToCheck, boolean>
+	const userPermissions = session?.user?.permissions ?? {}
+	if (!_.get(userPermissions, 'admin')) {
+		if(!session?.user){
+			return Object.entries(permissionsToCheck).reduce((acc, [key]) => {
+				return {
+					...acc,
+					[key]: false
+				}
+			}, {}) as Record<keyof PermissionsToCheck, boolean>
+		}
 	}
 
 	return Object.entries(permissionsToCheck).reduce((acc, [key, value]) => {
 		return {
 			...acc,
-			[key]: value.includes('admin') && value.every((permission) => _.get(session.user!.permissions, permission))
+			[key]: _.get(userPermissions, 'admin') ?? _.get(userPermissions, value)
 		}
 	}, {}) as Record<keyof PermissionsToCheck, boolean>
 }

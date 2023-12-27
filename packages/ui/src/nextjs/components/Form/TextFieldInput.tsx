@@ -38,10 +38,10 @@ export const TextFieldInput = styled(motion.input, {
 		removeShadow,
 		hasBeforeIcon,
 		margins,
-	...restProps
+		...restProps
 	}: TextFieldInputProps
 ) => {
-	const { theme } = restProps as StyledProps
+	const { theme }                           = restProps as StyledProps
 	const resolvedBackgroundColor             = getSingleColorFromPath(backgroundColor, theme.config)
 	const resolvedDarkBackgroundColor         = getSingleColorFromPath(backgroundColorDark, theme.config)
 	const resolvedBackgroundColorDisabled     = getDisabledColorFromPath(backgroundColorDisabled, theme.config.disabledState)
