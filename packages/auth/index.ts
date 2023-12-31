@@ -22,7 +22,7 @@ export const {
 	             auth,
 	             CSRF_experimental,
              } = NextAuth({
-	adapter:   DrizzleAdapter(db, tableCreator),
+	adapter:   DrizzleAdapter(db, tableCreator), // TODO: resolve this error
 	secret:    process.env.NEXTAUTH_SECRET,
 	session:   { strategy: "jwt" },
 	providers: [

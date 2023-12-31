@@ -60,7 +60,7 @@ const calcPlacement = (
 	return { left, top }
 }
 
-interface TooltipProps extends HTMLMotionProps<"div">, TooltipContainerProps {
+interface TooltipProps extends HTMLMotionProps<"div">, Omit<TooltipContainerProps, 'top' | 'left'> {
 	wrapperClassName?: string
 	dark?: boolean
 	color?: SingleColorOptions
@@ -199,8 +199,8 @@ const Tooltip = forwardRef<HTMLDivElement, TooltipProps>((
 							transition={{ duration: 0.1 }}
 							dark={isDarkMode}
 							{...restProps}
-							top={restProps.top ?? top}
-							left={restProps.left ?? left}
+							top={top}
+							left={left}
 							ref={tooltipElement}>
 							<Typography variant="small"
 							            as={typeof tooltip === "string" ? "p" : "span"}

@@ -5,7 +5,7 @@ type PartialMessageHeaders = Partial<MessageHeaders>
 type MessageHeadersGetter = () => PartialMessageHeaders | Promise<PartialMessageHeaders>
 
 export default class DefaultHeadersInjector {
-	private static headersGetter: MessageHeadersGetter
+	private static headersGetter: MessageHeadersGetter = async () => ({})
 
 	static getHeaders() {
 		return DefaultHeadersInjector.headersGetter ()

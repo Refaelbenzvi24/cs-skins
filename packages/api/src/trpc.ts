@@ -6,7 +6,7 @@
  * tl;dr - this is where all the tRPC server stuff is created and plugged in.
  * The pieces you will need to use are documented accordingly near the end
  */
-import { TRPCError, initTRPC } from "@trpc/server"
+import { initTRPC } from "@trpc/server"
 import superjson from "superjson"
 import { ZodError } from "zod"
 import { auth } from "@acme/auth";
@@ -14,9 +14,10 @@ import type { Session } from "@acme/auth";
 import { db, dbHelper } from "@acme/db";
 import type { EmailProvider } from "./services/email/emailProvider";
 import type { BuildConnectionStringProps } from "@acme/message-broker"
-import { Paths } from "@acme/db/types/objectHelpers"
-import { PermissionsType } from "@acme/db/src/schema/auth"
+import type { PermissionsType } from "@acme/db/src/schema/auth"
 import _ from "lodash"
+import logger from "@acme/logger"
+import type { Paths } from "@acme/db/types/objectHelpers"
 
 
 /**
@@ -124,9 +125,12 @@ export const publicProcedure  = t.procedure;
  * Reusable middleware that enforces users are logged in before running the
  * procedure
  */
+
+export const newError = logger.errorBuilder({loggedAtService: "nextjs", initializedAtService: "nextjs"})
+
 const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
 	if(!ctx.session?.user){
-		throw new TRPCError({ code: "UNAUTHORIZED" });
+		throw newError.TRPCError("E00003", "UNAUTHORIZED");
 	}
 	return next({
 		ctx: {
@@ -138,12 +142,12 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
 export type PermissionsFilter = Paths<PermissionsType>
 const enforceUserPermissions = (permissions: PermissionsFilter[]) => t.middleware(({ ctx, next }) => {
 	const userPermissions = ctx.session?.user?.permissions ?? {}
-	if(!_.get(userPermissions, 'admin')){
+	if(!_.get(userPermissions, 'admin', false)){
 		if(!ctx.session?.user){
-			throw new TRPCError({ code: "UNAUTHORIZED" });
+			throw newError.TRPCError("E00003", "UNAUTHORIZED");
 		}
-		if(!permissions.every((permission) => !!_.get(userPermissions, permission))){
-			throw new TRPCError({ code: "UNAUTHORIZED" });
+		if(!permissions.every((permission) => !!_.get(userPermissions, permission, false))){
+			throw newError.TRPCError("E00006", "UNAUTHORIZED");
 		}
 	}
 	return next({

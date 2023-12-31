@@ -83,6 +83,7 @@ const MainProvider = (props: MainProviderOptions) => {
 	return (
 		<MainContext.Provider value={
 			{
+				isServer,
 				isMobile,
 				isTouchable,
 				scrollDirection,
