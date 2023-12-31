@@ -32,6 +32,7 @@ weaponsTable:
     createdAt: Created At
 skinsTable:
     name: Name
+    weaponName: Weapon Name
     url: Url
     createdAt: Created At
 qualitiesTable:

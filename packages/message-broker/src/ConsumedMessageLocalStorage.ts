@@ -1,10 +1,10 @@
 import { AsyncLocalStorage } from "node:async_hooks";
-import { servicesMap } from "@acme/logger"
+import type logger from "@acme/logger"
 
 
 interface MessageLocalStorageStore {
 	systemProcessId: string
-	initializedAtService: typeof servicesMap[number]["name"]
+	initializedAtService: typeof logger.servicesMap[number]["name"]
 	sentByUser: string
 }
 

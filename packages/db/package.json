@@ -17,24 +17,24 @@
 		"seed" :       "ts-node-dev src/seed.ts"
 	},
 	"dependencies" :    {
-		"@auth/core" :           "^0.15.2",
-		"@paralleldrive/cuid2" : "^2.2.2",
-		"drizzle-orm" :          "^0.29.1",
-		"postgres" :             "^3.4.0",
-		"lodash" :               "^4.17.21"
+		"@auth/core" :           "0.15.2",
+		"@paralleldrive/cuid2" : "2.2.2",
+		"drizzle-orm" :          "0.29.1",
+		"postgres" :             "3.4.0",
+		"lodash" :               "4.17.21"
 	},
 	"devDependencies" : {
-		"@acme/eslint-config" :   "^0.2.0",
-		"@acme/prettier-config" : "^0.1.0",
-		"@acme/tsconfig" :        "^0.1.0",
-		"@types/node" :           "^18.0.0",
-		"dotenv-cli" :            "^7.3.0",
-		"drizzle-kit" :           "^0.20.6",
-		"eslint" :                "^8.50.0",
-		"pg" :                    "^8.11.3",
-		"prettier" :              "^3.0.3",
-		"ts-node-dev" :           "^2.0.0",
-		"typescript" :            "^5.2.2"
+		"@acme/eslint-config" :   "0.2.0",
+		"@acme/prettier-config" : "0.1.0",
+		"@acme/tsconfig" :        "0.1.0",
+		"@types/node" :           "18.0.0",
+		"dotenv-cli" :            "7.3.0",
+		"drizzle-kit" :           "0.20.6",
+		"eslint" :                "8.50.0",
+		"pg" :                    "8.11.3",
+		"prettier" :              "3.0.3",
+		"ts-node-dev" :           "2.0.0",
+		"typescript" :            "5.2.2"
 	},
 	"eslintConfig" :    {
 		"root" :    true,

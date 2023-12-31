@@ -82,8 +82,12 @@ const SkinsTable = ({ searchQuery, initialData, lng }: SkinsTableProps) => {
 						display: "Name"
 					},
 					{
+						key: "weaponName",
+						display: "Weapon Name"
+					},
+					{
 						key:     "url",
-						display: "url"
+						display: "Url"
 					},
 					{
 						key:     "createdAt",

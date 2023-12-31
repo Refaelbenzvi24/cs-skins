@@ -1,12 +1,12 @@
-import errorCodesMap from "./src"
+import logger from "./src"
 
 const playground = () => {
-	const error = errorCodesMap.E00001 ({
-		systemProcessId:      "123",
-		loggedAtService:      "cronjobs",
+	const errors = logger.errorBuilder({
 		initializedAtService: "scraper",
+		loggedAtService: "scraper",
 	})
-	console.log (error.toString())
+	const error = errors.TRPCError("E00001", "UNAUTHORIZED")
+	console.log (error)
 }
 
 playground ()

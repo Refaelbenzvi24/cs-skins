@@ -1,11 +1,27 @@
-import BaseError from "./BaseError"
-import errorCodesMap from "./errorCodesMap"
+import BaseError from "./Errors/BaseError"
+import TRPCError from "./Errors/TRPCError"
+import errorCodesMap, { ErrorParams } from "./errorCodesMap"
 
 
-export const errors = {
-	BaseError
+const errors = {
+	BaseError,
+	TRPCError
 }
 
-export { default as servicesMap } from "./servicesMap"
+import servicesMap from "./servicesMap"
 
-export default errorCodesMap
+
+const errorBuilder = (details: ErrorParams) => ({
+	BaseError: (error: keyof typeof errorCodesMap) => new BaseError(errorCodesMap[error](details)),
+	TRPCError: (error: keyof typeof errorCodesMap, code: TRPCError['code']) => new TRPCError({
+		...errorCodesMap[error](details),
+		code
+	})
+})
+
+export default {
+	errors,
+	errorCodesMap,
+	servicesMap,
+	errorBuilder
+}
