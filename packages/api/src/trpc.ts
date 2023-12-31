@@ -146,7 +146,7 @@ const enforceUserPermissions = (permissions: PermissionsFilter[]) => t.middlewar
 		if(!ctx.session?.user){
 			throw newError.TRPCError("E00003", "UNAUTHORIZED");
 		}
-		if(!permissions.every((permission) => !!_.get(userPermissions, permission, false))){
+		if(!permissions.every((permission) => _.get(userPermissions, permission, false))){
 			throw newError.TRPCError("E00006", "UNAUTHORIZED");
 		}
 	}

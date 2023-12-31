@@ -13,6 +13,7 @@ export type OAuthProviders = (typeof providers)[number];
 import sha256 from "crypto-js/sha256"
 import { DrizzleAdapter } from "@auth/drizzle-adapter"
 
+
 export const hashPassword = (password: string) => {
 	return sha256(password).toString();
 }
@@ -23,7 +24,7 @@ export const {
 	             CSRF_experimental,
              } = NextAuth({
 	adapter:   DrizzleAdapter(db, tableCreator), // TODO: resolve this error
-	secret:    process.env.NEXTAUTH_SECRET,
+	secret:    process.env.AUTH_SECRET,
 	session:   { strategy: "jwt" },
 	providers: [
 		// Discord ({
@@ -67,7 +68,11 @@ export const {
 	],
 	callbacks: {
 		session: ({ session, user }) => ({
-			...session
+			...session,
+			user: {
+				...session.user,
+				id: user.id,
+			},
 		}),
 		//
 		jwt: ({ token, user }) => ({

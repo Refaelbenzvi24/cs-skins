@@ -4,7 +4,7 @@ import Icons from 'unplugin-icons/webpack'
 import AutoImport from "unplugin-auto-import/webpack"
 import IconsResolver from 'unplugin-icons/resolver'
 import "./src/env.mjs";
-import "@acme/auth/env.mjs";
+import "@acme/auth/env.js";
 
 /**
  * @type {import('next').NextConfig}

@@ -7,22 +7,23 @@
 		"test" : "echo \"Error: no test specified\" && exit 1"
 	},
 	"devDependencies" : {
-		"@acme/eslint-config" :   "0.2.0",
-		"@acme/prettier-config" : "0.1.0",
-		"@acme/tsconfig" :        "0.1.0",
+		"@acme/eslint-config" :   "workspace:^0.2.0",
+		"@acme/prettier-config" : "workspace:^0.1.0",
+		"@acme/tsconfig" :        "workspace:^0.1.0",
 		"@types/node" :           "18.0.0",
 		"@types/validator" :      "13.7.15",
-		"typescript" :            "5.2.2",
-		"zod" :                   "3.22.2"
+		"eslint" :                "8.56.0",
+		"prettier" :              "3.1.1",
+		"typescript" :            "5.3.3"
 	},
 	"dependencies" :    {
-		"validator" : "13.9.0"
+		"validator" : "13.9.0",
+		"zod" :       "3.22.4"
 	},
-	"eslintConfig": {
-		"root": true,
-		"extends": [
+	"eslintConfig" :    {
+		"extends" : [
 			"@acme/eslint-config/base"
 		]
 	},
-	"prettier": "@acme/prettier-config"
+	"prettier" :        "@acme/prettier-config"
 }

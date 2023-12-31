@@ -2,13 +2,13 @@
 	"name": "cs-skins",
 	"private": true,
 	"engines": {
-		"node": ">=v18.18.0"
+		"node": ">=20.10"
 	},
 	"packageManager": "pnpm@8.7.5",
 	"scripts": {
 		"start": "pnpm with-env turbo start --parallel",
 		"build": "pnpm with-env turbo build",
-		"clean": "git clean -xdf node_odules",
+		"clean": "git clean -xdf node_modules",
 		"clean:workspaces": "turbo clean",
 		"deploy:cronjobs": "fly deploy -c ./infra/cronjobs.toml",
 		"db:generate": "pnpm -F db generate",
@@ -19,17 +19,19 @@
 		"db:seed": "pnpm with-env pnpm -F db seed",
 		"db:push": "pnpm with-env pnpm -F db push",
 		"dev": "pnpm with-env turbo dev --parallel",
-		"format": "turbo format --continue -- --cache --cache-location='node_modules/.cache/.prettiercache'",
-		"format:fix": "turbo format --continue -- --write --cache --cache-location='node_modules/.cache/.prettiercache'",
-		"lint": "turbo lint --continue -- --cache --cache-location 'node_modules/.cache/.eslintcache' && manypkg check",
-		"lint:fix": "turbo lint --continue -- --fix --cache --cache-location 'node_modules/.cache/.eslintcache' && manypkg fix",
+		"format": "turbo format --continue -- --cache --cache-location node_modules/.cache/.prettiercache",
+		"format:fix": "turbo format --continue -- --write --cache --cache-location node_modules/.cache/.prettiercache",
+		"lint": "turbo lint --continue -- --cache --cache-location node_modules/.cache/.eslintcache",
+		"lint:fix": "turbo lint --continue -- --fix --cache --cache-location node_modules/.cache/.eslintcache",
 		"test": "pnpm with-env turbo test",
 		"test:ci": "pnpm with-env turbo test:ci",
 		"test:watch": "pnpm with-env  turbo test:watch",
 		"typecheck": "turbo typecheck",
+		"lint:ws": "pnpm dlx sherif@latest",
+		"postinstall": "pnpm lint:ws",
 		"with-env": "dotenv -e .env --"
 	},
-	"dependencies": {
+	"devDependencies": {
 		"@acme/prettier-config": "0.1.0",
 		"@manypkg/cli": "0.21.0",
 		"@turbo/gen": "1.10.14",

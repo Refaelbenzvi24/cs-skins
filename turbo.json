@@ -36,7 +36,9 @@
 				"!.next/cache/**",
 				"next-env.d.ts",
 				".expo/**",
-				"storybook-static/**"
+				"storybook-static/**",
+				".output/**",
+				".vercel/output/**"
 			]
 		},
 		"test" :          {
@@ -74,9 +76,6 @@
 			]
 		},
 		"clean" :         {
-			"cache" : false
-		},
-		"//#clean" :      {
 			"cache" : false
 		},
 		"//#clean" :      {
