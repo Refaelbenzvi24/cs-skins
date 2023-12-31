@@ -43,7 +43,7 @@ export class Producer {
 				initializedAtService: initializedAtService ?? process.env.npm_package_name,
 				systemProcessId:      systemProcessId ?? createId (),
 				...DefaultHeadersInjector.getHeaders (),
-				sentByUser: options?.headers.sentByUser ?? (await DefaultHeadersInjector.getHeaders ()).sentByUser ?? sentByUser ?? "system",
+				sentByUser: options?.headers?.sentByUser ?? (await DefaultHeadersInjector.getHeaders ())?.sentByUser ?? sentByUser ?? "system",
 				...options?.headers
 			},
 		})
@@ -82,9 +82,9 @@ export class Consumer {
 
 			await MessageLocalStorage.run (
 				{
-					initializedAtService: msg.properties.headers.initializedAtService,
-					systemProcessId:      msg.properties.headers.systemProcessId,
-					sentByUser:           msg.properties.headers.sentByUser,
+					initializedAtService: msg.properties?.headers?.initializedAtService,
+					systemProcessId:      msg.properties?.headers?.systemProcessId,
+					sentByUser:           msg.properties?.headers?.sentByUser,
 				},
 				async () => {
 					const messageReturning = await messageHandler(messageContent, msg)
