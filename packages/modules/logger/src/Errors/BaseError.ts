@@ -1,32 +1,34 @@
 import ServicesMap from "../servicesMap"
-import errorCodesMap from "../errorCodesMap"
+import { buildErrorCodesMapObject } from "../errorCodesMap"
 import { createId } from "@paralleldrive/cuid2"
+
 
 class UnknownCauseError extends Error {
 	[key: string]: unknown;
 }
-export function isObject(value: unknown): value is Record<string, unknown> {
+
+export function isObject(value: unknown): value is Record<string, unknown>{
 	// check that value is object
 	return !!value && !Array.isArray(value) && typeof value === 'object';
 }
 
-function getCauseFromUnknown(cause: unknown): Error | undefined {
-	if (cause instanceof Error) {
+function getCauseFromUnknown(cause: unknown): Error | undefined{
+	if(cause instanceof Error){
 		return cause;
 	}
 
 	const type = typeof cause;
-	if (type === 'undefined' || type === 'function' || cause === null) {
+	if(type === 'undefined' || type === 'function' || cause === null){
 		return undefined;
 	}
 
 	// Primitive types just get wrapped in an error
-	if (type !== 'object') {
+	if(type !== 'object'){
 		return new Error(String(cause));
 	}
 
 	// If it's an object, we'll create a synthetic error
-	if (isObject(cause)) {
+	if(isObject(cause)){
 		const err = new UnknownCauseError();
 		for (const key in cause) {
 			err[key] = cause[key];
@@ -50,39 +52,68 @@ function getCauseFromUnknown(cause: unknown): Error | undefined {
 // ] as const
 export const errorSeverity = ["INFO", "WARNING", "ERROR", "CRITICAL"] as const
 
-export interface ErrorOptions<ExtraDetails = undefined> {
-	name?: string
-	stack?: string
-	message: string
+export const errorNames = {
+	"BaseError":           [],
+	"UnknownError":        [],
+	"ValidationError":     [],
+	"AuthenticationError": [],
+	"AuthorizationError":  [],
+	"DatabaseError":       ["QueryFailed"],
+	"PermissionError":     [],
+	"MessageBroker":       ["Connection", "ChannelCreation", "SendingMessage", "AssertingQueue", "MessageConsuming"]
+} as const
+
+export type ErrorNameOptions = keyof typeof errorNames
+
+export interface ErrorOptions {
 	severity: typeof errorSeverity[number]
-	errorCode: keyof typeof errorCodesMap
 	initializedAtService: typeof ServicesMap[number]["name"]
 	loggedAtService?: typeof ServicesMap[number]["name"]
-	extraDetails?: ExtraDetails
 	userId?: string
 	cause?: unknown;
 }
 
+export interface ErrorOptionsWithGenerics<
+	ErrorCodesMap extends Record<string, ReturnType<typeof buildErrorCodesMapObject>>,
+	ErrorTranslationKeys extends Record<string, keyof ErrorCodesMap>,
+	ErrorName extends ErrorNameOptions,
+	ErrorCode extends keyof ErrorCodesMap,
+	ExtraDetails = undefined
+> extends ErrorOptions {
+	name?: ErrorName
+	subName?: typeof errorNames[ErrorName][number]
+	message: Exclude<keyof ErrorTranslationKeys, symbol | number>
+	errorCode: ErrorCode
+	extraDetails?: ExtraDetails
+}
 
-class BaseError<ExtraDetails = undefined> extends Error {
+class BaseError<
+	ErrorCodesMap extends Record<string, ReturnType<typeof buildErrorCodesMapObject>>,
+	ErrorTranslationKeys extends Record<string, keyof ErrorCodesMap>,
+	ErrorName extends ErrorNameOptions,
+	ErrorCode extends keyof ErrorCodesMap,
+	ExtraDetails = undefined
+> extends Error {
+	public name: ErrorName
+	public subName?: typeof errorNames[ErrorName][number]
 	public systemProcessId?: string
 	public userId?: string
 	public severity: typeof errorSeverity[number]
 	public extraDetails?: ExtraDetails
 	public initializedAtService: typeof ServicesMap[number]["name"]
 	public loggedAtService: typeof ServicesMap[number]["name"]
-	public errorCode: keyof typeof errorCodesMap
+	public errorCode: ErrorCode
+	public message: Exclude<keyof ErrorTranslationKeys, symbol | number>
 
-	constructor(options: ErrorOptions<ExtraDetails>){
+	constructor(options: ErrorOptionsWithGenerics<ErrorCodesMap, ErrorTranslationKeys, ErrorName, ErrorCode, ExtraDetails>){
 		const cause   = getCauseFromUnknown(options.cause);
 		const message = options.message ?? cause?.message;
 
 		super(message, { cause });
-		super(options.message, { cause });
-		this.name                 = options.name ?? "BaseError"
+		this.name                 = options.name ?? ("BaseError" as ErrorName)
+		this.subName              = options.subName
 		this.errorCode            = options.errorCode
 		this.message              = options.message
-		this.stack                = this.stack ?? new Error().stack
 		this.userId               = options.userId ?? "system"
 		this.severity             = options.severity
 		this.systemProcessId      = createId()

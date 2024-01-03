@@ -11,7 +11,7 @@ declare module "next-auth/jwt" {
 }
 
 declare module "next-auth" {
-	import { DefaultSession } from "@auth/core/types"
+	import type { DefaultSession } from "@auth/core/types"
 
 	interface User {
 		id: string;

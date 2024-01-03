@@ -99,7 +99,7 @@ const skinsDataAggregationPartitionedByDays = ({ skinId, dateRange }: WithIdPara
 	const schema                                                                          = getSchema()
 	const { skins, weaponsSkins, weapons, skinsQualitiesData, skinsQualities, qualities } = schemaList
 	const { eq, desc, sql, rowNumber, over, avgPartitionedOverTimeStamp, and }            = dbOperators
-	const { dateRange: whereDateRange }                    = whereClauses
+	const { dateRange: whereDateRange }                                                   = whereClauses
 	return db
 	.select({
 		id:        schema.id,
@@ -112,7 +112,8 @@ const skinsDataAggregationPartitionedByDays = ({ skinId, dateRange }: WithIdPara
 			steamMedianPriceAvg: avgPartitionedOverTimeStamp(skinsQualitiesData.steamMedianPrice, skinsQualitiesData.createdAt),
 			bitSkinPriceAvg:     avgPartitionedOverTimeStamp(skinsQualitiesData.bitSkinsPrice, skinsQualitiesData.createdAt),
 			percentChangeAvg:    avgPartitionedOverTimeStamp(skinsQualitiesData.percentChange, skinsQualitiesData.createdAt),
-			rowNumber:           rowNumber(undefined, over(sql`ORDER BY ${skinsQualitiesData.createdAt}`)),
+			rowNumber:           rowNumber(undefined, over(sql`ORDER BY
+			${skinsQualitiesData.createdAt}`)),
 			totalCount:          sql`count(*) OVER ()`.mapWith(Number)
 		})
 	})

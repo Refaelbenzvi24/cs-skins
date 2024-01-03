@@ -9,7 +9,7 @@ interface MessageLocalStorageStore {
 }
 
 export default class MessageLocalStorage {
-	static asyncLocalStorage = new AsyncLocalStorage<MessageLocalStorageStore> ()
+	private static asyncLocalStorage = new AsyncLocalStorage<MessageLocalStorageStore> ()
 
 	static getStore() {
 		return MessageLocalStorage.asyncLocalStorage.getStore ()

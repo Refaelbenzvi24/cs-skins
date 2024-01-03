@@ -1,27 +1,43 @@
 import BaseError from "./Errors/BaseError"
-import TRPCError from "./Errors/TRPCError"
-import errorCodesMap, { ErrorParams } from "./errorCodesMap"
+import TRPCError, { TRPCErrorOptions } from "./Errors/TRPCError"
+import { buildErrorCodesMapObject, ErrorParams } from "./errorCodesMap"
 
+import servicesMap from "./servicesMap"
 
-const errors = {
+export const errors = {
 	BaseError,
 	TRPCError
 }
 
-import servicesMap from "./servicesMap"
 
+export interface OverrideErrorCodesMapObjectWithExtraDetails extends Partial<Omit<ErrorOptions, 'errorCode' | 'message' | 'loggedAtService' | 'userId' | 'name' | 'initializedAtService' | 'severity'>> {
+	extraDetails?: unknown
+}
 
-const errorBuilder = (details: ErrorParams) => ({
-	BaseError: (error: keyof typeof errorCodesMap) => new BaseError(errorCodesMap[error](details)),
-	TRPCError: (error: keyof typeof errorCodesMap, code: TRPCError['code']) => new TRPCError({
-		...errorCodesMap[error](details),
+const errorBuilder = <
+	ErrorCodesMap extends Record<string, ReturnType<typeof buildErrorCodesMapObject>>,
+	ErrorTranslationKeys extends Record<string, keyof ErrorCodesMap>
+>(errorCodesMap: ErrorCodesMap, errorTranslationKeys: ErrorTranslationKeys) => (details: ErrorParams) => ({
+	BaseError: (key: keyof ErrorTranslationKeys, options?: OverrideErrorCodesMapObjectWithExtraDetails) => new BaseError({
+		...errorCodesMap[errorTranslationKeys[key]](details),
+		errorCode: errorTranslationKeys[key],
+		message:   key,
+		...options
+	}),
+	TRPCError: (key: keyof ErrorTranslationKeys, code: TRPCErrorOptions['code'], options?: OverrideErrorCodesMapObjectWithExtraDetails) => new TRPCError({
+		...errorCodesMap[errorTranslationKeys[key]](details),
+		errorCode: errorTranslationKeys[key],
+		message:   key,
+		...options,
 		code
 	})
 })
 
-export default {
+const logger = {
 	errors,
-	errorCodesMap,
 	servicesMap,
 	errorBuilder
 }
+
+export { buildErrorCodesMapObject } from "./errorCodesMap"
+export default logger

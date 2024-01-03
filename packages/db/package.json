@@ -17,6 +17,7 @@
 		"seed" :       "ts-node-dev src/seed.ts"
 	},
 	"dependencies" :    {
+		"@acme/logger" :         "0.1.0",
 		"@auth/core" :           "0.15.2",
 		"@paralleldrive/cuid2" : "2.2.2",
 		"drizzle-orm" :          "0.29.1",
