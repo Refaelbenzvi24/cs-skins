@@ -223,7 +223,7 @@ export const SelectWithLabel = forwardRef<ComponentRef<typeof Select>, SelectPro
 				           placeholder={localPlaceholder || localLabel}
 				           instanceId={useId ()}
 				           menuPosition="absolute"
-				           menuPortalTarget={isServer ? (document.querySelector ("#portals-root") as HTMLElement) : null}
+				           menuPortalTarget={!isServer ? (document.querySelector ("#portals-root") as HTMLElement) : null}
 				           {...restProps}
 				           menuIsOpen={textInput ? (restProps.menuIsOpen ?? false) : restProps.menuIsOpen}
 				           theme={(theme) => ({

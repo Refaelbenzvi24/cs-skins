@@ -1,54 +1,31 @@
-import { ErrorOptions } from "./Errors/BaseError"
+import { ErrorNameOptions, errorNames, ErrorOptions } from "./Errors/BaseError"
+
 
 export interface ErrorParams {
 	initializedAtService: ErrorOptions["initializedAtService"]
 	loggedAtService?: ErrorOptions["loggedAtService"]
 }
 
+export interface ErrorCodesMapObject<ErrorName extends ErrorNameOptions> extends Pick<ErrorOptions, 'severity'> {
+	name: ErrorName
+	subName?: typeof errorNames[ErrorName][number]
+}
+
+export const buildErrorCodesMapObject = <ErrorName extends ErrorNameOptions>(error: Omit<ErrorCodesMapObject<ErrorName>, 'initializedAtService' | 'loggedAtService'>) => (details: ErrorParams) => {
+	return {
+		...details,
+		...error
+	}
+}
+
 
 const errorCodesMap = {
-	E00001: (details: ErrorParams) => ({
-		name:                 "UnknownError",
-		message:              "Unknown error",
-		errorCode:            "E00001",
-		severity:             "ERROR",
-		...details
-	} satisfies ErrorOptions),
-	E00002: (details: ErrorParams) => ({
-		name:                 "ValidationError",
-		message:              "Validation error",
-		errorCode:            "E00002",
-		severity:             "ERROR",
-		...details
-	} satisfies ErrorOptions),
-	E00003: (details: ErrorParams) => ({
-		name:                 "AuthenticationError",
-		message:              "Authentication error",
-		errorCode:            "E00003",
-		severity:             "ERROR",
-		...details
-	} satisfies ErrorOptions),
-	E00004: (details: ErrorParams) => ({
-		name:                 "AuthorizationError",
-		message:              "Authorization error",
-		errorCode:            "E00004",
-		severity:             "ERROR",
-		...details
-	} satisfies ErrorOptions),
-	E00005: (details: ErrorParams) => ({
-		name:                 "DatabaseError",
-		message:              "Database error",
-		errorCode:            "E00005",
-		severity:             "ERROR",
-		...details
-	} satisfies ErrorOptions),
-	E00006: (details: ErrorParams) => ({
-		name:                 "PermissionError",
-		message:              "Permission error",
-		errorCode:            "E00006",
-		severity:             "ERROR",
-		...details
-	} satisfies ErrorOptions),
-}
+	E00001: buildErrorCodesMapObject({ severity: "ERROR", name: "UnknownError" }),
+	E00002: buildErrorCodesMapObject({ severity: "ERROR", name: "ValidationError" }),
+	E00003: buildErrorCodesMapObject({ severity: "ERROR", name: "AuthenticationError" }),
+	E00004: buildErrorCodesMapObject({ severity: "ERROR", name: "AuthorizationError" }),
+	E00005: buildErrorCodesMapObject({ severity: "ERROR", name: "DatabaseError" }),
+	E00006: buildErrorCodesMapObject({ severity: "ERROR", name: "PermissionError" })
+} as const
 
 export default errorCodesMap

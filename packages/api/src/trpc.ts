@@ -16,8 +16,8 @@ import type { EmailProvider } from "./services/email/emailProvider";
 import type { BuildConnectionStringProps } from "@acme/message-broker"
 import type { PermissionsType } from "@acme/db/src/schema/auth"
 import _ from "lodash"
-import logger from "@acme/logger"
 import type { Paths } from "@acme/db/types/objectHelpers"
+import { newError } from "./services/logger"
 
 
 /**
@@ -89,7 +89,8 @@ export const createTRPCContext = async (opts: {
  */
 export const t = initTRPC.context<typeof createTRPCContext>().create({
 	transformer: superjson,
-	errorFormatter({ shape, error }){
+	errorFormatter({ shape, error, ...args }){
+		console.log({shape, error, args})
 		return {
 			...shape,
 			data: {
@@ -126,11 +127,9 @@ export const publicProcedure  = t.procedure;
  * procedure
  */
 
-export const newError = logger.errorBuilder({loggedAtService: "nextjs", initializedAtService: "nextjs"})
-
 const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
 	if(!ctx.session?.user){
-		throw newError.TRPCError("E00003", "UNAUTHORIZED");
+		throw newError.TRPCError("errors:authenticationError", "UNAUTHORIZED");
 	}
 	return next({
 		ctx: {
@@ -144,10 +143,10 @@ const enforceUserPermissions = (permissions: PermissionsFilter[]) => t.middlewar
 	const userPermissions = ctx.session?.user?.permissions ?? {}
 	if(!_.get(userPermissions, 'admin', false)){
 		if(!ctx.session?.user){
-			throw newError.TRPCError("E00003", "UNAUTHORIZED");
+			throw newError.TRPCError("errors:authenticationError", "UNAUTHORIZED");
 		}
 		if(!permissions.every((permission) => !!_.get(userPermissions, permission, false))){
-			throw newError.TRPCError("E00006", "UNAUTHORIZED");
+			throw newError.TRPCError("errors:permissionsError", "UNAUTHORIZED");
 		}
 	}
 	return next({

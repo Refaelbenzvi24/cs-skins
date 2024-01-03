@@ -1,10 +1,7 @@
 {
 	"extends" : "@acme/tsconfig/base.json",
 	"compilerOptions" : {
-		"tsBuildInfoFile" : "node_modules/.cache/tsbuildinfo.json",
-		"types": [
-			"./global.d.ts"
-		]
+		"tsBuildInfoFile" : "node_modules/.cache/tsbuildinfo.json"
 	},
 	"ts-node" : {
 		"compilerOptions" : {
