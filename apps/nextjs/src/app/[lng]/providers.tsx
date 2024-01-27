@@ -1,17 +1,17 @@
 "use client";
 import "react-toastify/dist/ReactToastify.css"
 import { useState } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider, QueryErrorResetBoundary } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
 import { loggerLink, unstable_httpBatchStreamLink } from "@trpc/client";
 import superjson from "superjson";
-import { api, getBaseUrl } from "~/utils/api";
+import { api, getBaseUrl } from "~/trpc/api";
 
 
 export function TRPCReactProvider(props: {
 	children: React.ReactNode;
-	headers?: Headers;
+	headersPromise: Promise<Headers>;
 }){
 	const [queryClient] = useState(
 		() =>
@@ -19,6 +19,7 @@ export function TRPCReactProvider(props: {
 				defaultOptions: {
 					queries: {
 						staleTime: 5 * 1000,
+						throwOnError: true
 					},
 				},
 			}),
@@ -29,16 +30,16 @@ export function TRPCReactProvider(props: {
 			transformer: superjson,
 			links:       [
 				loggerLink({
-					enabled: (opts) =>
+					enabled: (op) =>
 						         process.env.NODE_ENV === "development" ||
-						         (opts.direction === "down" && opts.result instanceof Error),
+						         (op.direction === "down" && op.result instanceof Error),
 				}),
 				unstable_httpBatchStreamLink({
-					url: `${getBaseUrl()}/api/trpc`,
-					headers(){
-						const headers = new Map(props.headers);
+					url: getBaseUrl() + "/api/trpc",
+					async headers(){
+						const headers = new Headers(await props.headersPromise);
 						headers.set("x-trpc-source", "nextjs-react");
-						return Object.fromEntries(headers);
+						return headers;
 					},
 				}),
 			],
@@ -46,13 +47,15 @@ export function TRPCReactProvider(props: {
 	);
 
 	return (
-		<api.Provider client={trpcClient} queryClient={queryClient}>
+		<QueryErrorResetBoundary>
 			<QueryClientProvider client={queryClient}>
-				<ReactQueryStreamedHydration transformer={superjson}>
-					{props.children}
-				</ReactQueryStreamedHydration>
-				<ReactQueryDevtools initialIsOpen={false}/>
+				<api.Provider client={trpcClient} queryClient={queryClient}>
+					<ReactQueryStreamedHydration transformer={superjson}>
+						{props.children}
+					</ReactQueryStreamedHydration>
+					<ReactQueryDevtools initialIsOpen={false}/>
+				</api.Provider>
 			</QueryClientProvider>
-		</api.Provider>
+		</QueryErrorResetBoundary>
 	);
 }

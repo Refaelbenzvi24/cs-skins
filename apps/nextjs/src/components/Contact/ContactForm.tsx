@@ -6,7 +6,7 @@ import {z} from "zod"
 import {leadsValidations} from "@acme/validations"
 import {useEffect, useRef, useState} from "react";
 import useTranslation from "next-translate/useTranslation"
-import {api} from "~/utils/api";
+import {api} from "~/trpc/api";
 import {mergeRefs} from "react-merge-refs";
 
 

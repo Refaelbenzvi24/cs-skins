@@ -10,8 +10,6 @@ export const qualityRouter = createTRPCRouter({
 		protectedProcedure
 		.input(z.object(qualityValidations.list))
 		.query(async ({ ctx, input }) => {
-
-
 			const { limit, search } = input
 			const cursor            = input.cursor ?? "0"
 			const items             = await ctx
@@ -20,7 +18,6 @@ export const qualityRouter = createTRPCRouter({
 			.qualities
 			.list({ limit, search, cursor })
 			.execute()
-
 			return getPaginationReturning(items, limit ?? 20)
 		})
 })

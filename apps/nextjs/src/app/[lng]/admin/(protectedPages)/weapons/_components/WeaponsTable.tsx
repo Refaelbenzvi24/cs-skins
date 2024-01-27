@@ -1,18 +1,18 @@
 "use client";
 import { Card, Row, Table, TextField, Typography } from "@acme/ui"
-import { api } from "~/utils/api"
+import { api } from "~/trpc/api"
 import type { FormEvent } from "react";
 import { useMemo } from "react"
-import type { trpcRsc } from "~/utils/apiServer"
+import type { trpcRsc } from "~/trpc/apiServer"
 import { useSearchParamState } from "~/hooks"
 import type { ComponentWithLocaleProps } from "~/types"
 import { useTranslation } from "~/app/i18n/client"
-import { getNextPageParam } from "~/utils/apiHelpers"
+import { getNextPageParam } from "~/trpc/apiHelpers"
 
 
 interface WeaponsTableProps extends ComponentWithLocaleProps {
 	searchQuery?: string
-	initialData?: Awaited<ReturnType<typeof trpcRsc.weapon.list.fetch>>
+	initialData?: Awaited<ReturnType<typeof trpcRsc.weapon.list>>
 }
 
 const WeaponsTable = ({ searchQuery, initialData, lng }: WeaponsTableProps) => {

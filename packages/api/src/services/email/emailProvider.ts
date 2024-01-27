@@ -49,9 +49,10 @@ export const getTransporter = async (providerData: ProviderData) => {
 export const sendEmail = async ({ emailProvider, data }: { emailProvider?: EmailProvider, data: Mail.Options }) => {
 	try {
 		if(!emailProvider) return previewEmail(data)
-		
+
 		return await emailProvider.sendMail(data)
 	} catch (error) {
+		// TODO: fix
 		console.log(error)
 	}
 }

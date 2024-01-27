@@ -1,0 +1,47 @@
+400:
+    title: Bad Request.
+    subtitle: The request you sent to the server was invalid.
+    subtitle2: "Here is some info which could help when contacting us:"
+    homepage: Go To homepage
+    tryAgain: Try Again
+401:
+    title: You are not authorized.
+    subtitle: You are not authorized to access this page.
+    subtitle2: "Here is some info which could help when contacting us:"
+    homepage: Go To homepage
+    tryAgain: Try Again
+403:
+    title: You are not allowed.
+    subtitle: You are not allowed to access this page.
+    subtitle2: "Here is some info which could help when contacting us:"
+    homepage: Go To homepage
+    tryAgain: Try Again
+404:
+    title: We looked everywhere.
+    subtitle: Looks like this page is missing. if you still need help.
+    subtitle2: "Here is some info which could help when contacting us:"
+    homepage: Go To homepage
+    tryAgain: Try Again
+500:
+    title: Something went wrong.
+    subtitle: We are working on it. if you still need help.
+    subtitle2: "Here is some info which could help when contacting us:"
+    homepage: Go To homepage
+    tryAgain: Try Again
+skins:
+    databaseError:
+        list:
+            failedToSearch: Error while Searching for skins
+        getById:
+            failedToSearch: Error while searching for this skin
+    create:
+        failedSendingMessage: There have been an error trying to search for this skin data
+skinsQualitiesData:
+    databaseError:
+        getByIdWithData:
+            failedToSearch: Error while searching for this skin data
+        getByIdWithDataForChart:
+            failedToSearch: Error while searching for this skin data
+authenticationError: There occurred some error authenticating
+authorizationError: There occurred some error while authorizing your request
+permissionsError: It's seems like you don't have the right permission for this!

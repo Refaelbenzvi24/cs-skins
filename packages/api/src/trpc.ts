@@ -13,11 +13,19 @@ import { auth } from "@acme/auth";
 import type { Session } from "@acme/auth";
 import { db, dbHelper } from "@acme/db";
 import type { EmailProvider } from "./services/email/emailProvider";
-import type { BuildConnectionStringProps } from "@acme/message-broker"
+import type { BuildConnectionStringProps } from "@acme/message-broker";
+import { Producer } from "@acme/message-broker"
 import type { PermissionsType } from "@acme/db/src/schema/auth"
 import _ from "lodash"
 import type { Paths } from "@acme/db/types/objectHelpers"
-import { newError } from "./services/logger"
+import { loggerInstance } from "./services/logger"
+import type { errorCodesMap } from "./services/logger";
+import TRPCError from "@acme/logger/src/Errors/TRPCError"
+import type { DefaultErrorShape } from "@trpc/core/src/error/formatter"
+import type { errorTranslationKeys } from "./services/logger/errorTranslationKeys"
+import type { ErrorNameOptions } from "@acme/logger/src/Errors/BaseError"
+import type { typeToFlattenedError } from "zod/lib/ZodError"
+import type apm from "elastic-apm-node"
 
 
 /**
@@ -33,6 +41,7 @@ interface CreateContextOptions {
 	session: Session | null
 	emailProvider?: EmailProvider
 	messageBrokerConnectionParams: BuildConnectionStringProps
+	apm?: apm.Agent
 }
 
 /**
@@ -45,14 +54,34 @@ interface CreateContextOptions {
  * @see https://create.t3.gg/en/usage/trpc#-servertrpccontextts
  */
 const createInnerTRPCContext = (opts: CreateContextOptions) => {
-	const { session, emailProvider, messageBrokerConnectionParams } = opts
+	const { session, emailProvider, messageBrokerConnectionParams, apm } = opts
+
+	const logger = loggerInstance.logger({
+		errorTransformer: 'TRPCError',
+		transports:       [
+			({ createTransport }) => createTransport({
+				severities:                  ["CRITICAL", "ERROR", "WARNING"],
+				retries:                     3,
+				unknownErrorsTranslationKey: "errors:unknownError",
+				retryDelay:                  1000,
+				callback:                    async (error) => {
+					const producer = new Producer("logs")
+					await producer.initializeProducer(messageBrokerConnectionParams)
+					await producer.sendMessage({ error })
+				}
+			})
+		]
+	})
 
 	return {
 		session,
 		emailProvider,
 		messageBrokerConnectionParams,
 		db,
-		dbHelper
+		dbHelper,
+		logger,
+		newError: loggerInstance.errorBuilder,
+		apm
 	}
 };
 
@@ -62,24 +91,46 @@ const createInnerTRPCContext = (opts: CreateContextOptions) => {
  * @link https://trpc.io/docs/context
  */
 export const createTRPCContext = async (opts: {
-	req?: Request;
-	auth?: Session;
-}, { emailProvider, messageBrokerConnectionParams }: {
+	headers: Headers;
+	session: Session | null;
+}, { emailProvider, messageBrokerConnectionParams, apm }: {
 	emailProvider?: EmailProvider,
-	messageBrokerConnectionParams: BuildConnectionStringProps
+	messageBrokerConnectionParams: BuildConnectionStringProps,
+	apm?: apm.Agent
 }) => {
-	const session = opts.auth ?? (await auth());
-	const source  = opts.req?.headers.get("x-trpc-source") ?? "unknown";
+	const session = opts.session ?? (await auth());
+	const source  = opts.headers.get("x-trpc-source") ?? "unknown";
 
 	console.log(">>> tRPC Request from", source, "by", session?.user);
 
 	return createInnerTRPCContext({
 		emailProvider,
 		messageBrokerConnectionParams,
-		session
+		session,
+		apm
 	});
 };
 
+export type TRPCErrorWithGenerics = TRPCError<
+	typeof errorCodesMap,
+	typeof errorTranslationKeys,
+	keyof typeof errorTranslationKeys,
+	ErrorNameOptions,
+	keyof typeof errorCodesMap
+>
+
+export const getErrorShape = (error: TRPCErrorWithGenerics, shape: DefaultErrorShape, zodError: typeToFlattenedError<unknown, unknown> | null) => ({
+	...shape,
+	data: {
+		...shape.data,
+		message:   error.message,
+		errorId:   error.errorId,
+		errorCode: error.errorCode,
+		timestamp: error.timestamp,
+		code:      error.code,
+		zodError
+	}
+})
 
 /**
  * 2. INITIALIZATION
@@ -87,19 +138,28 @@ export const createTRPCContext = async (opts: {
  * This is where the trpc api is initialized, connecting the context and
  * transformer
  */
-export const t = initTRPC.context<typeof createTRPCContext>().create({
-	transformer: superjson,
-	errorFormatter({ shape, error, ...args }){
-		console.log({shape, error, args})
-		return {
-			...shape,
-			data: {
-				...shape.data,
-				zodError: error.cause instanceof ZodError ? error.cause.flatten() : null,
-			},
-		};
-	},
-});
+const t = initTRPC.context<typeof createTRPCContext>().create({
+	transformer:    superjson,
+	errorFormatter: ({ shape, error }) => {
+		const zodError = error.cause instanceof ZodError ? error.cause.flatten() : null
+		if(error.cause instanceof TRPCError){
+			return getErrorShape((error.cause as TRPCErrorWithGenerics), shape, zodError)
+		}
+		const trpcError = TRPCError.from<
+			typeof errorCodesMap,
+			typeof errorTranslationKeys,
+			typeof loggerInstance.errorBuilder
+		>({ errorBuilderInstance: loggerInstance.errorBuilder, errorTranslationKey: "errors:unknownError" }, error)
+		return getErrorShape(trpcError as TRPCErrorWithGenerics, shape, zodError)
+	}
+})
+
+
+/**
+ * Create a server-side caller
+ * @see https://trpc.io/docs/server/server-side-calls
+ */
+export const createCallerFactory = t.createCallerFactory;
 
 /**
  * 3. ROUTER & PROCEDURE (THE IMPORTANT BIT)
@@ -113,6 +173,19 @@ export const t = initTRPC.context<typeof createTRPCContext>().create({
  * @see https://trpc.io/docs/router
  */
 export const createTRPCRouter = t.router;
+
+const errorsMiddleware = t.middleware(async ({ ctx, next, path, input, type }) => {
+	// TOOD: maybe remove this
+	// ctx.apm?.setTransactionName( `${type}: ${path}`);
+	try {
+		return await next({
+			ctx
+		})
+	} catch (error) {
+		await ctx.logger.logError(error, { path, input, type, session: ctx.session })
+	}
+})
+
 /**
  * Public (unauthed) procedure
  *
@@ -120,16 +193,18 @@ export const createTRPCRouter = t.router;
  * tRPC API. It does not guarantee that a user querying is authorized, but you
  * can still access user session data if they are logged in
  */
-export const publicProcedure  = t.procedure;
+export const publicProcedure = t
+.procedure
+.use(errorsMiddleware)
+
 
 /**
  * Reusable middleware that enforces users are logged in before running the
  * procedure
  */
-
 const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
 	if(!ctx.session?.user){
-		throw newError.TRPCError("errors:authenticationError", "UNAUTHORIZED");
+		throw ctx.newError.TRPCError("errors:authorizationError", "UNAUTHORIZED", { extraDetails: { user: 'public' } });
 	}
 	return next({
 		ctx: {
@@ -140,18 +215,20 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
 
 export type PermissionsFilter = Paths<PermissionsType>
 const enforceUserPermissions = (permissions: PermissionsFilter[]) => t.middleware(({ ctx, next }) => {
-	const userPermissions = ctx.session?.user?.permissions ?? {}
-	if(!_.get(userPermissions, 'admin', false)){
-		if(!ctx.session?.user){
-			throw newError.TRPCError("errors:authenticationError", "UNAUTHORIZED");
-		}
-		if(!permissions.every((permission) => !!_.get(userPermissions, permission, false))){
-			throw newError.TRPCError("errors:permissionsError", "UNAUTHORIZED");
+	if(!ctx.session?.user){
+		throw ctx.newError.TRPCError("errors:authorizationError", "UNAUTHORIZED", { extraDetails: { user: 'public' } });
+	}
+	const userPermissions         = ctx.session?.user?.permissions ?? {}
+	const userHasAdminPermissions = _.get(userPermissions, 'admin', false)
+	if(!userHasAdminPermissions){
+		const userHasRightPermission = permissions.every((permission) => !!_.get(userPermissions, permission, false))
+		if(!userHasRightPermission){
+			throw ctx.newError.TRPCError("errors:permissionsError", "UNAUTHORIZED", { extraDetails: { user: ctx.session?.user?.id ?? 'public' } });
 		}
 	}
 	return next({
 		ctx: {
-			session: { ...ctx.session, user: ctx.session?.user },
+			session: { ...ctx.session, user: ctx.session.user },
 		},
 	});
 })
@@ -167,8 +244,10 @@ const enforceUserPermissions = (permissions: PermissionsFilter[]) => t.middlewar
  */
 export const protectedProcedure = t
 .procedure
+.use(errorsMiddleware)
 .use(enforceUserIsAuthed)
 
 export const protectedProcedureWithPermissions = (permissions: PermissionsFilter[]) => t
 .procedure
+.use(errorsMiddleware)
 .use(enforceUserPermissions(permissions))

@@ -5,13 +5,13 @@ import { AppBar, Modal, Row, ThemeToggle, Tooltip } from "@acme/ui";
 import LanguageSelector from "~/components/LanguageSelector";
 import clsx from "clsx";
 import Button from "@acme/ui/src/nextjs/components/Buttons/Button";
-import { signOut } from "next-auth/react";
 import IconCarbonLogout from "~icons/carbon/logout"
 import IconCarbonSettings from "~icons/carbon/settings"
 import Settings from "~/components/Admin/Settings";
 import { useTranslation } from "~/app/i18n/client"
 import { useRouter } from "next/navigation"
 import type { ComponentWithLocaleProps } from "~/types"
+import { serverSignOut } from "~/server/authServerActions"
 
 
 export interface AdminAppBarProps extends Partial<ComponentProps<typeof AppBar>>, ComponentWithLocaleProps {
@@ -22,25 +22,25 @@ export interface AdminAppBarProps extends Partial<ComponentProps<typeof AppBar>>
 
 const AdminAppBar = (props: AdminAppBarProps) => {
 	const {
-		className,
-		removeLogoutButton = false,
-		removeSettingsButton = false,
-		lng,
-		...restProps
-	} = props
+		      className,
+		      removeLogoutButton   = false,
+		      removeSettingsButton = false,
+		      lng,
+		      ...restProps
+	      } = props
 
-	const [isSettingsModalOpen, setIsSettingsModalOpen] = useState<boolean> (false)
+	const [isSettingsModalOpen, setIsSettingsModalOpen] = useState<boolean>(false)
 
-	const router = useRouter ()
-	const { t } = useTranslation (lng, ["common"])
+	const router = useRouter()
+	const { t }  = useTranslation(lng, ["common"])
 
 	const handleLogout = async () => {
-		await signOut ({ redirect: false })
-		router.push (`/${lng}/admin/login`)
+		await serverSignOut()
+		router.push(`/${lng}/admin/login`)
 	}
 
 	const openSettings = () => {
-		setIsSettingsModalOpen (true)
+		setIsSettingsModalOpen(true)
 	}
 
 	return (
@@ -51,13 +51,13 @@ const AdminAppBar = (props: AdminAppBarProps) => {
 				width={"500px"}
 				isOpen={isSettingsModalOpen}
 				centered
-				onBackdropClick={() => setIsSettingsModalOpen (false)}>
-				<Settings onBackButtonClick={() => setIsSettingsModalOpen (false)}/>
+				onBackdropClick={() => setIsSettingsModalOpen(false)}>
+				<Settings onBackButtonClick={() => setIsSettingsModalOpen(false)}/>
 			</Modal>
 
 			<AppBar
 				{...restProps}
-				className={`justify-between px-16 max-[700px]:pl-8 max-[700px]:pr-4 ${clsx (className)}`}>
+				className={`justify-between px-16 max-[700px]:pl-8 max-[700px]:pr-4 ${clsx(className)}`}>
 				<Row className="items-center">
 					{/*<Image src={"/Logo.svg"} alt={'logo'} width={38} height={45}/>*/}
 				</Row>
@@ -65,7 +65,7 @@ const AdminAppBar = (props: AdminAppBarProps) => {
 				<Row className="space-s-2">
 					<Row className="ltr:pl-2 rtl:pr-2">
 						{!removeSettingsButton && (
-							<Tooltip tooltip={t ("common:settings")}
+							<Tooltip tooltip={t("common:settings")}
 							         color={"colorScheme.overlaysDark"}
 							         placement="bottom-center">
 								<Button
@@ -81,20 +81,20 @@ const AdminAppBar = (props: AdminAppBarProps) => {
 							</Tooltip>
 						)}
 
-						<Tooltip tooltip={t ("common:language")}
+						<Tooltip tooltip={t("common:language")}
 						         color={"colorScheme.overlaysDark"}
 						         placement="bottom-center">
 							<LanguageSelector/>
 						</Tooltip>
 
-						<Tooltip tooltip={t ("common:theme")}
+						<Tooltip tooltip={t("common:theme")}
 						         color={"colorScheme.overlaysDark"}
 						         placement="bottom-center">
 							<ThemeToggle/>
 						</Tooltip>
 
 						{!removeLogoutButton && (
-							<Tooltip tooltip={t ("common:logout")}
+							<Tooltip tooltip={t("common:logout")}
 							         color={"colorScheme.overlaysDark"}
 							         placement="bottom-center">
 								<Button

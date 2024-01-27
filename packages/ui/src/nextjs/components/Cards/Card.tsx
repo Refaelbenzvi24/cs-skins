@@ -29,8 +29,8 @@ export interface CardProps extends StyledProps {
 }
 
 
-const Card = styled (motion.div, {
-	shouldForwardProp: (props) => shouldForwardProp<CardProps> (
+const Card = styled(motion.div, {
+	shouldForwardProp: (props) => shouldForwardProp<CardProps>(
 		[
 			"dark",
 			"height",
@@ -47,71 +47,71 @@ const Card = styled (motion.div, {
 			"zIndex",
 			"elevation"
 		]
-	) (props as keyof CardProps)
-}) (({
-	     dark,
-	     elevation = 3,
-	     noShadow,
-	     notRounded,
-	     backgroundColor = "colorScheme.white",
-	     backgroundColorDark = "colorScheme.overlaysDark",
-	     minHeight,
-	     maxHeight,
-	     height,
-	     minWidth,
-	     maxWidth,
-	     noPadding,
-	     width,
-	     zIndex = 0,
-	     theme
-     }: CardProps) => {
-	const resolvedBackgroundColor = getSingleColorFromPath (backgroundColor, theme.config)
-	const resolvedBackgroundColorDark = getSingleColorFromPath (backgroundColorDark, theme.config)
-	const resolvedZIndex = getZIndexFromPath (zIndex, theme.config)
+	)(props as keyof CardProps)
+})(({
+	dark,
+	elevation = 3,
+	noShadow,
+	notRounded,
+	backgroundColor = "colorScheme.white",
+	backgroundColorDark = "colorScheme.overlaysDark",
+	minHeight,
+	maxHeight,
+	height,
+	minWidth,
+	maxWidth,
+	noPadding,
+	width,
+	zIndex = 0,
+	theme
+}: CardProps) => {
+	const resolvedBackgroundColor     = getSingleColorFromPath(backgroundColor, theme.config)
+	const resolvedBackgroundColorDark = getSingleColorFromPath(backgroundColorDark, theme.config)
+	const resolvedZIndex              = getZIndexFromPath(zIndex, theme.config)
 	return [
 		tw`flex right-0 overflow-hidden`,
 
 		!notRounded && tw`rounded`,
 
 		!noShadow && css`
-          box-shadow: ${theme.config.shadows[elevation]};
+			box-shadow: ${theme.config.shadows[elevation]};
 		`,
 
 		noPadding ? "" : tw`p-2`,
 
 		css`
-          background-color: ${resolvedBackgroundColor};
+			background-color: ${resolvedBackgroundColor};
 		`,
 
 		height && css`
-          height: ${typeof height === "number" ? `${height}px` : height};
+			height: ${typeof height === "number" ? `${height}px` : height};
 		`,
 
 		width && css`
-          width: ${typeof width === "number" ? `${width}px` : width};
+			width: ${typeof width === "number" ? `${width}px` : width};
 		`,
 
 		minHeight && css`
-          min-height: ${minHeight};
+			min-height: ${minHeight};
 		`,
 		maxHeight && css`
-          max-height: ${maxHeight};
+			max-height: ${maxHeight};
 		`,
 		minWidth && css`
-          min-width: ${minWidth};
+			min-width: ${minWidth};
 		`,
 		maxWidth && css`
-          max-width: ${maxWidth};
+			max-width: ${maxWidth};
 		`,
 
 		zIndex && css`
-          z-index: ${resolvedZIndex};
+			z-index: ${resolvedZIndex};
 		`,
 
 		(props) => (dark || props.theme.isDark) && css`
-          background-color: ${resolvedBackgroundColorDark};
+			background-color: ${resolvedBackgroundColorDark};
 		`
 	]
 })
 
-export default withTheme (Card)
+export default withTheme(Card)

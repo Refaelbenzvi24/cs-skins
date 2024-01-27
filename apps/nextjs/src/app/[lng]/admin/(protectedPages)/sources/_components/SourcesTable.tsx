@@ -1,18 +1,18 @@
 "use client";
 import { ATagButton, Card, Row, Table, TextField, Typography } from "@acme/ui"
-import { api } from "~/utils/api"
+import { api } from "~/trpc/api"
 import type { FormEvent } from "react";
 import { useMemo } from "react"
-import type { trpcRsc } from "~/utils/apiServer"
+import type { trpcRsc } from "~/trpc/apiServer"
 import { useSearchParamState } from "~/hooks"
 import type { ComponentWithLocaleProps } from "~/types"
 import { useTranslation } from "~/app/i18n/client"
-import { getNextPageParam } from "~/utils/apiHelpers"
+import { getNextPageParam } from "~/trpc/apiHelpers"
 
 
 interface SourcesTableProps extends ComponentWithLocaleProps {
 	searchQuery?: string
-	initialData?: Awaited<ReturnType<typeof trpcRsc.source.list.fetch>>
+	initialData?: Awaited<ReturnType<typeof trpcRsc.source.list>>
 }
 
 const SourcesTable = ({ searchQuery, initialData, lng }: SourcesTableProps) => {

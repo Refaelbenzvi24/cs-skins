@@ -1,7 +1,7 @@
 import { Col, Icon, LinkButton, Row, Typography } from "@acme/ui"
 import { redirect } from "next/navigation"
 import SkinsDataTable from "~/app/[lng]/admin/(protectedPages)/skins-data/_components/SkinsDataTable"
-import { trpcRsc } from "~/utils/apiServer"
+import { trpcRsc } from "~/trpc/apiServer"
 import { getTranslation } from "~/app/i18n"
 import { auth } from "@acme/auth"
 import type { GenerateMetadataWithLocaleProps, TranslatedRouteProps } from "~/types"

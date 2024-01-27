@@ -1,27 +1,27 @@
 {
-	"name":            "@acme/logger",
-	"version":         "0.1.0",
-	"description":     "",
-	"main":            "src/index.ts",
-	"scripts":         {
-		"clean":      "rm -rf .turbo node_modules",
-		"lint":       "eslint .",
-		"format":     "prettier --check \"**/*.{mjs,ts,md,json}\"",
+	"name": "@acme/logger",
+	"version": "0.1.0",
+	"description": "",
+	"main": "src/index.ts",
+	"scripts": {
+		"clean": "rm -rf .turbo node_modules",
+		"lint": "eslint .",
+		"format": "prettier --check \"**/*.{mjs,ts,md,json}\"",
 		"playground": "ts-node-dev ./playground.ts",
-		"typecheck":  "tsc --noEmit"
+		"typecheck": "tsc --noEmit"
 	},
 	"devDependencies": {
-		"@acme/eslint-config":   "0.2.0",
+		"@acme/eslint-config": "0.2.0",
 		"@acme/prettier-config": "0.1.0",
-		"@acme/tsconfig":        "0.1.0",
-		"@types/node":           "18.0.0",
-		"eslint":                "8.50.0",
-		"prettier":              "3.0.3",
-		"ts-node-dev":           "2.0.0",
-		"typescript":            "5.2.2"
+		"@acme/tsconfig": "0.1.0",
+		"@types/node": "18.0.0",
+		"eslint": "8.50.0",
+		"prettier": "3.0.3",
+		"ts-node-dev": "2.0.0",
+		"typescript": "5.2.2"
 	},
 	"dependencies": {
 		"@paralleldrive/cuid2": "2.2.2",
-		"chalk": "4.1.2"
+		"lodash": "4.17.21"
 	}
 }

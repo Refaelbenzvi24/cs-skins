@@ -11,7 +11,7 @@ const Layout = async (props: LayoutWithLocaleProps) => {
 	if (!session) redirect (`/${props.params.lng}/admin/login`)
 
 	return (
-		<div className="h-full">
+		<div className="w-full h-full">
 			<AdminAppBar lng={props.params.lng}/>
 			<SideBar lng={props.params.lng}/>
 

@@ -1,19 +1,19 @@
 "use client";
-import { Card, Col, Row, Tab, Table, Tabs, TextField, Typography } from "@acme/ui"
-import { api } from "~/utils/api"
+import { Card, Row, Table, TextField, Typography } from "@acme/ui"
+import { api } from "~/trpc/api"
 import type { FormEvent } from "react";
 import { useMemo } from "react"
-import type { trpcRsc } from "~/utils/apiServer"
+import type { trpcRsc } from "~/trpc/apiServer"
 import { useSearchParamState } from "~/hooks"
 import type { ComponentWithLocaleProps } from "~/types"
 import { useTranslation } from "~/app/i18n/client"
 import moment from "moment/moment"
-import { getNextPageParam } from "~/utils/apiHelpers"
+import { getNextPageParam } from "~/trpc/apiHelpers"
 
 
 interface SkinsDataTableProps extends ComponentWithLocaleProps {
 	searchQuery?: string
-	initialData?: Awaited<ReturnType<typeof trpcRsc.skinData.list.fetch>>
+	initialData?: Awaited<ReturnType<typeof trpcRsc.skinData.list>>
 }
 
 const SkinsDataTable = ({ searchQuery, initialData, lng }: SkinsDataTableProps) => {
@@ -32,11 +32,7 @@ const SkinsDataTable = ({ searchQuery, initialData, lng }: SkinsDataTableProps) 
 
 	const { t } = useTranslation(lng, ["common", "admin"])
 
-	const {
-		      data: skinsList,
-		      fetchNextPage,
-		      hasNextPage
-	      } = api.skinData.list.useInfiniteQuery({ search: value ?? searchQuery, limit: 20 }, { getNextPageParam })
+	const { data: skinsList, fetchNextPage, hasNextPage } = api.skinData.list.useInfiniteQuery({ search: value ?? searchQuery, limit: 20 }, { getNextPageParam })
 
 	const skins = useMemo(() => skinsList?.pages.flatMap(page => page.items).map(item => ({
 		...item

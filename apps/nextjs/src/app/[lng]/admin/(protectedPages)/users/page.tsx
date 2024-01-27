@@ -1,11 +1,12 @@
 import { Col, Icon, LinkButton, Row, Typography } from "@acme/ui"
 import { redirect } from "next/navigation"
-import { trpcRsc } from "~/utils/apiServer"
+import { trpcRsc } from "~/trpc/apiServer"
 import { getTranslation } from "~/app/i18n"
 import { auth } from "@acme/auth"
 import type { GenerateMetadataWithLocaleProps, TranslatedRouteProps } from "~/types"
 import UsersTable from "~/app/[lng]/admin/(protectedPages)/users/_components/UsersTable"
-import checkForServerPermissions from "~/hooks/useCheckForServerPermissions"
+import checkForServerPermissions from "~/hooks/checkForServerPermissions"
+import managedRsc from "~/components/managedRsc"
 
 
 interface AdminPageProps extends TranslatedRouteProps {
@@ -22,19 +23,17 @@ export async function generateMetadata(props: GenerateMetadataWithLocaleProps){
 	};
 }
 
-const Page = async ({ params: { lng }, searchParams }: AdminPageProps) => {
+const Page = managedRsc(async ({ params: { lng }, searchParams }: AdminPageProps) => {
 	const session = await auth();
 	if(!session) return redirect(`/${lng}/admin/login`)
 
-	const usersList = await trpcRsc.user.list.fetch({ search: searchParams.search, limit: 20 })
+	const usersList = await trpcRsc.user.list({ search: searchParams.search, limit: 20 })
 
-	const { isAdmin } = await checkForServerPermissions({
-		isAdmin: 'admin'
-	})
+	const { isAdmin } = await checkForServerPermissions({ isAdmin: 'admin' })
 	const { t }       = await getTranslation(lng, 'admin')
 
 	return (
-		<main className="h-full">
+		<main className="min-h-full w-full">
 			<Col className="h-full pb-[20px] px-10">
 				<Row className="px-[30px] justify-between">
 					<Typography variant={'h2'}
@@ -62,6 +61,6 @@ const Page = async ({ params: { lng }, searchParams }: AdminPageProps) => {
 			</Col>
 		</main>
 	)
-}
+})
 
 export default Page

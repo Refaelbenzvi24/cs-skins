@@ -3,23 +3,33 @@ import type { Channel, Connection, ConsumeMessage, Options } from "amqplib";
 import type { Replies } from "amqplib/properties";
 
 import { buildConnectionString, type BuildConnectionStringProps } from "./connectionUtils";
-import { MessageBrokerPayloads, QueueNames } from "./types"
+import type { PayloadsByQueueName, QueueNames } from "./types"
 import { createId } from "@paralleldrive/cuid2"
 import MessageLocalStorage from "./ConsumedMessageLocalStorage"
 import DefaultHeadersInjector from "./utils/DefaultHeadersInjector"
-import { errors } from "@acme/logger"
-import { newError } from "./logger"
+import { errorTranslationKeys, loggerInstance } from "./logger"
 import logger from "@acme/logger"
 
 
-export class Producer {
+const getErrorFromUnknown = (fallbackErrorKey: keyof typeof errorTranslationKeys, error: unknown, extraDetails?: unknown) => {
+	const store = MessageLocalStorage.getStore()
+	if(error instanceof logger.errors.BaseError || error instanceof logger.errors.TRPCError){
+		return error.addSystemProcessId(store?.systemProcessId)
+	}
+	return loggerInstance({
+		initializedAtService: store?.initializedAtService ?? process.env.npm_package_name as typeof logger.servicesMap[number]["name"],
+		loggedAtService:      process.env.npm_package_name as typeof logger.servicesMap[number]["name"],
+	}).errorBuilder.BaseError(fallbackErrorKey, { cause: error, extraDetails })
+}
+
+export class Producer<QueueName extends QueueNames> {
 	static connection: Connection;
 	static channel: Channel;
 	queue: Replies.AssertQueue | undefined;
-	queueName: QueueNames;
+	queueName: QueueName;
 	options?: Options.AssertQueue;
 
-	constructor(queueName: QueueNames, options?: Options.AssertQueue){
+	constructor(queueName: QueueName, options?: Options.AssertQueue){
 		this.queueName = queueName
 		this.options   = options
 	}
@@ -30,14 +40,7 @@ export class Producer {
 			try {
 				Producer.connection = await amqplib.connect(connectionString);
 			} catch (error) {
-				if(error instanceof errors.BaseError || error instanceof errors.TRPCError){
-					throw error
-				}
-				const store = MessageLocalStorage.getStore()
-				throw newError({
-					initializedAtService: store?.initializedAtService ?? process.env.npm_package_name as typeof logger.servicesMap[number]["name"],
-					loggedAtService:      process.env.npm_package_name as typeof logger.servicesMap[number]["name"],
-				}).BaseError("errors:messageBroker.consumer.connect.unknown", { cause: error })
+				throw getErrorFromUnknown("errors:messageBroker.producer.connect.unknown", error, { queue: this.queue })
 			}
 		}
 	}
@@ -46,14 +49,7 @@ export class Producer {
 		try {
 			if(!Producer.channel) Producer.channel = await Producer.connection.createChannel();
 		} catch (error) {
-			if(error instanceof errors.BaseError || error instanceof errors.TRPCError){
-				throw error
-			}
-			const store = MessageLocalStorage.getStore()
-			throw newError({
-				initializedAtService: store?.initializedAtService ?? process.env.npm_package_name as typeof logger.servicesMap[number]["name"],
-				loggedAtService:      process.env.npm_package_name as typeof logger.servicesMap[number]["name"],
-			}).BaseError("errors:messageBroker.producer.createChannel.unknown", { cause: error })
+			throw getErrorFromUnknown("errors:messageBroker.producer.createChannel.unknown", error, { queue: this.queue })
 		}
 	}
 
@@ -64,22 +60,19 @@ export class Producer {
 		try {
 			this.queue = await Producer.channel.assertQueue(this.queueName, this.options);
 		} catch (error) {
-			if(error instanceof errors.BaseError || error instanceof errors.TRPCError){
-				throw error
-			}
-			const store = MessageLocalStorage.getStore()
-			throw newError({
-				initializedAtService: store?.initializedAtService ?? process.env.npm_package_name as typeof logger.servicesMap[number]["name"],
-				loggedAtService:      process.env.npm_package_name as typeof logger.servicesMap[number]["name"],
-			}).BaseError("errors:messageBroker.producer.assertQueue.unknown", { cause: error })
+			throw getErrorFromUnknown("errors:messageBroker.producer.assertQueue.unknown", error, { queue: this.queue })
 		}
 	}
 
 	async purgeQueue(){
-		return await Producer.channel.purgeQueue(this.queueName)
+		try {
+			return await Producer.channel.purgeQueue(this.queueName)
+		} catch (error) {
+			throw getErrorFromUnknown("errors:messageBroker.producer.purgeQueue.unknown", error, { queue: this.queue })
+		}
 	}
 
-	async sendMessage(message: MessageBrokerPayloads, options?: Options.Publish){
+	async sendMessage(message: PayloadsByQueueName[QueueName], options?: Options.Publish){
 		const { systemProcessId, initializedAtService, sentByUser } = MessageLocalStorage.getStore() ?? {}
 		try {
 			Producer.channel.sendToQueue(this.queueName, Buffer.from(JSON.stringify(message)), {
@@ -87,20 +80,13 @@ export class Producer {
 				headers: {
 					initializedAtService: initializedAtService ?? process.env.npm_package_name,
 					systemProcessId:      systemProcessId ?? createId(),
-					...DefaultHeadersInjector.getHeaders(),
+					...(await DefaultHeadersInjector.getHeaders()),
 					sentByUser: options?.headers?.sentByUser ?? (await DefaultHeadersInjector.getHeaders())?.sentByUser ?? sentByUser ?? "system",
 					...options?.headers
 				},
 			})
 		} catch (error) {
-			if(error instanceof errors.BaseError || error instanceof errors.TRPCError){
-				throw error
-			}
-			const store = MessageLocalStorage.getStore()
-			throw newError({
-				initializedAtService: store?.initializedAtService ?? process.env.npm_package_name as typeof logger.servicesMap[number]["name"],
-				loggedAtService:      process.env.npm_package_name as typeof logger.servicesMap[number]["name"],
-			}).BaseError("errors:messageBroker.producer.publish.unknown", { cause: error })
+			throw getErrorFromUnknown("errors:messageBroker.producer.publish.unknown", error, { queue: this.queue })
 		}
 	}
 }
@@ -109,47 +95,32 @@ interface ExtendedConsumeOptions extends Options.Consume {
 	disableAutoAck?: boolean
 }
 
-export class Consumer {
+export class Consumer<QueueName extends QueueNames> {
 	static connection: Connection;
 	static channel: Channel;
 	queue: Replies.AssertQueue | undefined;
-	queueName: QueueNames;
+	queueName: QueueName;
 
-	constructor(queueName: QueueNames){
+	constructor(queueName: QueueName){
 		this.queueName = queueName;
 	}
 
-	// TODO: consider moving this into a separate function to have a SSOT
 	async setupConnection(connectionParameters: BuildConnectionStringProps){
-		if(!Producer.connection){
+		if(!Consumer.connection){
 			const connectionString = buildConnectionString(connectionParameters)
 			try {
-				Producer.connection = await amqplib.connect(connectionString);
+				Consumer.connection = await amqplib.connect(connectionString);
 			} catch (error) {
-				if(error instanceof errors.BaseError || error instanceof errors.TRPCError){
-					throw error
-				}
-				const store = MessageLocalStorage.getStore()
-				throw newError({
-					initializedAtService: store?.initializedAtService ?? process.env.npm_package_name as typeof logger.servicesMap[number]["name"],
-					loggedAtService:      process.env.npm_package_name as typeof logger.servicesMap[number]["name"],
-				}).BaseError("errors:messageBroker.consumer.connect.unknown", { cause: error })
+				throw getErrorFromUnknown("errors:messageBroker.consumer.connect.unknown", error, { queue: this.queue })
 			}
 		}
 	}
 
 	async createChannel(){
 		try {
-			if(!Producer.channel) Producer.channel = await Producer.connection.createChannel();
+			if(!Consumer.channel) Consumer.channel = await Consumer.connection.createChannel();
 		} catch (error) {
-			if(error instanceof errors.BaseError || error instanceof errors.TRPCError){
-				throw error
-			}
-			const store = MessageLocalStorage.getStore()
-			throw newError({
-				initializedAtService: store?.initializedAtService ?? process.env.npm_package_name as typeof logger.servicesMap[number]["name"],
-				loggedAtService:      process.env.npm_package_name as typeof logger.servicesMap[number]["name"],
-			}).BaseError("errors:messageBroker.producer.createChannel.unknown", { cause: error })
+			throw getErrorFromUnknown("errors:messageBroker.consumer.createChannel.unknown", error, { queue: this.queue })
 		}
 	}
 
@@ -158,24 +129,17 @@ export class Consumer {
 		await this.createChannel()
 
 		try {
-			this.queue = await Producer.channel.assertQueue(this.queueName);
+			this.queue = await Consumer.channel.assertQueue(this.queueName);
 		} catch (error) {
-			if(error instanceof errors.BaseError || error instanceof errors.TRPCError){
-				throw error
-			}
-			const store = MessageLocalStorage.getStore()
-			throw newError({
-				initializedAtService: store?.initializedAtService ?? process.env.npm_package_name as typeof logger.servicesMap[number]["name"],
-				loggedAtService:      process.env.npm_package_name as typeof logger.servicesMap[number]["name"],
-			}).BaseError("errors:messageBroker.consumer.assertQueue.unknown", { cause: error, extraDetails: { queue: this.queue } })
+			throw getErrorFromUnknown("errors:messageBroker.consumer.assertQueue.unknown", error, { queue: this.queue })
 		}
 	}
 
-	async consumeMessages(messageHandler: (messageContent: MessageBrokerPayloads, msg: ConsumeMessage | null) => Promise<any>, options: ExtendedConsumeOptions = {}){
+	async consumeMessages(messageHandler: (messageContent: PayloadsByQueueName[QueueName], msg: ConsumeMessage | null) => Promise<any>, options: ExtendedConsumeOptions = {}){
 		const { disableAutoAck, ...restOptions } = options
 		await Consumer.channel.consume(this.queueName, async (msg) => {
 			if(!msg) return;
-			const messageContent = JSON.parse(msg.content.toString() || "{}") as MessageBrokerPayloads
+			const messageContent = JSON.parse(msg.content.toString() || "{}") as PayloadsByQueueName[QueueName]
 
 			await MessageLocalStorage.run(
 				{
@@ -189,14 +153,7 @@ export class Consumer {
 						if(!disableAutoAck) Consumer.channel.ack(msg)
 						return messageReturning
 					} catch (error) {
-						if(error instanceof errors.BaseError || error instanceof errors.TRPCError){
-							throw error
-						}
-						const store = MessageLocalStorage.getStore()
-						throw newError({
-							initializedAtService: store?.initializedAtService ?? process.env.npm_package_name as typeof logger.servicesMap[number]["name"],
-							loggedAtService:      process.env.npm_package_name as typeof logger.servicesMap[number]["name"],
-						}).BaseError("errors:messageBroker.consumer.consume.unknown", { cause: error, extraDetails: { queue: this.queue } })
+						throw getErrorFromUnknown("errors:messageBroker.consumer.consume.unknown", error, { queue: this.queue })
 					}
 				}
 			)

@@ -8,8 +8,8 @@ type MessageHeadersGetter = () => PartialMessageHeaders | Promise<PartialMessage
 export default class DefaultHeadersInjector {
 	private static headersGetter: MessageHeadersGetter = async () => ({})
 
-	static getHeaders() {
-		return DefaultHeadersInjector.headersGetter ()
+	static async getHeaders() {
+		return DefaultHeadersInjector.headersGetter()
 	}
 
 	static setHeaders(headersGetter: MessageHeadersGetter) {

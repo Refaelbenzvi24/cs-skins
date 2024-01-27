@@ -2,7 +2,7 @@ import React from "react";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 
-import { TRPCProvider } from "~/utils/api";
+import { TRPCProvider } from "~/trpc/api";
 
 import "../styles.css";
 
@@ -13,7 +13,7 @@ const RootLayout = () => {
     <TRPCProvider>
       {/*
         The Stack component displays the current page.
-        It also allows you to configure your screens 
+        It also allows you to configure your screens
       */}
       <Stack
         screenOptions={{

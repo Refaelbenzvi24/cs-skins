@@ -2,7 +2,7 @@
 import { Button, Col, TextField, theme, Typography } from "@acme/ui"
 import { Controller, SubmitHandler } from "react-hook-form";
 import { useForm } from "react-hook-form"
-import { api } from "~/utils/api"
+import { api } from "~/trpc/api"
 import { useTranslation } from "~/app/i18n/client"
 import { useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
