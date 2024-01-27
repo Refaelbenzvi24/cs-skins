@@ -1,20 +1,20 @@
 "use client";
 import { Card, Row, Table, TextField, Typography } from "@acme/ui"
-import { api } from "~/utils/api"
+import { api } from "~/trpc/api"
 import type { FormEvent } from "react";
 import { useMemo } from "react"
-import type { trpcRsc } from "~/utils/apiServer"
+import type { trpcRsc } from "~/trpc/apiServer"
 import type { ComponentWithLocaleProps } from "~/types"
 import { useTranslation } from "~/app/i18n/client"
 import moment from "moment"
 import { useGetSearchParams, useSearchParamState } from "~/hooks"
-import { getNextPageParam } from "~/utils/apiHelpers"
+import { getNextPageParam } from "~/trpc/apiHelpers"
 
 
 interface SkinIdWithDataProps extends ComponentWithLocaleProps {
 	skinId: string
 	searchQuery?: string
-	initialData?: Awaited<ReturnType<typeof trpcRsc.skin.getByIdWithData.fetch>>
+	initialData?: Awaited<ReturnType<typeof trpcRsc.skin.getByIdWithData>>
 }
 
 const SkinIdWithDataTable = ({ initialData, lng, skinId, searchQuery }: SkinIdWithDataProps) => {

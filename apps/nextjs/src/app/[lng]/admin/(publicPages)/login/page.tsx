@@ -1,5 +1,5 @@
 "use client";
-import { signIn, useSession } from "next-auth/react"
+import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import type { SubmitHandler } from "react-hook-form";
@@ -11,12 +11,12 @@ import { authValidations } from "@acme/validations"
 import { useRouter } from "next/navigation"
 import { useTranslation } from "~/app/i18n/client"
 import i18next from "i18next"
+import { serverSignIn } from "~/server/authServerActions"
 
 
 const loginValidation = z.object(authValidations.loginObject)
 
 type LoginValidationSchema = z.infer<typeof loginValidation>
-// TODO: make server component and move form into separate component
 const Page = () => {
 	const router                                  = useRouter()
 	const { status }                              = useSession()
@@ -29,11 +29,8 @@ const Page = () => {
 	})
 
 	const onSubmit: SubmitHandler<LoginValidationSchema> = async (data) => {
-		await signIn("credentials", {
-			redirect: false,
-			username: data.email,
-			...data
-		})
+		await serverSignIn(data)
+		router.push(`/${i18n.language}/admin`)
 		reset()
 	}
 
@@ -48,8 +45,8 @@ const Page = () => {
 				<meta name="description" content={"CS Skins"}/>
 			</Head>
 
-			<main className="h-full">
-				<Col className="h-full justify-center items-center mx-auto min-[600px]:w-[580px] px-[30px]">
+			<main className="h-full w-full">
+				<Col className="h-full w-full justify-center items-center mx-auto min-[600px]:w-[580px] px-[30px]">
 					<Row
 						className="items-center justify-center rtl:space-x-reverse w-full px-[24px] pb-[120px]">
 						<Divider className="max-[800px]:hidden"

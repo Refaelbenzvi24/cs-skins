@@ -15,6 +15,7 @@ declare module "next-auth" {
 
 	interface User {
 		id: string;
+		sub: string;
 		permissions: Permissions
 	}
 

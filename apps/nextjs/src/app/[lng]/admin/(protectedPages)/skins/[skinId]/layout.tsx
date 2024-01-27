@@ -1,5 +1,5 @@
 import { Col, Row, Typography } from "@acme/ui"
-import { trpcRsc } from "~/utils/apiServer"
+import { trpcRsc } from "~/trpc/apiServer"
 import type { ReactNode } from "react"
 import { getPathname, getSearchParams } from "~/utils/serverFunctions"
 import _ from "lodash"
@@ -18,10 +18,10 @@ interface LayoutProps {
 const Layout = async ({ params: { lng, skinId }, children }: LayoutProps) => {
 	const pathname     = getPathname()
 	const { startDate, endDate } = getSearchParams("startDate", "endDate")
-	const skin = await trpcRsc.skin.getById.fetch(skinId)
+	const skin = await trpcRsc.skin.getById(skinId)
 
 	return (
-		<main className="h-full">
+		<main className="min-h-full w-full">
 			<Col className="h-full pb-[20px] px-10">
 				<Row className="px-[30px] justify-between">
 					<Typography variant={"h2"}
@@ -39,7 +39,6 @@ const Layout = async ({ params: { lng, skinId }, children }: LayoutProps) => {
 							initialEndDate={endDate}/>
 					</Col>
 				</Row>
-
 				{children}
 			</Col>
 		</main>

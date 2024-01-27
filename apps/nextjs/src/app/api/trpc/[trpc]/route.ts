@@ -4,6 +4,17 @@ import { appRouter, createTRPCContext } from "@acme/api";
 import { auth } from "@acme/auth";
 import getEmailProvider from "~/utils/emailProvider";
 import { messageBrokerConnectionParams } from "~/modules/vars"
+import apm from "elastic-apm-node"
+
+// interface ErrorResponse {
+// 	'0': { error: { json: { data: { code: string, httpStatus: number } } } }
+// }
+//
+// interface ResultResponse {
+// 	'0': { result: unknown }
+// }
+//
+// type ResponseOptions = ErrorResponse | ResultResponse
 
 
 /**
@@ -26,19 +37,33 @@ export function OPTIONS(){
 }
 
 const handler = auth(async (req) => {
-	const emailProvider         = await getEmailProvider();
-	const response              = await fetchRequestHandler({
+	const response      = await fetchRequestHandler({
 		endpoint:      "/api/trpc",
 		router:        appRouter,
 		req,
-		createContext: () => createTRPCContext({ auth: req.auth, req }, { messageBrokerConnectionParams, emailProvider }),
+		createContext: async () => createTRPCContext({ session: req.auth, headers: req.headers }, { messageBrokerConnectionParams, emailProvider: await getEmailProvider(), apm }),
 		onError({ error, path }){
-			console.error(`>>> tRPC Error on '${path}'`, error);
+			// TODO: update this
+			// console.error(`>>> tRPC Error on '${path}'`, error);
+
+			return error
 		},
 	});
 
+	// const clonedResponse = response.clone();
+	// const body           = await clonedResponse.json() as unknown as ResponseOptions
+	// if ('error' in body["0"]) {
+	// 	const code           = body['0'].error.json.data.code
+	// 	const httpCode       = body['0'].error.json.data.httpStatus
+	// 	return new Response(response.body, {
+	// 		status:     httpCode,
+	// 		statusText: code,
+	// 		headers:    response.headers,
+	// 	});
+	// }
+
 	setCorsHeaders(response);
-	return response;
+	return response
 });
 
 export { handler as GET, handler as POST };

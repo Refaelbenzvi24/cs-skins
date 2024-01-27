@@ -2,6 +2,7 @@ import { Col, Divider, Row, Typography } from "@acme/ui"
 import type { GenerateMetadataWithLocaleProps, PageWithLocaleProps } from "~/types"
 import { getTranslation } from "~/app/i18n"
 import AddSkinForm from "~/app/[lng]/admin/(protectedPages)/skins/add/_components/AddSkinForm"
+import managedRsc from "~/components/managedRsc"
 
 export async function generateMetadata(props: GenerateMetadataWithLocaleProps) {
 	const { params: { lng } } = props;
@@ -13,7 +14,7 @@ export async function generateMetadata(props: GenerateMetadataWithLocaleProps) {
 	};
 }
 
-const Page = async ({ params: { lng } }: PageWithLocaleProps) => {
+const Page = managedRsc(async ({ params: { lng } }: PageWithLocaleProps) => {
 	const {t} = await getTranslation(lng, ["common", "admin"])
 
 	return (
@@ -35,6 +36,6 @@ const Page = async ({ params: { lng } }: PageWithLocaleProps) => {
 			</Col>
 		</main>
 	)
-}
+})
 
 export default Page

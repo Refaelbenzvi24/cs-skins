@@ -1,22 +1,23 @@
 import { auth } from "@acme/auth"
 import { redirect } from "next/navigation"
 import Chart from "./_components/Chart"
-import { trpcRsc } from "~/utils/apiServer"
+import { trpcRsc } from "~/trpc/apiServer"
 import _ from "lodash"
 import { Col, Row } from "@acme/ui"
 import { getSearchParams } from "~/utils/serverFunctions"
 import moment from "moment"
+import managedRsc from "~/components/managedRsc"
 
 
 interface AdminPageProps {
 	params: { lng: string, skinId: string }
 }
 
-const Page = async ({ params: { lng, skinId } }: AdminPageProps) => {
+const Page = managedRsc(async ({ params: { lng, skinId } }: AdminPageProps) => {
 	const session = await auth();
 	if(!session) return redirect(`/${lng}/admin/login`)
 	const { startDate, endDate } = getSearchParams("startDate", "endDate")
-	const chartData              = await trpcRsc.skin.getByIdWithDataForChart.fetch({
+	const chartData              = await trpcRsc.skin.getByIdWithDataForChart({
 		limit:     50,
 		skinId,
 		dateRange: {
@@ -104,6 +105,6 @@ const Page = async ({ params: { lng, skinId } }: AdminPageProps) => {
 			</Col>
 		</div>
 	)
-}
+})
 
 export default Page

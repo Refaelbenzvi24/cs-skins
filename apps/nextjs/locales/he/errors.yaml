@@ -1,0 +1,22 @@
+404:
+    title: חיפשנו בכל מקום
+    subtitle: נראה שעמוד זה חסר. אם אתה עדיין צריך עזרה.
+    subtitle2: "הנה קצת מידע אשר יוכל לסייע כאשר תיצור איתנו קשר:"
+    homepage: לדף הבית
+skins:
+    databaseError:
+        list:
+            failedToSearch: שגיאה בחיפוש הסקינים
+        getById:
+            failedToSearch: שגיאה בחיפוש הסקין
+    create:
+        failedSendingMessage: שגיאה בשילחת הודעה לחיפוש המידע עבור סקין זה
+skinsQualitiesData:
+    databaseError:
+        getByIdWithData:
+            failedToSearch: שגיאה בחיפוש
+        getByIdWithDataForChart:
+            failedToSearch: שגיאה בחיפוש
+authenticationError: שגיאה בהתחברות
+authorizationError: שגיאה בהזדהות
+permissionsError: שגיאת הרשאה

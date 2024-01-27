@@ -1,4 +1,5 @@
 import logger, { buildErrorCodesMapObject } from "./src"
+import BaseError from "./src/Errors/BaseError"
 
 const errorCodesMap = {
 	E00001: buildErrorCodesMapObject({ severity: "ERROR", name: "UnknownError" }),
@@ -16,8 +17,8 @@ export const newError = logger.errorBuilder(errorCodesMap, errorTranslationKeys)
 
 
 const playground = () => {
-	const error = newError.TRPCError("errors:tests.error.test", "UNAUTHORIZED")
-	console.log (error)
+	const error = newError.BaseError("errors:tests.error.test")
+	const error2 = newError.TRPCError("errors:tests.error.test", "UNAUTHORIZED")
 }
 
 playground ()

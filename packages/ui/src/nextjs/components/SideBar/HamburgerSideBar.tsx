@@ -80,53 +80,53 @@ const HamburgerSideBar = (
 		dark,
 		...restProps
 	}: HamburgerSideBarProps) => {
-	const {dir} = restProps
+	const { dir } = restProps
 
-	const globalIsDarkMode = useIsDark ()
-	const isDarkMode = dark || globalIsDarkMode
-	const isRTL = dir === "rtl"
+	const globalIsDarkMode = useIsDark()
+	const isDarkMode       = dark || globalIsDarkMode
+	const isRTL            = dir === "rtl"
 
-	const { isMobile } = useMain ()
-	const { windowHeight, windowWidth } = useDimensions ()
+	const { isMobile }                  = useMain()
+	const { windowHeight, windowWidth } = useDimensions()
 
 
-	const [isOpen, toggleOpen] = useCycle (false, true)
-	const containerRef = useRef (null)
+	const [isOpen, toggleOpen] = useCycle(false, true)
+	const containerRef         = useRef(null)
 
-	useEffect (() => {
-		if (isOpenProp !== isOpen) toggleOpen ()
+	useEffect(() => {
+		if(isOpenProp !== isOpen) toggleOpen()
 	}, [isOpenProp])
 
 
-	useEffect (() => {
-		if (onIsOpenChange) onIsOpenChange (isOpen)
+	useEffect(() => {
+		if(onIsOpenChange) onIsOpenChange(isOpen)
 
-		const root = document.querySelector ("#__next") as HTMLDivElement
+		const root = document.querySelector("#__next") as HTMLDivElement
 
-		if (isOpen) {
-			const html = document.querySelector ("html")
+		if(isOpen){
+			const html                    = document.querySelector("html")
 			document.body.style.overflowY = "hidden"
-			root.style.overflowY = "hidden"
-			if (html) html.style.overflowY = "hidden"
-			if (!isMobile) root.style.paddingRight = "6px"
+			root.style.overflowY          = "hidden"
+			if(html) html.style.overflowY = "hidden"
+			if(!isMobile) root.style.paddingRight = "6px"
 		}
 
-		if (!isOpen) {
-			setTimeout (() => {
-				const html = document.querySelector ("html")
+		if(!isOpen){
+			setTimeout(() => {
+				const html                    = document.querySelector("html")
 				document.body.style.overflowY = "auto"
-				root.style.overflowY = "auto"
-				if (html) html.style.overflowY = "auto"
-				if (!isMobile) root.style.paddingRight = ""
+				root.style.overflowY          = "auto"
+				if(html) html.style.overflowY = "auto"
+				if(!isMobile) root.style.paddingRight = ""
 			}, 900)
 		}
 
 		return () => {
-			const html = document.querySelector ("html")
+			const html                    = document.querySelector("html")
 			document.body.style.overflowY = "auto"
-			root.style.overflowY = "auto"
-			if (html) html.style.overflowY = "auto"
-			if (!isMobile) root.style.paddingRight = ""
+			root.style.overflowY          = "auto"
+			if(html) html.style.overflowY = "auto"
+			if(!isMobile) root.style.paddingRight = ""
 		}
 	}, [isOpen])
 
@@ -142,11 +142,11 @@ const HamburgerSideBar = (
 				{isOpen ? (
 					// TODO: fix this - change to an external component
 					<motion.div
-						onClick={() => toggleOpen ()}
+						onClick={() => toggleOpen()}
 						className={css`
-                          ${tw`fixed top-0 right-0 bottom-0 h-full w-full bg-white`};
-                          z-index: ${theme.zIndex.appBar - 10};
-                          background-color: ${isDarkMode ? theme.colorScheme.dark : theme.colorScheme.light}bb;
+							${tw`fixed top-0 right-0 bottom-0 h-full w-full bg-white`};
+							z-index: ${theme.zIndex.appBar - 10};
+							background-color: ${isDarkMode ? theme.colorScheme.dark : theme.colorScheme.light}bb;
 						`}
 						initial={{
 							opacity: 0,
@@ -178,12 +178,12 @@ const HamburgerSideBar = (
 				<motion.div
 					{...restProps}
 					// TODO: fix this
-					className={`${clsx (className)} ${css`
-                      ${tw`fixed top-0 bottom-0 h-full`};
-                      ${isRTL ? tw`left-0` : tw`right-0`};
-                      background-color: ${isDarkMode ? bgColorDark : bgColor};
-                      width: ${windowWidth > 500 ? windowWidth / 2 : windowWidth}px;
-                      z-index: ${theme.zIndex.appBar};
+					className={`${clsx(className)} ${css`
+						${tw`fixed top-0 bottom-0 h-full`};
+						${isRTL ? tw`left-0` : tw`right-0`};
+						background-color: ${isDarkMode ? bgColorDark : bgColor};
+						width: ${windowWidth > 500 ? windowWidth / 2 : windowWidth}px;
+						z-index: ${theme.zIndex.appBar};
 					`}`}
 					custom={{ width: windowWidth > 500 ? windowWidth / 2 : windowWidth, height: windowHeight, isRTL }}
 					variants={sidebar}>
@@ -192,19 +192,19 @@ const HamburgerSideBar = (
 			)}
 
 			<motion.div className={css`
-              ${tw`fixed rounded-full bottom-0 h-full`};
-              ${isRTL ? tw`top-[14px] left-[14px]` : tw`top-[14px] right-[14px]`};
-              background-color: transparent;
-              box-shadow: ${isDarkMode ? theme.shadows["5"] : theme.shadows["3"]};
-              width: 53px;
-              height: 53px;
+				${tw`fixed rounded-full bottom-0 h-full`};
+				${isRTL ? tw`top-[14px] left-[14px]` : tw`top-[14px] right-[14px]`};
+				background-color: transparent;
+				box-shadow: ${isDarkMode ? theme.shadows["5"] : theme.shadows["3"]};
+				width: 53px;
+				height: 53px;
 			`}/>
 
 			<Button
 				className={css`
-                  ${tw`fixed top-0 p-2.5`};
-                  ${isRTL ? tw`left-0 mt-[21px] ml-[18px]` : tw`right-0 mt-[20px] mr-[16px]`};
-                  z-index: ${theme.zIndex.appBar + 1};
+					${tw`fixed top-0 p-2.5`};
+					${isRTL ? tw`left-0 mt-[21px] ml-[18px]` : tw`right-0 mt-[20px] mr-[16px]`};
+					z-index: ${theme.zIndex.appBar + 1};
 				`}
 				id="theme-toggle-button"
 				icon
@@ -212,7 +212,7 @@ const HamburgerSideBar = (
 				size="28px"
 				colorsForStates={theme.colorSchemeByState.secondary}
 				colorsForStatesDark={theme.colorSchemeByState.secondary}
-				onClick={() => toggleOpen ()}>
+				onClick={() => toggleOpen()}>
 				<svg width="23" height="23" viewBox="0 0 23 23">
 					<Path
 						variants={{

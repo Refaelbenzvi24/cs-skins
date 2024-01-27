@@ -1,6 +1,10 @@
 import ServicesMap from "../servicesMap"
 import { buildErrorCodesMapObject } from "../errorCodesMap"
 import { createId } from "@paralleldrive/cuid2"
+import { MaybePromise } from "../../types"
+import errorBuilder from "../errorBuilder"
+import TRPCError from "./TRPCError"
+import _ from "lodash"
 
 
 class UnknownCauseError extends Error {
@@ -12,7 +16,7 @@ export function isObject(value: unknown): value is Record<string, unknown>{
 	return !!value && !Array.isArray(value) && typeof value === 'object';
 }
 
-function getCauseFromUnknown(cause: unknown): Error | undefined{
+export function getCauseFromUnknown(cause: unknown): Error | undefined{
 	if(cause instanceof Error){
 		return cause;
 	}
@@ -60,66 +64,75 @@ export const errorNames = {
 	"AuthorizationError":  [],
 	"DatabaseError":       ["QueryFailed"],
 	"PermissionError":     [],
-	"MessageBroker":       ["Connection", "ChannelCreation", "SendingMessage", "AssertingQueue", "MessageConsuming"]
+	"MessageBroker":       ["Connection", "ChannelCreation", "SendingMessage", "AssertingQueue", "MessageConsuming", "PurgingQueue"]
 } as const
 
 export type ErrorNameOptions = keyof typeof errorNames
 
 export interface ErrorOptions {
 	severity: typeof errorSeverity[number]
+	addSystemProcessId?: boolean
 	initializedAtService: typeof ServicesMap[number]["name"]
 	loggedAtService?: typeof ServicesMap[number]["name"]
 	userId?: string
+	userIdGetter?: () => MaybePromise<string>
 	cause?: unknown;
 }
 
 export interface ErrorOptionsWithGenerics<
 	ErrorCodesMap extends Record<string, ReturnType<typeof buildErrorCodesMapObject>>,
-	ErrorTranslationKeys extends Record<string, keyof ErrorCodesMap>,
+	ErrorTranslationKeys extends Record<`errors:${string}`, keyof ErrorCodesMap>,
+	ErrorMessage extends keyof ErrorTranslationKeys,
 	ErrorName extends ErrorNameOptions,
 	ErrorCode extends keyof ErrorCodesMap,
 	ExtraDetails = undefined
 > extends ErrorOptions {
-	name?: ErrorName
-	subName?: typeof errorNames[ErrorName][number]
-	message: Exclude<keyof ErrorTranslationKeys, symbol | number>
+	type: ErrorName
+	subType?: typeof errorNames[ErrorName][number]
+	message: ErrorMessage
 	errorCode: ErrorCode
 	extraDetails?: ExtraDetails
 }
 
 class BaseError<
 	ErrorCodesMap extends Record<string, ReturnType<typeof buildErrorCodesMapObject>>,
-	ErrorTranslationKeys extends Record<string, keyof ErrorCodesMap>,
+	ErrorTranslationKeys extends Record<`errors:${string}`, keyof ErrorCodesMap>,
+	ErrorMessage extends keyof Pick<ErrorTranslationKeys, `errors:${string}`>,
 	ErrorName extends ErrorNameOptions,
 	ErrorCode extends keyof ErrorCodesMap,
-	ExtraDetails = undefined
+	ExtraDetails extends Record<string, unknown> | undefined = undefined
 > extends Error {
-	public name: ErrorName
-	public subName?: typeof errorNames[ErrorName][number]
+	public errorId: string
+	public type: ErrorName
+	public subType?: typeof errorNames[ErrorName][number]
 	public systemProcessId?: string
 	public userId?: string
+	public userIdGetter?: () => MaybePromise<string>
 	public severity: typeof errorSeverity[number]
 	public extraDetails?: ExtraDetails
 	public initializedAtService: typeof ServicesMap[number]["name"]
 	public loggedAtService: typeof ServicesMap[number]["name"]
 	public errorCode: ErrorCode
-	public message: Exclude<keyof ErrorTranslationKeys, symbol | number>
+	public message: ErrorMessage
+	public timestamp: string
 
-	constructor(options: ErrorOptionsWithGenerics<ErrorCodesMap, ErrorTranslationKeys, ErrorName, ErrorCode, ExtraDetails>){
+	constructor(options: ErrorOptionsWithGenerics<ErrorCodesMap, ErrorTranslationKeys, ErrorMessage, ErrorName, ErrorCode, ExtraDetails>){
 		const cause   = getCauseFromUnknown(options.cause);
 		const message = options.message ?? cause?.message;
 
 		super(message, { cause });
-		this.name                 = options.name ?? ("BaseError" as ErrorName)
-		this.subName              = options.subName
+		this.errorId              = createId()
+		this.type                 = options.type
+		this.subType              = options.subType
 		this.errorCode            = options.errorCode
 		this.message              = options.message
 		this.userId               = options.userId ?? "system"
 		this.severity             = options.severity
-		this.systemProcessId      = createId()
 		this.initializedAtService = options.initializedAtService
 		this.loggedAtService      = options.loggedAtService ?? process.env.npm_package_name as typeof ServicesMap[number]["name"]
 		this.extraDetails         = options.extraDetails
+		this.userIdGetter         = options.userIdGetter
+		this.timestamp            = new Date().toISOString()
 
 		if(!this.cause){
 			// idk why this is needed, but it is
@@ -127,15 +140,38 @@ class BaseError<
 		}
 	}
 
-	public parseError(){
+	public static from<
+		ErrorCodesMap extends Record<string, ReturnType<typeof buildErrorCodesMapObject>>,
+		ErrorTranslationKeys extends Record<`errors:${string}`, keyof ErrorCodesMap>,
+		ErrorBuilderInstance extends ReturnType<ReturnType<typeof errorBuilder<ErrorCodesMap, ErrorTranslationKeys>>>
+	>({ errorBuilderInstance, errorTranslationKey }: {
+		errorBuilderInstance: ErrorBuilderInstance,
+		errorTranslationKey: keyof ErrorTranslationKeys,
+	}, error: unknown, extraDetails?: Record<string, unknown>) {
+		if(error instanceof BaseError){
+			return {
+				...error,
+				extraDetails: _.merge(error.extraDetails, extraDetails)
+			}
+		}
+
+		return errorBuilderInstance.BaseError(errorTranslationKey, { cause: error, extraDetails: { originalError: error, extraDetails } })
+	}
+	public addSystemProcessId(systemProcessId?: string){
+		this.systemProcessId = systemProcessId ?? createId()
+		return this
+	}
+
+	public async parseError(){
+		this.userId = this.userId ?? await this.userIdGetter?.()
 		return {
 			...this,
 			stack: this.stack?.split("\n").map(line => line.trim()),
 		}
 	}
 
-	public toString(){
-		return JSON.stringify(this.parseError())
+	public async toString(){
+		return JSON.stringify(await this.parseError())
 	}
 }
 

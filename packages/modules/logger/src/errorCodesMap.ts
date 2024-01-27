@@ -1,9 +1,11 @@
 import { ErrorNameOptions, errorNames, ErrorOptions } from "./Errors/BaseError"
+import { MaybePromise } from "../types"
 
 
 export interface ErrorParams {
 	initializedAtService: ErrorOptions["initializedAtService"]
 	loggedAtService?: ErrorOptions["loggedAtService"]
+	userIdGetter?: () => MaybePromise<ErrorOptions["userId"]>
 }
 
 export interface ErrorCodesMapObject<ErrorName extends ErrorNameOptions> extends Pick<ErrorOptions, 'severity'> {
@@ -12,10 +14,12 @@ export interface ErrorCodesMapObject<ErrorName extends ErrorNameOptions> extends
 }
 
 export const buildErrorCodesMapObject = <ErrorName extends ErrorNameOptions>(error: Omit<ErrorCodesMapObject<ErrorName>, 'initializedAtService' | 'loggedAtService'>) => (details: ErrorParams) => {
+	const { initializedAtService, loggedAtService } = details
 	return {
-		...details,
+		initializedAtService,
+		loggedAtService,
 		...error
-	}
+	} satisfies ErrorOptions
 }
 
 

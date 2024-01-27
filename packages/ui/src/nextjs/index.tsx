@@ -54,6 +54,7 @@ export {default as List} from "./components/List/List"
 export {default as ListItem} from "./components/List/ListItem"
 export {default as Body} from "./components/Body/Body"
 export {default as DatePicker} from "./components/Form/DatePicker/DatePicker"
+export {default as LoadingSpinner} from "./components/Loaders/LoadingSpinner"
 
 // export {useTheme}
 export {default as useDimensions} from "./hooks/useDimensions"

@@ -16,9 +16,7 @@ import { CssUnit } from "../../Utils/utils";
 import { withTheme } from "@emotion/react"
 
 
-const MainDiv = styled (motion.div) (() => [
-	tw`h-full`
-])
+const MainDiv = styled(motion.div)(() => [])
 
 interface MainProps {
 	dark?: boolean
@@ -27,28 +25,28 @@ interface MainProps {
 
 
 const Main = (props: MainProps & HTMLMotionProps<"div">) => {
-	const { sideBarState: sideBar, sideBarOpts, overlayState, setSideBarState, setOverlayState } = useMain ()
+	const { sideBarState: sideBar, sideBarOpts, overlayState, setSideBarState, setOverlayState } = useMain()
 
-	const { windowWidth } = useDimensions ()
+	const { windowWidth } = useDimensions()
 
 	const { children, className, dark, backdropProps, ...restProps } = props
-	const { shrinkPoint } = sideBarOpts
+	const { shrinkPoint }                                            = sideBarOpts
 
 	const initializeOverlayState = () => {
-		const overlaysRoot = document.querySelector ("#portals-root")
-		if (overlaysRoot?.childNodes && overlaysRoot.childNodes.length > 0) return setOverlayState (true)
+		const overlaysRoot = document.querySelector("#portals-root")
+		if(overlaysRoot?.childNodes && overlaysRoot.childNodes.length > 0) return setOverlayState(true)
 
-		setOverlayState (false)
+		setOverlayState(false)
 	}
 
-	useEffect (() => {
-		initializeOverlayState ()
+	useEffect(() => {
+		initializeOverlayState()
 	}, [])
 
-	const overlayAction = () => {
-		if (sideBar) {
-			setSideBarState (false)
-			setOverlayState (false)
+	const overlayAction      = () => {
+		if(sideBar){
+			setSideBarState(false)
+			setOverlayState(false)
 		}
 	}
 	const shouldApplyMargins = () => windowWidth ? !!(shrinkPoint && sideBar && windowWidth > shrinkPoint) : false
@@ -56,23 +54,23 @@ const Main = (props: MainProps & HTMLMotionProps<"div">) => {
 	return (
 		<MainDiv
 			{...restProps}
-			className={`min-h-full w-full ${clsx (className)}`}
+			className={`flex h-full w-full ${clsx(className)}`}
 			animate={{
-				transition:  {
+				transition: {
 					duration: 0.5
 				}
 			}}
 			id="main">
 			<>
-				{sideBar && !shouldApplyMargins () ? (
+				{sideBar && !shouldApplyMargins() ? (
 					<Backdrop {...{ dark }}
 					          active={overlayState}
 					          id="overlay-background"
 					          role="presentation"
 					          {...backdropProps}
 					          onClick={(event) => {
-						          overlayAction ()
-						          !!backdropProps?.onClick && backdropProps?.onClick (event)
+						          overlayAction()
+						          !!backdropProps?.onClick && backdropProps?.onClick(event)
 					          }}/>
 				) : null}
 				{children}
@@ -81,4 +79,4 @@ const Main = (props: MainProps & HTMLMotionProps<"div">) => {
 	)
 }
 
-export default withTheme (Main)
+export default withTheme(Main)

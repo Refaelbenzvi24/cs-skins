@@ -1,5 +1,5 @@
 import "../../styles/global.css";
-import type { ReactNode } from "react"
+import { cache, ReactNode } from "react"
 
 import { Work_Sans, Heebo } from "next/font/google";
 import { cookies, headers } from "next/headers";
@@ -14,6 +14,7 @@ import { Body } from "@acme/ui"
 import NextTopLoader from 'nextjs-toploader';
 import { getTranslation } from "~/app/i18n"
 import type { GenerateMetadataWithLocaleProps, LayoutWithLocaleProps } from "~/types"
+import ErrorBoundary from "~/components/ErrorBoundary"
 
 
 const workSans = Work_Sans({ weight: ["400", "500", "700"], subsets: ["latin"], variable: "--work-sans" })
@@ -25,7 +26,7 @@ export function generateStaticParams(){
 
 export async function generateMetadata(props: GenerateMetadataWithLocaleProps){
 	const { params: { lng } } = props;
-	const { t } = await getTranslation(lng)
+	const { t }               = await getTranslation(lng)
 
 	return {
 		title:       t('common:metadata.title'),
@@ -43,6 +44,15 @@ export async function generateMetadata(props: GenerateMetadataWithLocaleProps){
 		// },
 	};
 }
+
+// export const viewport: Viewport = {
+// 	themeColor: [
+// 		{ media: "(prefers-color-scheme: light)", color: "white" },
+// 		{ media: "(prefers-color-scheme: dark)", color: "black" },
+// 	],
+// };
+
+const getHeaders = cache(async () => headers());
 export default function Layout(props: LayoutWithLocaleProps){
 	const { params: { lng } } = props
 	const cookieStore         = cookies()
@@ -56,7 +66,7 @@ export default function Layout(props: LayoutWithLocaleProps){
 			className={theme === "dark" ? "dark" : "light"}>
 		<Body className={["work-sans", workSans.variable, "heebo", heebo.variable].join(" ")}>
 			<NextTopLoader/>
-			<TRPCReactProvider headers={headers()}>
+			<TRPCReactProvider headers={getHeaders()}>
 				<SessionProvider>
 					<UiProviders lng={lng} theme={theme}>
 						<div id="portals-root"></div>

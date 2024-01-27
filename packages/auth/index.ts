@@ -13,6 +13,7 @@ export type OAuthProviders = (typeof providers)[number];
 import sha256 from "crypto-js/sha256"
 import { DrizzleAdapter } from "@auth/drizzle-adapter"
 
+
 export const hashPassword = (password: string) => {
 	return sha256(password).toString();
 }
@@ -20,9 +21,10 @@ export const hashPassword = (password: string) => {
 export const {
 	             handlers: { GET, POST },
 	             auth,
-	             CSRF_experimental,
+	             signOut,
+	             signIn
              } = NextAuth({
-	adapter:   DrizzleAdapter(db, tableCreator), // TODO: resolve this error
+	adapter:   DrizzleAdapter(db, tableCreator),
 	secret:    process.env.NEXTAUTH_SECRET,
 	session:   { strategy: "jwt" },
 	providers: [
@@ -66,14 +68,24 @@ export const {
 		}),
 	],
 	callbacks: {
-		session: ({ session, user }) => ({
-			...session
-		}),
+		session: (opts) => {
+			return {
+				...opts.session,
+				user: {
+					...opts.session.user,
+					id: opts.user?.id ?? opts.session?.user?.id ?? opts.token?.id,
+					permissions: opts.token.permissions
+				},
+			};
+		},
 		//
-		jwt: ({ token, user }) => ({
-			permissions: user?.permissions,
-			...token
-		}),
+		jwt: ({ token, user }) => {
+			return {
+				id:          user?.id,
+				permissions: user?.permissions,
+				...token
+			}
+		},
 		//
 		// authorized({ request, auth }) {
 		// 	console.log('authorized')

@@ -1,6 +1,9 @@
 "use client";
 import styled from "@emotion/styled";
-import {css} from "@emotion/react";
+import { css, withTheme } from "@emotion/react";
+import { getSingleColorFromPath } from "../../Utils/colors"
+import { SingleColorOptions } from "../Theme/types"
+import { StyledProps } from "../../types"
 
 interface LengthObject {
 	value: number;
@@ -63,11 +66,13 @@ export function cssValue(value: number | string): string {
 	return `${lengthWithunit.value}${lengthWithunit.unit}`;
 }
 
-export interface StyledLoadingSpinnerProps {
-	color: string;
-	loading: boolean;
-	speedMultiplier: number;
+export interface StyledLoadingSpinnerProps extends StyledProps {
+	color: SingleColorOptions;
+	colorDark: SingleColorOptions;
+	speedMultiplier: number
+	thickness: number;
 	size: number | string;
+	dark?: boolean;
 }
 
 const createAnimation = (loaderName: string, frames: string, suffix: string): string => {
@@ -100,38 +105,45 @@ const clip = createAnimation(
 	"clip"
 );
 
-const StyledLoadingSpinner = styled.span((props: StyledLoadingSpinnerProps) => [
-	css`
-    background: transparent !important;
-    width: ${cssValue(props.size)};
-    height: ${cssValue(props.size)};
-    borderRadius: 100%;
-    border: 2px solid;
-    borderTopColor: ${props.color};
-    borderBottomColor: "transparent";
-    borderLeftColor: ${props.color};
-    borderRightColor: ${props.color};
-    display: inline-block;
-    animation: \`${clip} ${0.75 / props.speedMultiplier}s 0s infinite linear\`;
-    animationFillMode: "both";
-	`
-])
+const StyledLoadingSpinner = styled.span((props: StyledLoadingSpinnerProps) => {
+	const resolvedColor = getSingleColorFromPath(props.color, props.theme.config)
+	const resolvedColorDark = getSingleColorFromPath(props.colorDark, props.theme.config)
+	return [
+		css`
+			background: transparent !important;
+			width: ${cssValue(props.size)};
+			height: ${cssValue(props.size)};
+			border-radius: 100%;
+			border: ${props.thickness}px solid;
+			border-top-color: ${resolvedColor};
+			border-bottom-color: transparent;
+			border-left-color: ${resolvedColor};
+			border-right-color: ${resolvedColor};
+			display: inline-block;
+			animation: ${clip} ${0.75 / props.speedMultiplier}s 0s infinite linear;
+			animation-fill-mode: both;
+		`,
+		(props) => ((props.dark || props.theme.isDark)) && css`
+			border-top-color: ${resolvedColorDark};
+			border-left-color: ${resolvedColorDark};
+			border-right-color: ${resolvedColorDark};
+		`
+	]
+})
 
-const defaultProps = {
-	loading: true,
-	color: "#000000",
-	speedMultiplier: 1,
-	size: 35
-} as const
-
-const LoadingSpinner = (props: StyledLoadingSpinnerProps & typeof defaultProps) => {
-	const {loading} = props
-
-	if (!loading) return null
-
+const LoadingSpinner = ({
+	color = "colorScheme.subtitle1",
+	colorDark = "colorScheme.subtitle1",
+	speedMultiplier = 0.7,
+	thickness = 4,
+	size = 85,
+	...props
+}: StyledLoadingSpinnerProps) => {
 	return (
-		<StyledLoadingSpinner {...props}/>
+		<StyledLoadingSpinner
+			{...{color, colorDark, speedMultiplier, size, thickness}}
+			{...props}/>
 	)
 }
 
-LoadingSpinner.defaultProps = defaultProps
+export default withTheme(LoadingSpinner)

@@ -1,7 +1,7 @@
 import _ from "lodash"
 
 interface ItemsBaseType {
-	id: string | number
+	id: string
 	[key: string]: unknown
 }
 export const getPaginationReturning = <ItemsType extends ItemsBaseType[]>(items: ItemsType, limit?: number | undefined | null) => {
