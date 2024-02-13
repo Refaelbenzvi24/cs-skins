@@ -180,7 +180,7 @@ const apmMiddleware = t.middleware(async ({ ctx, next, path, type, getRawInput }
 	const transaction = ctx?.apm?.startTransaction(`${type} /api/trpc/${path.replace('.', '/')}`, 'trpc', type, type, { childOf: ctx?.apm?.currentTransaction?.traceparent ?? undefined })
 	const response    = await next({ ctx })
 	const rawInput    = await getRawInput()
-	if(rawInput) ctx?.apm?.setLabel('request.input', typeof rawInput === 'object' ? JSON.stringify(rawInput) : (rawInput as number | string))
+	if(rawInput) ctx?.apm?.setLabel('input', typeof rawInput === 'object' ? JSON.stringify(rawInput) : (rawInput as number | string))
 	if(!response.ok) {
 		const trpcError = TRPCError.from<
 			typeof errorCodesMap,
@@ -191,7 +191,7 @@ const apmMiddleware = t.middleware(async ({ ctx, next, path, type, getRawInput }
 		trpcError.isLogged = true
 		response.error = trpcError
 	}
-	if(response.ok && response.data) ctx?.apm?.setLabel('response.data', typeof response.data === 'object' ? JSON.stringify(response.data) : (response.data as number | string))
+	if(response.ok && response.data) ctx?.apm?.setLabel('responseData', typeof response.data === 'object' ? JSON.stringify(response.data) : (response.data as number | string))
 	transaction?.end()
 	return response
 })

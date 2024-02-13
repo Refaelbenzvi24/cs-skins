@@ -1,3 +1,4 @@
+"use client";
 import { useRouter } from "next/navigation"
 import { useSession } from "next-auth/react"
 import { useTranslation } from "~/app/i18n/client"
