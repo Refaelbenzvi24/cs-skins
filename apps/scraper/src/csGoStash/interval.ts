@@ -1,7 +1,7 @@
 import { db, dbHelper, dbOperators, schema } from "@acme/db";
 import { getSkinHtml, getSkinTableData } from "./shared";
-import _ = require("lodash")
-import { logError, newError } from "../services/logger"
+import _ from "lodash"
+import { newError } from "../services/logger"
 
 
 const getSkinsList = async (skinsUrls?: string[]) => {
@@ -55,11 +55,11 @@ const getSkinDetails = async (url: string) => {
 	return skinsData.map(row => ({
 		url,
 		quality:          row[0] as string,
-		steamPrice:       convertToNumber(row[1]),
-		steamListings:    convertToNumber(row[2]),
-		steamMedianPrice: convertToNumber(row[3]),
-		steamVolume:      convertToNumber(row[4]),
-		bitSkinsPrice:    convertToNumber(row[5])
+		steamPrice:       convertToNumber(`${row[1]}`),
+		steamListings:    convertToNumber(`${row[2]}`),
+		steamMedianPrice: convertToNumber(`${row[3]}`),
+		steamVolume:      convertToNumber(`${row[4]}`),
+		bitSkinsPrice:    convertToNumber(`${row[5]}`)
 	}))
 }
 
@@ -92,12 +92,12 @@ const addSkinQualityIdsToSkinsData = async (skinsData: { [key: string]: any, ski
 	return Promise.all(
 		skinsData.map(async (skinData) => {
 			const skinQuality   = _.find(skinsQualities, ({ skinId, qualityId }) =>
-				skinId === skinData.skinId && qualityId === skinsQualitiesIdsMap[skinData.quality].id
+				skinId === skinData.skinId && qualityId === skinsQualitiesIdsMap[skinData.quality]!.id
 			)
 			const skinQualityId = skinQuality?.id ??
 				(await dbHelper.mutate.skinsQualities.insert({
 					data: {
-						qualityId: skinsQualitiesIdsMap[skinData.quality].id,
+						qualityId: skinsQualitiesIdsMap[skinData.quality]!.id,
 						skinId:    skinData.skinId,
 					}
 				})).id
@@ -116,6 +116,7 @@ const calculatePercentChange = (
 	{ steamPrice, bitSkinsPrice, steamMedianPrice }:
 		Pick<SkinDetails, "bitSkinsPrice" | "steamPrice" | "steamMedianPrice">
 ) => {
+	if (!steamPrice || !bitSkinsPrice || !steamMedianPrice) return null
 	const calculateSteamPrice = (steamPrice - steamMedianPrice) * 0.1 + steamMedianPrice
 	const difference          = calculateSteamPrice - bitSkinsPrice
 

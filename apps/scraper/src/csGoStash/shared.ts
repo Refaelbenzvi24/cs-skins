@@ -18,7 +18,7 @@ export const getSkinHtml = async (skinUrl: string) => {
 export const getSkinTitle = (skinHtml: string) => {
 	const $                      = cheerio.load(skinHtml)
 	const title                  = $(".result-box > h2").text()
-	const [weaponName, skinName] = title.split(" | ")
+	const [weaponName, skinName] = title.split(" | ") as [string, string]
 
 	return { weaponName, skinName }
 }

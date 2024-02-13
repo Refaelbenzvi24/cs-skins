@@ -20,7 +20,7 @@ export default class DelayManager {
 
 		setInterval(() => {
 			if(this.queue.length > 0){
-				this.queue[0]()
+				this.queue[0]!()
 				this.queue.shift()
 			}
 		}, this.delayInMili)

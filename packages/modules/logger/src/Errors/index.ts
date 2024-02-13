@@ -12,7 +12,7 @@ export type ErrorByErrorType<
 	ErrorType extends keyof typeof errors,
 	ErrorCodesMap extends Record<string, ReturnType<typeof buildErrorCodesMapObject>>,
 	ErrorTranslationKeys extends Record<string, keyof ErrorCodesMap>,
-	ErrorMessage extends Exclude<keyof ErrorTranslationKeys, number | symbol>,
+	ErrorMessage extends Extract<keyof ErrorTranslationKeys, string>,
 	ErrorName extends ErrorNameOptions,
 	ErrorCode extends keyof ErrorCodesMap,
 	ExtraDetails extends Record<string, unknown> | undefined = undefined

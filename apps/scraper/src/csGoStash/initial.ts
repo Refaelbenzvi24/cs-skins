@@ -20,7 +20,7 @@ const getBasicSkinData = async (url: string) => {
 
 const connectSkinQuality = async ({ quality, skinId }: { skinId: string, quality: string }) => {
 	const { eq }      = dbOperators
-	const skinQuality = await
+	const [skinQuality] = await
 		db
 		.select({
 			id:   schema.qualities.id,
@@ -30,11 +30,13 @@ const connectSkinQuality = async ({ quality, skinId }: { skinId: string, quality
 		.where(({ name }) => eq(name, quality))
 		.execute()
 
+	if (!skinQuality) throw newError.BaseError("errors:skins.notFound", { extraDetails: { quality } })
+
 	return await
 		db
 		.insert(schema.skinsQualities)
 		.values({
-			qualityId: skinQuality[0].id,
+			qualityId: skinQuality.id,
 			skinId:    skinId,
 		})
 		.returning()

@@ -1,5 +1,5 @@
 import { buildErrorCodesMapObject, ErrorParams } from "./errorCodesMap"
-import BaseError from "./Errors/BaseError"
+import BaseError, { ErrorOptions } from "./Errors/BaseError"
 import TRPCError, { TRPCErrorOptions } from "./Errors/TRPCError"
 
 export interface OverrideErrorCodesMapObjectWithExtraDetails extends Partial<Omit<ErrorOptions, 'errorCode' | 'message' | 'loggedAtService' | 'userId' | 'name' | 'initializedAtService' | 'severity'>> {
@@ -18,7 +18,7 @@ const errorBuilder = <
 			...options
 		})
 	},
-	TRPCError: (key: keyof ErrorTranslationKeys, code: TRPCErrorOptions['code'], options?: OverrideErrorCodesMapObjectWithExtraDetails) => new TRPCError({
+	TRPCError: <Key extends keyof ErrorTranslationKeys>(key: Key, code: TRPCErrorOptions['code'], options?: OverrideErrorCodesMapObjectWithExtraDetails) => new TRPCError({
 		...(errorCodesMap[errorTranslationKeys[key]](details)),
 		errorCode: errorTranslationKeys[key],
 		message:   key,

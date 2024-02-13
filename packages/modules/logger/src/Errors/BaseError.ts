@@ -80,7 +80,7 @@ export interface ErrorOptions {
 export interface ErrorOptionsWithGenerics<
 	ErrorCodesMap extends Record<string, ReturnType<typeof buildErrorCodesMapObject>>,
 	ErrorTranslationKeys extends Record<string, keyof ErrorCodesMap>,
-	ErrorMessage extends keyof ErrorTranslationKeys,
+	ErrorMessage extends Extract<keyof ErrorTranslationKeys, string>,
 	ErrorName extends ErrorNameOptions,
 	ErrorCode extends keyof ErrorCodesMap,
 	ExtraDetails extends Record<string, unknown> | undefined = undefined
@@ -95,7 +95,7 @@ export interface ErrorOptionsWithGenerics<
 class BaseError<
 	ErrorCodesMap extends Record<string, ReturnType<typeof buildErrorCodesMapObject>>,
 	ErrorTranslationKeys extends Record<string, keyof ErrorCodesMap>,
-	ErrorMessage extends Exclude<keyof ErrorTranslationKeys, number | symbol>,
+	ErrorMessage extends Extract<keyof ErrorTranslationKeys, string>,
 	ErrorName extends ErrorNameOptions,
 	ErrorCode extends keyof ErrorCodesMap,
 	ExtraDetails extends Record<string, unknown> | undefined = undefined
@@ -112,11 +112,14 @@ class BaseError<
 	public message: ErrorMessage
 	public timestamp: string
 	public isLogged: boolean
+	public readonly cause?: Error;
 
 	constructor(options: ErrorOptionsWithGenerics<ErrorCodesMap, ErrorTranslationKeys, ErrorMessage, ErrorName, ErrorCode, ExtraDetails>){
 		const cause   = getCauseFromUnknown(options.cause);
 		const message = options.message ?? cause?.message;
 
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore https://github.com/tc39/proposal-error-cause
 		super(message, { cause });
 		this.errorId      = createId()
 		this.type         = options.type
@@ -142,7 +145,7 @@ class BaseError<
 		ErrorBuilderInstance extends ReturnType<ReturnType<typeof errorBuilder<ErrorCodesMap, ErrorTranslationKeys>>>
 	>({ errorBuilderInstance, errorTranslationKey }: {
 		errorBuilderInstance: ErrorBuilderInstance,
-		errorTranslationKey: Exclude<keyof ErrorTranslationKeys, number | symbol>,
+		errorTranslationKey: Extract<keyof ErrorTranslationKeys, string>,
 	}, error: unknown, extraDetails?: Record<string, unknown>){
 		if(error instanceof BaseError){
 			const originalErrorMessage = error.cause instanceof Error ? error.cause.message : undefined
