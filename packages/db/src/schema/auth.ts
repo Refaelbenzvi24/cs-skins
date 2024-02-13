@@ -1,4 +1,3 @@
-import type { AdapterAccount } from "@auth/core/adapters";
 import { relations, sql } from "drizzle-orm";
 import {
 	index,
@@ -48,7 +47,7 @@ export const accounts = pgTable(
 	{
 		userId:            text("userId").notNull(),
 		type:              text("type")
-		                   .$type<AdapterAccount["type"]>()
+		                   .$type<"oauth" | "oidc" | "email">()
 		                   .notNull(),
 		provider:          text("provider").notNull(),
 		providerAccountId: text("provider_account_id").notNull(),

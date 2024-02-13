@@ -1,6 +1,6 @@
-"use client";
 import type { GenerateMetadataWithLocaleProps } from "~/types"
 import { getTranslation } from "~/app/i18n"
+import LoginPage from "~/app/[lng]/admin/(publicPages)/login/_components/LoginForm"
 
 
 export async function generateMetadata(props: GenerateMetadataWithLocaleProps){
@@ -15,7 +15,7 @@ export async function generateMetadata(props: GenerateMetadataWithLocaleProps){
 
 
 const Page = () => {
-	return
+	return <LoginPage/>
 }
 
 export default Page
