@@ -13,13 +13,13 @@ export interface CreateTransportProps<
 	severities: typeof errorSeverity[number][]
 	retries?: number
 	retryDelay?: number
-	unknownErrorsTranslationKey: Exclude<keyof ErrorTranslationKeys, number | symbol>
+	unknownErrorsTranslationKey: Extract<keyof ErrorTranslationKeys, string>
 	killProcessOnFailure?: boolean
 	callback: (error: ErrorByErrorType<
 		ErrorTransformer,
 		ErrorCodesMap,
 		ErrorTranslationKeys,
-		Exclude<keyof ErrorTranslationKeys, number | symbol>,
+		Extract<keyof ErrorTranslationKeys, string>,
 		ErrorNameOptions,
 		keyof ErrorCodesMap
 	>) => MaybePromise<void>
@@ -48,7 +48,7 @@ const createTransport = <
 					ErrorTransformer,
 					ErrorCodesMap,
 					ErrorTranslationKeys,
-					Exclude<keyof ErrorTranslationKeys, number | symbol>,
+					Extract<keyof ErrorTranslationKeys, string>,
 					ErrorNameOptions,
 					keyof ErrorCodesMap
 				>)

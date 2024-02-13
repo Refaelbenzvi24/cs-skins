@@ -74,7 +74,7 @@ export interface TRPCErrorOptions {
 export interface TRPCErrorOptionsWithGenerics<
 	ErrorCodesMap extends Record<string, ReturnType<typeof buildErrorCodesMapObject>>,
 	ErrorTranslationKeys extends Record<string, keyof ErrorCodesMap>,
-	ErrorMessage extends Exclude<keyof ErrorTranslationKeys, number | symbol>,
+	ErrorMessage extends Extract<keyof ErrorTranslationKeys, string>,
 	ErrorName extends ErrorNameOptions,
 	ErrorCode extends keyof ErrorCodesMap,
 	ExtraDetails extends Record<string, unknown> | undefined = undefined
@@ -84,12 +84,11 @@ export interface TRPCErrorOptionsWithGenerics<
 class TRPCError<
 	ErrorCodesMap extends Record<string, ReturnType<typeof buildErrorCodesMapObject>>,
 	ErrorTranslationKeys extends Record<string, keyof ErrorCodesMap>,
-	ErrorMessage extends Exclude<keyof ErrorTranslationKeys, number | symbol>,
+	ErrorMessage extends Extract<keyof ErrorTranslationKeys, string>,
 	ErrorName extends ErrorNameOptions,
 	ErrorCode extends keyof ErrorCodesMap,
 	ExtraDetails extends Record<string, unknown> | undefined = undefined
 > extends BaseError<ErrorCodesMap, ErrorTranslationKeys, ErrorMessage, ErrorName, ErrorCode, ExtraDetails> {
-	public readonly cause?: Error;
 	public readonly code: TRPC_ERROR_CODE_KEY;
 
 	constructor(options: TRPCErrorOptionsWithGenerics<ErrorCodesMap, ErrorTranslationKeys, ErrorMessage, ErrorName, ErrorCode, ExtraDetails>){
@@ -103,7 +102,7 @@ class TRPCError<
 		ErrorBuilderInstance extends ReturnType<ReturnType<typeof errorBuilder<ErrorCodesMap, ErrorTranslationKeys>>>
 	>({ errorBuilderInstance, errorTranslationKey }: {
 		errorBuilderInstance: ErrorBuilderInstance,
-		errorTranslationKey: Exclude<keyof ErrorTranslationKeys, number | symbol>,
+		errorTranslationKey: Extract<keyof ErrorTranslationKeys, string>,
 	}, error: unknown, extraDetails?: Record<string, unknown>){
 		if(error instanceof TRPCError){
 			const originalErrorMessage = error.cause instanceof Error ? error.cause.message : undefined

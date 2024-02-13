@@ -23,14 +23,14 @@ type TransportsType<
 		callback: (error: BaseError<
 			ErrorCodesMap,
 			ErrorTranslationKeys,
-			Exclude<keyof ErrorTranslationKeys, number | symbol>,
+			Extract<keyof ErrorTranslationKeys, string>,
 			ErrorName,
 			ErrorCode,
 			ExtraDetails
 		> | TRPCError<
 			ErrorCodesMap,
 			ErrorTranslationKeys,
-			Exclude<keyof ErrorTranslationKeys, number | symbol>,
+			Extract<keyof ErrorTranslationKeys, string>,
 			ErrorName,
 			ErrorCode,
 			ExtraDetails

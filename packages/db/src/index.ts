@@ -20,14 +20,17 @@ export { extraDbOperators }
 
 const connectionString = process.env.DATABASE_URL!
 let client: ReturnType<typeof postgres>
+const globalWithClient   = global as typeof globalThis & {
+	client: typeof client;
+};
 if(process.env.NODE_ENV === "production"){
 	client = postgres(connectionString);
 } else {
-	if(!global.client){
-		global.client = postgres(connectionString);
+	if(!globalWithClient.client){
+		globalWithClient.client = postgres(connectionString);
 	}
 
-	client = global.client;
+	client = globalWithClient.client;
 }
 
 export const db = drizzle(client, { schema });

@@ -6,7 +6,8 @@ import apm from "elastic-apm-node"
 export const errorCodesMap = {
 	E00001: buildErrorCodesMapObject({ severity: "ERROR", type: "UnknownError" }),
 	E00002: buildErrorCodesMapObject({ severity: "ERROR", type: "DatabaseError", subName: "NotFound" }),
-	E00003: buildErrorCodesMapObject({ severity: "ERROR", type: "DatabaseError", subName: "NotFound" })
+	E00003: buildErrorCodesMapObject({ severity: "ERROR", type: "DatabaseError", subName: "NotFound" }),
+	E00004: buildErrorCodesMapObject({ severity: "ERROR", type: "DatabaseError", subName: "NotFound" })
 } as const
 
 

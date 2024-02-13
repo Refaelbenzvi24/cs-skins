@@ -1,14 +1,14 @@
 {
-	"extends" : "@acme/tsconfig/base.json",
+	"extends" :         "@acme/tsconfig/base.json",
 	"compilerOptions" : {
 		"tsBuildInfoFile" : "node_modules/.cache/tsbuildinfo.json"
 	},
-	"include" : [
+	"include" :         [
 		"src",
 		"drizzle.config.ts",
 		"global.d.ts"
 	],
-	"exclude" : [
+	"exclude" :         [
 		"node_modules"
 	]
 }
