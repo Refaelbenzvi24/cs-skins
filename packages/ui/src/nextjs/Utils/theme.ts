@@ -42,11 +42,11 @@ const theme = {
 	},
 
 	transforms: (transforms: string[]) => css`
-      transform: ${transforms.join (" ")};
+		transform: ${transforms.join(" ")};
 	`,
 
 	transitions: (transitions: string[]) => css`
-      transition: ${transitions.join (", ")};
+		transition: ${transitions.join(", ")};
 	`,
 
 	disabledState,
@@ -87,7 +87,7 @@ const theme = {
 			active:  "#437bcb",
 			...disabledState,
 		},
-		primaryLight: {
+		primaryLight:  {
 			default: "#c9dcf8",
 			hover:   "#dce6f9",
 			active:  "#b7cde1",
@@ -99,7 +99,7 @@ const theme = {
 			active:  "#8faecf",
 			...disabledState,
 		},
-		primaryDark:  {
+		primaryDark:   {
 			default: "#437bcb",
 			hover:   "#5a8fcf",
 			active:  "#3b6ba5",

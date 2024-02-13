@@ -1,41 +1,53 @@
-import { CronJob } from 'cron'
-import { Producer } from '@acme/message-broker'
+import apm from "elastic-apm-node"
 
-import { getCronIntervalString, getIntervalInSec } from "./scheduling/scheduling"
+
+const serviceName = process.env.APP || 'cronjobs'
+apm.start({
+	serviceName,
+	active:      process.env.APM_IS_ACTIVE === 'true',
+	serverUrl:   process.env.APM_URL || 'http://localhost:8200',
+	secretToken: process.env.APM_SECRET_TOKEN || undefined,
+	environment: process.env.ENVIRONMENT || 'development',
+})
+import { Producer, setApmInstance } from '@acme/message-broker'
+
+
+setApmInstance(apm)
+import { CronJob } from 'cron'
+import { getCronIntervalString, getIntervalInMilliseconds } from "./scheduling/scheduling"
 import { messageBrokerConnectionParams } from "./vars"
+import { logError } from "./services/logger"
 
 
 export const publishScrapingMessage = async (interval: number) => {
-	console.log(`sending message for scrape with interval ${interval}...`)
 	const producer = new Producer("scraper")
-	await producer.initializeProducer(messageBrokerConnectionParams)
-	if(producer.queue.messageCount === 0) await producer.purgeQueue()
-	await producer.sendMessage({ payload: "interval_scrape" }, {
-		expiration: interval.toString()
-	});
+	const queue = await producer.initializeProducer(messageBrokerConnectionParams)
+	if(queue.messageCount !== 0) await producer.purgeQueue()
+	await producer.sendMessage({ payload: "interval_scrape" }, { expiration: interval });
 };
 
 export const initialJob = async () => {
-	console.log("sending initial message...")
-	const intervalInMili = getIntervalInSec({ minutes: 5 })
+	const intervalInMili = getIntervalInMilliseconds({ minutes: 5 })
 	await publishScrapingMessage(intervalInMili)
 };
 
 export const cronJobsInitializer = () => {
-	const intervalInMili = getIntervalInSec({ minutes: 5 })
+	const intervalInMili = getIntervalInMilliseconds({ minutes: 5 })
 	const cronInterval   = getCronIntervalString({ minutes: 5 })
 
 	const job = new CronJob(cronInterval, () => {
-		console.log("sending interval message...")
-		void (async () => await publishScrapingMessage(intervalInMili))()
+		void publishScrapingMessage(intervalInMili)
 	})
 	job.start()
 }
 
-export const serviceInitializer = () => {
-	// console.log(process.env.npm_package_name)
-	void (() => initialJob())()
-	cronJobsInitializer()
+export const serviceInitializer = async () => {
+	try {
+		void initialJob()
+		cronJobsInitializer()
+	} catch (error) {
+		await logError(error)
+	}
 }
 
-serviceInitializer()
+void serviceInitializer()

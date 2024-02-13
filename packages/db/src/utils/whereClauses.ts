@@ -1,4 +1,4 @@
-import { dbOperators } from "../../index"
+import { dbOperators } from "../index"
 import type { SQLWrapper } from "drizzle-orm"
 import type { DateRange, WithLimitParam } from "../../types/queryParams"
 

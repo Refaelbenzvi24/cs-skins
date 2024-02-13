@@ -1,20 +1,28 @@
 import { buildErrorCodesMapObject } from "./errorCodesMap"
-import { errorSeverity } from "./Errors/BaseError"
+import { ErrorNameOptions, errorSeverity } from "./Errors/BaseError"
 import { MaybePromise } from "../types"
 import errorBuilder from "./errorBuilder"
-import errors from "./Errors"
+import errors, { ErrorByErrorType } from "./Errors"
 
 
 export interface CreateTransportProps<
 	ErrorCodesMap extends Record<string, ReturnType<typeof buildErrorCodesMapObject>>,
-	ErrorTranslationKeys extends Record<string, keyof ErrorCodesMap>
+	ErrorTranslationKeys extends Record<string, keyof ErrorCodesMap>,
+	ErrorTransformer extends keyof typeof errors,
 > {
 	severities: typeof errorSeverity[number][]
 	retries?: number
 	retryDelay?: number
-	unknownErrorsTranslationKey: Exclude<keyof ErrorTranslationKeys, symbol | number>
+	unknownErrorsTranslationKey: Exclude<keyof ErrorTranslationKeys, number | symbol>
 	killProcessOnFailure?: boolean
-	callback: (error: string) => MaybePromise<void>
+	callback: (error: ErrorByErrorType<
+		ErrorTransformer,
+		ErrorCodesMap,
+		ErrorTranslationKeys,
+		Exclude<keyof ErrorTranslationKeys, number | symbol>,
+		ErrorNameOptions,
+		keyof ErrorCodesMap
+	>) => MaybePromise<void>
 }
 
 const createTransport = <
@@ -25,7 +33,8 @@ const createTransport = <
 >(errorBuilderInstance: ErrorBuilder, errorTransformer: ErrorTransformer) =>
 	(props: CreateTransportProps<
 		ErrorCodesMap,
-		ErrorTranslationKeys
+		ErrorTranslationKeys,
+		ErrorTransformer
 	>) => {
 		const { callback, unknownErrorsTranslationKey, retries, retryDelay, severities, killProcessOnFailure } = props
 		const transportCallback                                                                                = async (error: unknown, generalInfo?: Record<string, unknown>) => {
@@ -33,9 +42,16 @@ const createTransport = <
 				errorBuilderInstance,
 				errorTranslationKey: unknownErrorsTranslationKey
 			}, error, generalInfo)
-			const parsedError = await baseError.toString()
-			if(severities.includes(baseError.severity)){
-				return callback(parsedError)
+			const parsedError = await baseError.parseError()
+			if(severities.includes(baseError.severity) && !parsedError.isLogged){
+				return callback(parsedError as ErrorByErrorType<
+					ErrorTransformer,
+					ErrorCodesMap,
+					ErrorTranslationKeys,
+					Exclude<keyof ErrorTranslationKeys, number | symbol>,
+					ErrorNameOptions,
+					keyof ErrorCodesMap
+				>)
 			}
 		}
 		return {

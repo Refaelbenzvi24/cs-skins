@@ -4,7 +4,7 @@ import type { ButtonProps } from "../../Buttons/Button";
 import Button, { buttonPropsArray, ButtonStyles } from "../../Buttons/Button"
 import { motion } from "framer-motion"
 import { shouldForwardProp } from "../../../Utils/StyledUtils"
-import { css } from "@emotion/react"
+import { css, withTheme } from "@emotion/react"
 import type { SingleColorOptions } from "../../Theme/types"
 import { getSingleColorFromPath } from "../../../Utils/colors"
 import type { StyledProps } from "../../../types"
@@ -20,7 +20,7 @@ interface StyledCalendarDateNumberButtonProps {
 	todayColorDark?: SingleColorOptions
 }
 
-const StyledCalendarDateNumberButton = styled(motion.button, {
+const StyledCalendarDateNumberButton = withTheme(styled(motion.button, {
 	shouldForwardProp: (props) => shouldForwardProp<StyledCalendarDateNumberButtonProps & ButtonProps>(
 		[...buttonPropsArray, "generateStateData"]
 	)(props as keyof StyledCalendarDateNumberButtonProps & ButtonProps)
@@ -87,7 +87,7 @@ const StyledCalendarDateNumberButton = styled(motion.button, {
 			`
 		] : []
 	]
-})
+}))
 
 
 export type CalendarDateNumberButtonStates =

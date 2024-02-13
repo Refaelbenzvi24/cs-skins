@@ -12,8 +12,8 @@ export const weaponRouter = createTRPCRouter({
 		.query(async ({ ctx, input }) => {
 			const { limit, search } = input
 			const cursor            = input.cursor ?? "0"
-			throw ctx.newError.TRPCError("errors:skins.create.failedSendingMessage", "BAD_REQUEST")
-			const items             = await ctx
+			throw ctx.newError.TRPCError("errors:weapons.list.notFound", "NOT_FOUND")
+			const items = await ctx
 			.dbHelper
 			.query
 			.weapons

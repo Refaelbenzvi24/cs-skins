@@ -13,7 +13,8 @@
 			}
 		],
 		"types" :            [
-			"unplugin-icons/types/react"
+			"unplugin-icons/types/react",
+			"@types/node"
 		],
 		"tsBuildInfoFile" :  "node_modules/.cache/tsbuildinfo.json",
 		"strictNullChecks" : true
@@ -24,6 +25,7 @@
 		".next/types/**/*.ts",
 		".next/types/**/**/*.d.ts",
 		".next/types/**/*.d.ts",
+		"./types/*.d.ts",
 		"./types/**/*.d.ts"
 	],
 	"exclude" :         [

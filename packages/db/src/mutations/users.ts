@@ -1,4 +1,4 @@
-import { db, schema as schemaList } from "../../index"
+import { db, schema as schemaList } from "../index"
 import type { InferInsert } from "../../types"
 
 

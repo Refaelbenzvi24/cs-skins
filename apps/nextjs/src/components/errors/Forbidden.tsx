@@ -6,7 +6,7 @@ import Error403Illustration from "~/assets/error_403_illustration.svg"
 import ErrorInfo from "~/components/errors/ErrorInfo"
 
 
-const ForbiddenError = ({ message, ...error }: ErrorComponentProps) => {
+const Forbidden = ({ message, ...error }: ErrorComponentProps) => {
 	const { language } = useMain()
 	const { t }        = useTranslation(language, ['errors'])
 
@@ -63,4 +63,4 @@ const ForbiddenError = ({ message, ...error }: ErrorComponentProps) => {
 	);
 }
 
-export default ForbiddenError
+export default Forbidden

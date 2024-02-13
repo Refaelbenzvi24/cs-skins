@@ -15,8 +15,7 @@ export default class DelayManager {
 
 
 	start(){
-		if(this.delayHandlerIsWorking) return console.log("Delay handler is already working")
-
+		if(this.delayHandlerIsWorking) return;
 		this.delayHandlerIsWorking = true
 
 		setInterval(() => {
@@ -33,6 +32,7 @@ export default class DelayManager {
 		return new Promise((resolve, reject) => {
 				this.queue.push(async () => {
 					try {
+						resolve(await callback())
 						resolve(await callback())
 					} catch (error) {
 						reject(error)

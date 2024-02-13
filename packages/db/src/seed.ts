@@ -1,4 +1,4 @@
-import { db, dbHelper, schema } from "../index"
+import { db, dbHelper, schema } from "./index"
 import type { InferInsert } from "../types"
 
 
@@ -6,14 +6,16 @@ export type NewGames = InferInsert<typeof schema.games>
 export type NewSource = Parameters<typeof dbHelper.mutate.sources.insert>[0]
 export type NewQuality = InferInsert<typeof schema.qualities>
 
-const games: NewGames[] = [
+const games = [
 	{ name: "CS GO" }
-]
+] satisfies NewGames[]
 
-const sources: NewSource[] = [
+// TODO: add static id for seeded data
+const sources = [
 	{
 		connect: { gameId: "CS GO" },
 		data:    {
+
 			url:  "https://csgostash.com",
 			name: "CS Go Stash",
 		}
@@ -97,14 +99,14 @@ const sources: NewSource[] = [
 	},
 	{
 		connect: { gameId: "CS GO" },
-		data: {
-			url: "https://waxpeer.com/",
+		data:    {
+			url:  "https://waxpeer.com/",
 			name: "Waxpeer"
 		}
 	}
-]
+] satisfies NewSource[]
 
-const quality: NewQuality[] = [
+const quality = [
 	{ name: "Field-Tested" },
 	{ name: "StatTrak Well-Worn" },
 	{ name: "Battle-Scarred" },
@@ -115,13 +117,13 @@ const quality: NewQuality[] = [
 	{ name: "Factory New" },
 	{ name: "StatTrak Factory New" },
 	{ name: "StatTrak Battle-Scarred" }
-]
+] satisfies NewQuality[]
 
 const seed = async () => {
 	const insertedGames = await db.insert(schema.games).values(games).onConflictDoNothing().returning().execute()
 	const sourcesSeed   = sources.map(source => ({
 		...source,
-		connect: { gameId: insertedGames.find(({ name }) => name === source.connect!.gameId)!.id }
+		connect: { gameId: insertedGames.find(({ name }) => name === source.connect.gameId)!.id }
 	}))
 	await Promise.all(sourcesSeed.map(async source => await dbHelper.mutate.sources.insert(source)))
 	await db.insert(schema.qualities).values(quality).onConflictDoNothing().execute()

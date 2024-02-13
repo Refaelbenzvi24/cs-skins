@@ -1,13 +1,14 @@
 "use client";
 import { Card, Row, Table, TextField, Typography } from "@acme/ui"
 import { api } from "~/trpc/api"
-import type { FormEvent } from "react";
+import { FormEvent, useEffect } from "react";
 import { useMemo } from "react"
 import type { trpcRsc } from "~/trpc/apiServer"
 import { useSearchParamState } from "~/hooks"
 import type { ComponentWithLocaleProps } from "~/types"
 import { useTranslation } from "~/app/i18n/client"
 import { getNextPageParam } from "~/trpc/apiHelpers"
+import { apm } from "@elastic/apm-rum"
 
 
 interface QualitiesTableProps extends ComponentWithLocaleProps {

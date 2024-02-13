@@ -62,7 +62,7 @@ export const errorNames = {
 	"ValidationError":     [],
 	"AuthenticationError": [],
 	"AuthorizationError":  [],
-	"DatabaseError":       ["QueryFailed"],
+	"DatabaseError":       ["QueryFailed", "NotFound"],
 	"PermissionError":     [],
 	"MessageBroker":       ["Connection", "ChannelCreation", "SendingMessage", "AssertingQueue", "MessageConsuming", "PurgingQueue"]
 } as const
@@ -72,8 +72,6 @@ export type ErrorNameOptions = keyof typeof errorNames
 export interface ErrorOptions {
 	severity: typeof errorSeverity[number]
 	addSystemProcessId?: boolean
-	initializedAtService: typeof ServicesMap[number]["name"]
-	loggedAtService?: typeof ServicesMap[number]["name"]
 	userId?: string
 	userIdGetter?: () => MaybePromise<string>
 	cause?: unknown;
@@ -81,11 +79,11 @@ export interface ErrorOptions {
 
 export interface ErrorOptionsWithGenerics<
 	ErrorCodesMap extends Record<string, ReturnType<typeof buildErrorCodesMapObject>>,
-	ErrorTranslationKeys extends Record<`errors:${string}`, keyof ErrorCodesMap>,
+	ErrorTranslationKeys extends Record<string, keyof ErrorCodesMap>,
 	ErrorMessage extends keyof ErrorTranslationKeys,
 	ErrorName extends ErrorNameOptions,
 	ErrorCode extends keyof ErrorCodesMap,
-	ExtraDetails = undefined
+	ExtraDetails extends Record<string, unknown> | undefined = undefined
 > extends ErrorOptions {
 	type: ErrorName
 	subType?: typeof errorNames[ErrorName][number]
@@ -96,8 +94,8 @@ export interface ErrorOptionsWithGenerics<
 
 class BaseError<
 	ErrorCodesMap extends Record<string, ReturnType<typeof buildErrorCodesMapObject>>,
-	ErrorTranslationKeys extends Record<`errors:${string}`, keyof ErrorCodesMap>,
-	ErrorMessage extends keyof Pick<ErrorTranslationKeys, `errors:${string}`>,
+	ErrorTranslationKeys extends Record<string, keyof ErrorCodesMap>,
+	ErrorMessage extends Exclude<keyof ErrorTranslationKeys, number | symbol>,
 	ErrorName extends ErrorNameOptions,
 	ErrorCode extends keyof ErrorCodesMap,
 	ExtraDetails extends Record<string, unknown> | undefined = undefined
@@ -110,29 +108,27 @@ class BaseError<
 	public userIdGetter?: () => MaybePromise<string>
 	public severity: typeof errorSeverity[number]
 	public extraDetails?: ExtraDetails
-	public initializedAtService: typeof ServicesMap[number]["name"]
-	public loggedAtService: typeof ServicesMap[number]["name"]
 	public errorCode: ErrorCode
 	public message: ErrorMessage
 	public timestamp: string
+	public isLogged: boolean
 
 	constructor(options: ErrorOptionsWithGenerics<ErrorCodesMap, ErrorTranslationKeys, ErrorMessage, ErrorName, ErrorCode, ExtraDetails>){
 		const cause   = getCauseFromUnknown(options.cause);
 		const message = options.message ?? cause?.message;
 
 		super(message, { cause });
-		this.errorId              = createId()
-		this.type                 = options.type
-		this.subType              = options.subType
-		this.errorCode            = options.errorCode
-		this.message              = options.message
-		this.userId               = options.userId ?? "system"
-		this.severity             = options.severity
-		this.initializedAtService = options.initializedAtService
-		this.loggedAtService      = options.loggedAtService ?? process.env.npm_package_name as typeof ServicesMap[number]["name"]
-		this.extraDetails         = options.extraDetails
-		this.userIdGetter         = options.userIdGetter
-		this.timestamp            = new Date().toISOString()
+		this.errorId      = createId()
+		this.type         = options.type
+		this.subType      = options.subType
+		this.errorCode    = options.errorCode
+		this.message      = options.message
+		this.userId       = options.userId ?? "system"
+		this.severity     = options.severity
+		this.extraDetails = options.extraDetails
+		this.userIdGetter = options.userIdGetter
+		this.timestamp    = new Date().toISOString()
+		this.isLogged     = false
 
 		if(!this.cause){
 			// idk why this is needed, but it is
@@ -142,21 +138,28 @@ class BaseError<
 
 	public static from<
 		ErrorCodesMap extends Record<string, ReturnType<typeof buildErrorCodesMapObject>>,
-		ErrorTranslationKeys extends Record<`errors:${string}`, keyof ErrorCodesMap>,
+		ErrorTranslationKeys extends Record<string, keyof ErrorCodesMap>,
 		ErrorBuilderInstance extends ReturnType<ReturnType<typeof errorBuilder<ErrorCodesMap, ErrorTranslationKeys>>>
 	>({ errorBuilderInstance, errorTranslationKey }: {
 		errorBuilderInstance: ErrorBuilderInstance,
-		errorTranslationKey: keyof ErrorTranslationKeys,
-	}, error: unknown, extraDetails?: Record<string, unknown>) {
+		errorTranslationKey: Exclude<keyof ErrorTranslationKeys, number | symbol>,
+	}, error: unknown, extraDetails?: Record<string, unknown>){
 		if(error instanceof BaseError){
-			return {
-				...error,
-				extraDetails: _.merge(error.extraDetails, extraDetails)
-			}
+			const originalErrorMessage = error.cause instanceof Error ? error.cause.message : undefined
+			error.extraDetails         = _.merge(error.extraDetails, extraDetails, { originalErrorMessage })
+			return error
+		}
+		if(error && typeof error === 'object' && 'cause' in error && error.cause instanceof BaseError){
+			const originalMessage    = 'message' in error ? error.message : undefined
+			error.cause.extraDetails = _.merge(error.cause.extraDetails, extraDetails, { originalMessage })
+
+			return error.cause
 		}
 
-		return errorBuilderInstance.BaseError(errorTranslationKey, { cause: error, extraDetails: { originalError: error, extraDetails } })
+		const originalMessage = error && typeof error === 'object' && 'message' in error ? error.message : undefined
+		return errorBuilderInstance.BaseError(errorTranslationKey, { cause: error, extraDetails: { ...extraDetails, originalMessage } })
 	}
+
 	public addSystemProcessId(systemProcessId?: string){
 		this.systemProcessId = systemProcessId ?? createId()
 		return this
@@ -164,14 +167,7 @@ class BaseError<
 
 	public async parseError(){
 		this.userId = this.userId ?? await this.userIdGetter?.()
-		return {
-			...this,
-			stack: this.stack?.split("\n").map(line => line.trim()),
-		}
-	}
-
-	public async toString(){
-		return JSON.stringify(await this.parseError())
+		return this
 	}
 }
 

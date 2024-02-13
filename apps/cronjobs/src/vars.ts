@@ -1,3 +1,6 @@
+import type { BuildConnectionStringProps } from "@acme/message-broker"
+
+
 const {
 	MESSAGE_BROKER_HOST,
 	MESSAGE_BROKER_PORT,
@@ -14,4 +17,4 @@ export const messageBrokerConnectionParams = {
 	host:     MESSAGE_BROKER_HOST,
 	port:     MESSAGE_BROKER_PORT,
 	pathname: MESSAGE_BROKER_PATHNAME
-}
+} as BuildConnectionStringProps

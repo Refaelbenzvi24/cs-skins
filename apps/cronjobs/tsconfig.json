@@ -1,16 +1,27 @@
 {
+	"extends" :         "@acme/tsconfig/base.json",
 	"compilerOptions" : {
-		"outDir" :             "./out",
-		"rootDir" :            "./",
-		"sourceMap" :          true,
-		"moduleResolution" :   "node",
-		"target" :             "es5",
-		"module" :             "commonjs",
-		"esModuleInterop" :    true,
-		"skipLibCheck" :       true,
-		"downlevelIteration" : true,
-		"resolveJsonModule" :  true
+		"esModuleInterop" : true,
+		"paths" :           {
+			"~/*" : [
+				"./src/*"
+			]
+		},
+		"tsBuildInfoFile" : "node_modules/.cache/tsbuildinfo.json",
+		"types" :           [
+			"node",
+			"jest"
+		]
 	},
+	"ts-node" :         {
+		"compilerOptions" : {
+			"esModuleInterop" : true,
+			"module" :          "commonjs"
+		}
+	},
+	"include" :         [
+		"src/**/*.ts"
+	],
 	"exclude" :         [
 		"node_modules"
 	]

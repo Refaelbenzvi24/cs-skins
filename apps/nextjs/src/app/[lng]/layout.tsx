@@ -1,5 +1,5 @@
 import "../../styles/global.css";
-import { cache, ReactNode } from "react"
+import { cache } from "react"
 
 import { Work_Sans, Heebo } from "next/font/google";
 import { cookies, headers } from "next/headers";
@@ -11,10 +11,15 @@ import type { ThemeOptions } from "@acme/ui/src/nextjs/components/Theme/types"
 import UiProviders from "~/components/UiProviders"
 import { languages } from "../i18n/settings"
 import { Body } from "@acme/ui"
-import NextTopLoader from 'nextjs-toploader';
 import { getTranslation } from "~/app/i18n"
 import type { GenerateMetadataWithLocaleProps, LayoutWithLocaleProps } from "~/types"
-import ErrorBoundary from "~/components/ErrorBoundary"
+import ProgressBar from "~/components/global/ProgressBar"
+import Analytics from "~/components/global/Analytics"
+import RealUserMonitoring from "~/components/global/RealUserMonitoring"
+import WebVitals from "~/components/global/WebVitals"
+import apm from "elastic-apm-node"
+import ApmProvider from "~/components/ApmProvider"
+import { getPathname } from "~/utils/serverFunctions"
 
 
 const workSans = Work_Sans({ weight: ["400", "500", "700"], subsets: ["latin"], variable: "--work-sans" })
@@ -58,22 +63,28 @@ export default function Layout(props: LayoutWithLocaleProps){
 	const cookieStore         = cookies()
 	const theme               = cookieStore.get("theme")?.value as ThemeOptions
 
-
 	return (
 		<html
 			dir={dir(lng)}
 			lang={lng}
 			className={theme === "dark" ? "dark" : "light"}>
 		<Body className={["work-sans", workSans.variable, "heebo", heebo.variable].join(" ")}>
-			<NextTopLoader/>
-			<TRPCReactProvider headers={getHeaders()}>
-				<SessionProvider>
-					<UiProviders lng={lng} theme={theme}>
-						<div id="portals-root"></div>
-						{props.children}
-					</UiProviders>
-				</SessionProvider>
-			</TRPCReactProvider>
+			<ApmProvider traceId={apm.currentTraceIds["trace.id"]} transactionId={apm.currentTraceIds["transaction.id"]}>
+				<ProgressBar/>
+
+				<Analytics/>
+				<RealUserMonitoring/>
+				<WebVitals/>
+
+				<TRPCReactProvider headersPromise={getHeaders()}>
+					<SessionProvider>
+						<UiProviders lng={lng} theme={theme}>
+							<div id="portals-root"></div>
+							{props.children}
+						</UiProviders>
+					</SessionProvider>
+				</TRPCReactProvider>
+			</ApmProvider>
 		</Body>
 		</html>
 	);

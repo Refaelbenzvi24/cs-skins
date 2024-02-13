@@ -16,7 +16,7 @@ save: Save
 send: Send
 metadata:
     title: CS Skins
-    appDescription: common:metadata.appDescription
+    appDescription: CS Skins
 appDescription: common:appDescription
 open: Open
 close: Close

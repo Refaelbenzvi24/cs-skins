@@ -5,8 +5,9 @@ import { QueryClient, QueryClientProvider, QueryErrorResetBoundary } from "@tans
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
 import { loggerLink, unstable_httpBatchStreamLink } from "@trpc/client";
-import superjson from "superjson";
+import SuperJSON from "superjson";
 import { api, getBaseUrl } from "~/trpc/api";
+import { apm } from "@elastic/apm-rum"
 
 
 export function TRPCReactProvider(props: {
@@ -18,7 +19,7 @@ export function TRPCReactProvider(props: {
 			new QueryClient({
 				defaultOptions: {
 					queries: {
-						staleTime: 5 * 1000,
+						staleTime:    5 * 1000,
 						throwOnError: true
 					},
 				},
@@ -27,18 +28,22 @@ export function TRPCReactProvider(props: {
 
 	const [trpcClient] = useState(() =>
 		api.createClient({
-			transformer: superjson,
-			links:       [
+			links: [
 				loggerLink({
 					enabled: (op) =>
 						         process.env.NODE_ENV === "development" ||
 						         (op.direction === "down" && op.result instanceof Error),
 				}),
 				unstable_httpBatchStreamLink({
-					url: getBaseUrl() + "/api/trpc",
+					transformer: SuperJSON,
+					url:         getBaseUrl() + "/api/trpc",
 					async headers(){
-						const headers = new Headers(await props.headersPromise);
+						const headers = new Headers();
 						headers.set("x-trpc-source", "nextjs-react");
+						// if(typeof window !== 'undefined'){
+						// 	headers.set("transaction-trace-id", apm.getCurrentTransaction())
+						// }
+
 						return headers;
 					},
 				}),
@@ -50,7 +55,7 @@ export function TRPCReactProvider(props: {
 		<QueryErrorResetBoundary>
 			<QueryClientProvider client={queryClient}>
 				<api.Provider client={trpcClient} queryClient={queryClient}>
-					<ReactQueryStreamedHydration transformer={superjson}>
+					<ReactQueryStreamedHydration transformer={SuperJSON}>
 						{props.children}
 					</ReactQueryStreamedHydration>
 					<ReactQueryDevtools initialIsOpen={false}/>

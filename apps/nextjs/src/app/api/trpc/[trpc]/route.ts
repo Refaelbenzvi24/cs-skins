@@ -1,20 +1,20 @@
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
-
 import { appRouter, createTRPCContext } from "@acme/api";
 import { auth } from "@acme/auth";
 import getEmailProvider from "~/utils/emailProvider";
 import { messageBrokerConnectionParams } from "~/modules/vars"
 import apm from "elastic-apm-node"
 
-// interface ErrorResponse {
-// 	'0': { error: { json: { data: { code: string, httpStatus: number } } } }
-// }
-//
-// interface ResultResponse {
-// 	'0': { result: unknown }
-// }
-//
-// type ResponseOptions = ErrorResponse | ResultResponse
+
+interface ErrorResponse {
+	'0': { error: { json: { data: { code: string, httpStatus: number } } } }
+}
+
+interface ResultResponse {
+	'0': { result: unknown }
+}
+
+type ResponseOptions = ErrorResponse | ResultResponse
 
 
 /**
@@ -22,10 +22,10 @@ import apm from "elastic-apm-node"
  * You should extend this to match your needs
  */
 function setCorsHeaders(res: Response){
-	res.headers.set("Access-Control-Allow-Origin", "*");
+	res.headers.set("Access-Control-Allow-Origin", `${new URL(process.env.NEXT_APP_URL!).origin}`);
 	res.headers.set("Access-Control-Request-Method", "*");
 	res.headers.set("Access-Control-Allow-Methods", "OPTIONS, GET, POST");
-	res.headers.set("Access-Control-Allow-Headers", "*");
+	res.headers.set("Access-Control-Allow-Headers", "traceparent, tracestate, *");
 }
 
 export function OPTIONS(){
@@ -37,30 +37,24 @@ export function OPTIONS(){
 }
 
 const handler = auth(async (req) => {
-	const response      = await fetchRequestHandler({
+	const response = await fetchRequestHandler({
 		endpoint:      "/api/trpc",
 		router:        appRouter,
 		req,
-		createContext: async () => createTRPCContext({ session: req.auth, headers: req.headers }, { messageBrokerConnectionParams, emailProvider: await getEmailProvider(), apm }),
-		onError({ error, path }){
-			// TODO: update this
-			// console.error(`>>> tRPC Error on '${path}'`, error);
-
-			return error
-		},
+		createContext: async () => createTRPCContext({ session: req.auth, headers: req.headers }, { messageBrokerConnectionParams, emailProvider: await getEmailProvider(), apm, isServer: false }),
 	});
 
-	// const clonedResponse = response.clone();
-	// const body           = await clonedResponse.json() as unknown as ResponseOptions
-	// if ('error' in body["0"]) {
-	// 	const code           = body['0'].error.json.data.code
-	// 	const httpCode       = body['0'].error.json.data.httpStatus
-	// 	return new Response(response.body, {
-	// 		status:     httpCode,
-	// 		statusText: code,
-	// 		headers:    response.headers,
-	// 	});
-	// }
+	const clonedResponse = response.clone();
+	const body           = await clonedResponse.json() as unknown as ResponseOptions
+	if('error' in body["0"]){
+		const code     = body['0'].error.json.data.code
+		const httpCode = body['0'].error.json.data.httpStatus
+		return new Response(response.body, {
+			status:     httpCode,
+			statusText: code,
+			headers:    response.headers,
+		});
+	}
 
 	setCorsHeaders(response);
 	return response

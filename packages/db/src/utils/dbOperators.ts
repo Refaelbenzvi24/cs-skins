@@ -1,4 +1,4 @@
-import { dbOperators } from "../../index"
+import { dbOperators } from "../index"
 import type { BinaryOperator, SQL, SQLWrapper } from "drizzle-orm"
 import { bindIfParam } from "drizzle-orm"
 

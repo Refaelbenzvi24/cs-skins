@@ -19,7 +19,8 @@ const ErrorPage = ({
 	if(error instanceof TRPCError){
 		const ErrorComponent = errorCodesComponentsMap[error.code]
 		return (
-			<ErrorComponent message={(error as TRPCErrorWithGenerics).message} errorId={error.errorId} timestamp={error.timestamp} errorCode={(error as TRPCErrorWithGenerics).errorCode} code={error.code}/>
+			<ErrorComponent message={(error as TRPCErrorWithGenerics).message} errorId={error.errorId} timestamp={error.timestamp} errorCode={(error as TRPCErrorWithGenerics).errorCode}
+			                code={error.code}/>
 		)
 	}
 	if(process.env.NODE_ENV === 'development') console.log({ ...error, message: error.message, stack: error?.stack?.split('\n') })

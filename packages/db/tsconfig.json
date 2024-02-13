@@ -3,14 +3,10 @@
 	"compilerOptions" : {
 		"tsBuildInfoFile" : "node_modules/.cache/tsbuildinfo.json"
 	},
-	"ts-node" : {
-		"compilerOptions" : {
-			"module" : "commonjs"
-		}
-	},
 	"include" : [
-		".",
-		"./global.d.ts"
+		"src",
+		"drizzle.config.ts",
+		"global.d.ts"
 	],
 	"exclude" : [
 		"node_modules"

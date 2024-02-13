@@ -6,7 +6,21 @@ interface GetIntervalProps {
 	dayOfWeek?: number
 }
 
-export const getIntervalInSec = (
+export const getIntervalInMilliseconds = ({
+		minutes = 0,
+		hours = 0,
+		days = 0,
+		weeks = 0
+	}: { days?: number, weeks?: number } & Omit<GetIntervalProps, "dayOfWeek" | "dayOfMonth" | "month">) => {
+	const minutesInMilis = minutes * 60 * 1000
+	const hoursInMilis = hours * 60 * 60 * 1000
+	const daysInMilis = days * 60 * 60 * 24 * 1000
+	const weeksInMilis = weeks * 60 * 60 * 24 * 7 * 1000
+
+	return minutesInMilis + hoursInMilis + daysInMilis + weeksInMilis
+}
+
+export const getIntervalInSeconds = (
 	{
 		minutes = 0,
 		hours = 0,

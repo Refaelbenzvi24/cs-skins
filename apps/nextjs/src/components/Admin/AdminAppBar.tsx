@@ -11,7 +11,7 @@ import Settings from "~/components/Admin/Settings";
 import { useTranslation } from "~/app/i18n/client"
 import { useRouter } from "next/navigation"
 import type { ComponentWithLocaleProps } from "~/types"
-import { serverSignOut } from "~/server/authServerActions"
+import { serverSignOut } from "~/server/actions/authServerActions"
 
 
 export interface AdminAppBarProps extends Partial<ComponentProps<typeof AppBar>>, ComponentWithLocaleProps {

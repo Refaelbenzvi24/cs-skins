@@ -1,15 +1,16 @@
 {
-  "extends": ["@acme/tsconfig/base.json", "@acme/tsconfig/react.json"],
-  "compilerOptions": {
-    "baseUrl": ".",
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
-    "types": ["unplugin-icons/types/react"],
-    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
-  },
-  "include":         ["src"],
-  "exclude": ["node_modules"]
+	"extends" :         "@acme/tsconfig/base.json",
+	"compilerOptions" : {
+		"types" :           [
+			"unplugin-icons/types/react"
+		],
+		"tsBuildInfoFile" : "node_modules/.cache/tsbuildinfo.json"
+	},
+	"include" :         [
+		"*.ts",
+		"src"
+	],
+	"exclude" :         [
+		"node_modules"
+	]
 }

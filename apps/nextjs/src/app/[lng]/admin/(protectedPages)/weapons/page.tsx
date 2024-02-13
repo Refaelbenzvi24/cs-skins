@@ -23,11 +23,11 @@ export async function generateMetadata(props: GenerateMetadataWithLocaleProps){
 }
 
 const Page = managedRsc(async ({ params: { lng }, searchParams }: AdminPageProps) => {
-	// TODO: remove all the auth logic from here
+	// TODO: remove all the auth logic from here and also from other pages
 	const session = await auth();
 	if(!session) return redirect(`/${lng}/admin/login`)
 
-	const weaponsList = await trpcRsc.weapon.list({ search: searchParams.search, limit: 20 })
+	const weaponsList = await trpcRsc.weapon.list({ search: searchParams.search, limit: 20  })
 
 	const { t } = await getTranslation(lng, 'admin')
 

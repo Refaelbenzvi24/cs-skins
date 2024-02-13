@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import styled from "@emotion/styled"
 import { SingleColorOptions, ZIndexOptions } from "../Theme/types"
 import tw from "twin.macro"
-import { css } from "@emotion/react"
+import { css, withTheme } from "@emotion/react"
 import { getCssUnit, getSingleColorFromPath, getZIndexFromPath } from "../../Utils/colors"
 import { StyledProps } from "../../types"
 import { shouldForwardProp } from "../../Utils/StyledUtils"
@@ -20,7 +20,7 @@ interface StyledSimpleSideBarProps {
 	zIndex?: ZIndexOptions
 }
 
-const StyledSimpleSideBar = styled(motion.div, {
+const StyledSimpleSideBar = withTheme(styled(motion.div, {
 	shouldForwardProp: (props) => shouldForwardProp<StyledSimpleSideBarProps>(
 		["shrinkPoint", "backgroundColor", "backgroundColorDark", "dark", "zIndex"]
 	)(props as keyof StyledSimpleSideBarProps)
@@ -63,7 +63,7 @@ const StyledSimpleSideBar = styled(motion.div, {
 			background-color: ${resolvedBackgroundColorDark};
 		`,
 	]
-})
+}))
 
 interface SimpleSideBarProps extends StyledSimpleSideBarProps {
 	onChange?: (value: boolean) => void

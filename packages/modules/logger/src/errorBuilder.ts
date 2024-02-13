@@ -10,7 +10,7 @@ const errorBuilder = <
 	ErrorCodesMap extends Record<string, ReturnType<typeof buildErrorCodesMapObject>>,
 	ErrorTranslationKeys extends Record<string, keyof ErrorCodesMap>
 >(errorCodesMap: ErrorCodesMap, errorTranslationKeys: ErrorTranslationKeys) => (details: ErrorParams) => ({
-	BaseError: (key: keyof ErrorTranslationKeys, options?: OverrideErrorCodesMapObjectWithExtraDetails) => {
+	BaseError: <Key extends keyof ErrorTranslationKeys>(key: Key, options?: OverrideErrorCodesMapObjectWithExtraDetails) => {
 		return new BaseError({
 			...(errorCodesMap[errorTranslationKeys[key]](details)),
 			errorCode: errorTranslationKeys[key],

@@ -1,6 +1,7 @@
 import { buildErrorCodesMapObject } from "../errorCodesMap"
 import BaseError, { ErrorNameOptions, ErrorOptionsWithGenerics } from "./BaseError"
 import errorBuilder from "../errorBuilder"
+import _ from "lodash"
 
 
 type KeyFromValue<TValue, TType extends Record<PropertyKey, PropertyKey>> = {
@@ -72,43 +73,51 @@ export interface TRPCErrorOptions {
 
 export interface TRPCErrorOptionsWithGenerics<
 	ErrorCodesMap extends Record<string, ReturnType<typeof buildErrorCodesMapObject>>,
-	ErrorTranslationKeys extends Record<`errors:${string}`, keyof ErrorCodesMap>,
-	ErrorMessage extends keyof Pick<ErrorTranslationKeys, `errors:${string}`>,
+	ErrorTranslationKeys extends Record<string, keyof ErrorCodesMap>,
+	ErrorMessage extends Exclude<keyof ErrorTranslationKeys, number | symbol>,
 	ErrorName extends ErrorNameOptions,
 	ErrorCode extends keyof ErrorCodesMap,
-	ExtraDetails = undefined
+	ExtraDetails extends Record<string, unknown> | undefined = undefined
 > extends ErrorOptionsWithGenerics<ErrorCodesMap, ErrorTranslationKeys, ErrorMessage, ErrorName, ErrorCode, ExtraDetails>, TRPCErrorOptions {
 }
 
 class TRPCError<
 	ErrorCodesMap extends Record<string, ReturnType<typeof buildErrorCodesMapObject>>,
-	ErrorTranslationKeys extends Record<`errors:${string}`, keyof ErrorCodesMap>,
-	ErrorMessage extends keyof Pick<ErrorTranslationKeys, `errors:${string}`>,
+	ErrorTranslationKeys extends Record<string, keyof ErrorCodesMap>,
+	ErrorMessage extends Exclude<keyof ErrorTranslationKeys, number | symbol>,
 	ErrorName extends ErrorNameOptions,
 	ErrorCode extends keyof ErrorCodesMap,
-	ExtraDetails = undefined
+	ExtraDetails extends Record<string, unknown> | undefined = undefined
 > extends BaseError<ErrorCodesMap, ErrorTranslationKeys, ErrorMessage, ErrorName, ErrorCode, ExtraDetails> {
 	public readonly cause?: Error;
 	public readonly code: TRPC_ERROR_CODE_KEY;
 
 	constructor(options: TRPCErrorOptionsWithGenerics<ErrorCodesMap, ErrorTranslationKeys, ErrorMessage, ErrorName, ErrorCode, ExtraDetails>){
 		super(options);
-		this.code = options.code;
+		this.code = options.code
 	}
 
 	public static from<
 		ErrorCodesMap extends Record<string, ReturnType<typeof buildErrorCodesMapObject>>,
-		ErrorTranslationKeys extends Record<`errors:${string}`, keyof ErrorCodesMap>,
+		ErrorTranslationKeys extends Record<string, keyof ErrorCodesMap>,
 		ErrorBuilderInstance extends ReturnType<ReturnType<typeof errorBuilder<ErrorCodesMap, ErrorTranslationKeys>>>
 	>({ errorBuilderInstance, errorTranslationKey }: {
 		errorBuilderInstance: ErrorBuilderInstance,
-		errorTranslationKey: keyof ErrorTranslationKeys,
-	}, error: unknown) {
+		errorTranslationKey: Exclude<keyof ErrorTranslationKeys, number | symbol>,
+	}, error: unknown, extraDetails?: Record<string, unknown>){
 		if(error instanceof TRPCError){
+			const originalErrorMessage = error.cause instanceof Error ? error.cause.message : undefined
+			error.extraDetails         = _.merge(error.extraDetails, extraDetails, { originalErrorMessage })
 			return error
 		}
-
-		return errorBuilderInstance.TRPCError(errorTranslationKey, "INTERNAL_SERVER_ERROR", { cause: error, extraDetails: { originalError: error } })
+		if(error && typeof error === 'object' && 'cause' in error && error.cause instanceof TRPCError){
+			const originalMessage    = 'message' in error ? error.message : undefined
+			error.cause.extraDetails = _.merge(error.cause.extraDetails, extraDetails, { originalMessage })
+			return error.cause
+		}
+		// TODO: add case to when error is instance of Base Error and not TRPCError
+		const originalMessage = error && typeof error === 'object' && 'message' in error ? error.message : undefined
+		return errorBuilderInstance.TRPCError(errorTranslationKey, "INTERNAL_SERVER_ERROR", { cause: error, extraDetails: { ...extraDetails, originalMessage } })
 	}
 }
 

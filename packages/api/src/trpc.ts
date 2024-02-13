@@ -8,24 +8,25 @@
  */
 import { initTRPC } from "@trpc/server"
 import superjson from "superjson"
+import type { typeToFlattenedError } from "zod";
 import { ZodError } from "zod"
 import { auth } from "@acme/auth";
 import type { Session } from "@acme/auth";
 import { db, dbHelper } from "@acme/db";
 import type { EmailProvider } from "./services/email/emailProvider";
 import type { BuildConnectionStringProps } from "@acme/message-broker";
-import { Producer } from "@acme/message-broker"
 import type { PermissionsType } from "@acme/db/src/schema/auth"
 import _ from "lodash"
 import type { Paths } from "@acme/db/types/objectHelpers"
 import { loggerInstance } from "./services/logger"
 import type { errorCodesMap } from "./services/logger";
 import TRPCError from "@acme/logger/src/Errors/TRPCError"
-import type { DefaultErrorShape } from "@trpc/core/src/error/formatter"
+import type { DefaultErrorShape } from "@trpc/server/unstable-core-do-not-import"
 import type { errorTranslationKeys } from "./services/logger/errorTranslationKeys"
 import type { ErrorNameOptions } from "@acme/logger/src/Errors/BaseError"
-import type { typeToFlattenedError } from "zod/lib/ZodError"
 import type apm from "elastic-apm-node"
+import { getHTTPStatusCodeFromError } from '@trpc/server/http';
+import { setApmInstance } from "@acme/message-broker"
 
 
 /**
@@ -42,6 +43,7 @@ interface CreateContextOptions {
 	emailProvider?: EmailProvider
 	messageBrokerConnectionParams: BuildConnectionStringProps
 	apm?: apm.Agent
+	isServer?: boolean
 }
 
 /**
@@ -60,14 +62,12 @@ const createInnerTRPCContext = (opts: CreateContextOptions) => {
 		errorTransformer: 'TRPCError',
 		transports:       [
 			({ createTransport }) => createTransport({
-				severities:                  ["CRITICAL", "ERROR", "WARNING"],
-				retries:                     3,
-				unknownErrorsTranslationKey: "errors:unknownError",
-				retryDelay:                  1000,
-				callback:                    async (error) => {
-					const producer = new Producer("logs")
-					await producer.initializeProducer(messageBrokerConnectionParams)
-					await producer.sendMessage({ error })
+				severities:                  ["CRITICAL", "ERROR", "WARNING", "INFO"],
+				unknownErrorsTranslationKey: "errors:unknown",
+				callback:                    (error) => {
+					apm?.captureError(error)
+					apm?.setSpanOutcome('failure')
+					apm?.setLabel('errorId', error.errorId)
 				}
 			})
 		]
@@ -81,7 +81,8 @@ const createInnerTRPCContext = (opts: CreateContextOptions) => {
 		dbHelper,
 		logger,
 		newError: loggerInstance.errorBuilder,
-		apm
+		apm,
+		isServer: opts.isServer ?? false
 	}
 };
 
@@ -93,21 +94,21 @@ const createInnerTRPCContext = (opts: CreateContextOptions) => {
 export const createTRPCContext = async (opts: {
 	headers: Headers;
 	session: Session | null;
-}, { emailProvider, messageBrokerConnectionParams, apm }: {
+}, { emailProvider, messageBrokerConnectionParams, apm, isServer }: {
 	emailProvider?: EmailProvider,
 	messageBrokerConnectionParams: BuildConnectionStringProps,
-	apm?: apm.Agent
+	apm?: apm.Agent,
+	isServer?: boolean
 }) => {
+	setApmInstance(apm as Parameters<typeof setApmInstance>[0])
 	const session = opts.session ?? (await auth());
-	const source  = opts.headers.get("x-trpc-source") ?? "unknown";
-
-	console.log(">>> tRPC Request from", source, "by", session?.user);
 
 	return createInnerTRPCContext({
 		emailProvider,
 		messageBrokerConnectionParams,
 		session,
-		apm
+		apm,
+		isServer
 	});
 };
 
@@ -123,11 +124,12 @@ export const getErrorShape = (error: TRPCErrorWithGenerics, shape: DefaultErrorS
 	...shape,
 	data: {
 		...shape.data,
-		message:   error.message,
-		errorId:   error.errorId,
-		errorCode: error.errorCode,
-		timestamp: error.timestamp,
-		code:      error.code,
+		httpStatus: getHTTPStatusCodeFromError(error),
+		message:    error.message,
+		errorId:    error.errorId,
+		errorCode:  error.errorCode,
+		timestamp:  error.timestamp,
+		code:       error.code,
 		zodError
 	}
 })
@@ -149,9 +151,9 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
 			typeof errorCodesMap,
 			typeof errorTranslationKeys,
 			typeof loggerInstance.errorBuilder
-		>({ errorBuilderInstance: loggerInstance.errorBuilder, errorTranslationKey: "errors:unknownError" }, error)
+		>({ errorBuilderInstance: loggerInstance.errorBuilder, errorTranslationKey: "errors:unknown" }, error)
 		return getErrorShape(trpcError as TRPCErrorWithGenerics, shape, zodError)
-	}
+	},
 })
 
 
@@ -174,16 +176,24 @@ export const createCallerFactory = t.createCallerFactory;
  */
 export const createTRPCRouter = t.router;
 
-const errorsMiddleware = t.middleware(async ({ ctx, next, path, input, type }) => {
-	// TOOD: maybe remove this
-	// ctx.apm?.setTransactionName( `${type}: ${path}`);
-	try {
-		return await next({
-			ctx
-		})
-	} catch (error) {
-		await ctx.logger.logError(error, { path, input, type, session: ctx.session })
+const apmMiddleware = t.middleware(async ({ ctx, next, path, type, getRawInput }) => {
+	const transaction = ctx?.apm?.startTransaction(`${type} /api/trpc/${path.replace('.', '/')}`, 'trpc', type, type, { childOf: ctx?.apm?.currentTransaction?.traceparent ?? undefined })
+	const response    = await next({ ctx })
+	const rawInput    = await getRawInput()
+	if(rawInput) ctx?.apm?.setLabel('request.input', typeof rawInput === 'object' ? JSON.stringify(rawInput) : (rawInput as number | string))
+	if(!response.ok) {
+		const trpcError = TRPCError.from<
+			typeof errorCodesMap,
+			typeof errorTranslationKeys,
+			typeof loggerInstance.errorBuilder
+		>({ errorBuilderInstance: loggerInstance.errorBuilder, errorTranslationKey: "errors:unknown" }, response.error)
+		await ctx?.logger.logError(trpcError)
+		trpcError.isLogged = true
+		response.error = trpcError
 	}
+	if(response.ok && response.data) ctx?.apm?.setLabel('response.data', typeof response.data === 'object' ? JSON.stringify(response.data) : (response.data as number | string))
+	transaction?.end()
+	return response
 })
 
 /**
@@ -195,7 +205,7 @@ const errorsMiddleware = t.middleware(async ({ ctx, next, path, input, type }) =
  */
 export const publicProcedure = t
 .procedure
-.use(errorsMiddleware)
+.use(apmMiddleware)
 
 
 /**
@@ -244,10 +254,10 @@ const enforceUserPermissions = (permissions: PermissionsFilter[]) => t.middlewar
  */
 export const protectedProcedure = t
 .procedure
-.use(errorsMiddleware)
+.use(apmMiddleware)
 .use(enforceUserIsAuthed)
 
 export const protectedProcedureWithPermissions = (permissions: PermissionsFilter[]) => t
 .procedure
-.use(errorsMiddleware)
+.use(apmMiddleware)
 .use(enforceUserPermissions(permissions))

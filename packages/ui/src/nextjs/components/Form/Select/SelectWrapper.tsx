@@ -1,7 +1,7 @@
 import styled from "@emotion/styled"
 import { motion } from "framer-motion"
 import { shouldForwardProp } from "../../../Utils/StyledUtils"
-import { css } from "@emotion/react"
+import { css, withTheme } from "@emotion/react"
 import tw from "twin.macro"
 import { SelectOption } from "./Select"
 import { theme } from "../../../index"
@@ -36,4 +36,4 @@ const SelectWrapper = styled (motion.div, {
 	]
 })
 
-export default SelectWrapper
+export default withTheme(SelectWrapper)

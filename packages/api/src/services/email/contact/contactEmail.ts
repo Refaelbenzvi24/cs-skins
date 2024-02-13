@@ -1,4 +1,4 @@
-import nodemailer from "nodemailer";
+import type nodemailer from "nodemailer";
 import { render } from "@react-email/render"
 
 import type { ContactEmailProps } from "@acme/email-templates/templates/contact";
