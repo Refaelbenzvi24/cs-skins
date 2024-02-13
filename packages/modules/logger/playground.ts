@@ -2,7 +2,7 @@ import logger, { buildErrorCodesMapObject } from "./src"
 import BaseError from "./src/Errors/BaseError"
 
 const errorCodesMap = {
-	E00001: buildErrorCodesMapObject({ severity: "ERROR", name: "UnknownError" }),
+	E00001: buildErrorCodesMapObject({ severity: "ERROR", type: "UnknownError" }),
 } as const
 
 

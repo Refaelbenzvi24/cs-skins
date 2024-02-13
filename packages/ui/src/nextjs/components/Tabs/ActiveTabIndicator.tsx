@@ -1,6 +1,6 @@
 import styled from "@emotion/styled"
 import { motion } from "framer-motion"
-import { css } from "@emotion/react"
+import { css, withTheme } from "@emotion/react"
 import tw from "twin.macro"
 import { shouldForwardProp } from "../../Utils/StyledUtils"
 import { SingleColorOptions, ZIndexOptions } from "../Theme/types"
@@ -39,4 +39,4 @@ const ActiveTabIndicator = styled (motion.span, {
 	]
 })
 
-export default ActiveTabIndicator
+export default withTheme(ActiveTabIndicator)

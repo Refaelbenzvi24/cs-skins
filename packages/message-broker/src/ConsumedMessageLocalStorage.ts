@@ -3,23 +3,21 @@ import type logger from "@acme/logger"
 
 
 interface MessageLocalStorageStore {
-	systemProcessId: string
-	initializedAtService: typeof logger.servicesMap[number]["name"]
-	sentByUser: string
+	traceparent?: string
 }
 
 export default class MessageLocalStorage {
-	private static asyncLocalStorage = new AsyncLocalStorage<MessageLocalStorageStore> ()
+	private static asyncLocalStorage = new AsyncLocalStorage<MessageLocalStorageStore>()
 
-	static getStore() {
-		return MessageLocalStorage.asyncLocalStorage.getStore ()
+	static getStore(){
+		return MessageLocalStorage.asyncLocalStorage.getStore()
 	}
 
-	static setStore(store: any) {
+	static setStore(store: any){
 		MessageLocalStorage.asyncLocalStorage.enterWith(store)
 	}
 
-	static run<T extends Promise<unknown>>({ systemProcessId, initializedAtService, sentByUser }: MessageLocalStorageStore, callback: () => T) {
-		return MessageLocalStorage.asyncLocalStorage.run ({ systemProcessId, initializedAtService, sentByUser }, callback)
+	static run<T extends Promise<unknown>>({ traceparent }: MessageLocalStorageStore, callback: () => T){
+		return MessageLocalStorage.asyncLocalStorage.run({ traceparent }, callback)
 	}
 }

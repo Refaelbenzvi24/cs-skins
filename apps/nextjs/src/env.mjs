@@ -27,6 +27,7 @@ export const env = createEnv({
 	 * built with invalid env vars.
 	 */
 	server: {
+		NEXT_APP_URL: z.string().url(),
 		DATABASE_URL: z.string().url(),
 		EMAIL_SERVICE_ENABLED: z.string().default("false"),
 		EMAIL_PORT: dependsOnEnvVar(z.string(), process.env.VALIDATE_EMAIL_VARS),
@@ -52,6 +53,7 @@ export const env = createEnv({
 	 * Destructure all variables from `process.env` to make sure they aren't tree-shaken away.
 	 */
 	runtimeEnv: {
+		NEXT_APP_URL: process.env.NEXT_APP_URL,
 		VERCEL_URL: process.env.VERCEL_URL,
 		PORT: process.env.PORT,
 		DATABASE_URL: process.env.DATABASE_URL,

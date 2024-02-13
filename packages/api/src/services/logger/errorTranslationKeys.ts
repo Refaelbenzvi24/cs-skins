@@ -2,8 +2,9 @@ import type { errorCodesMap } from "./index"
 
 
 export const errorTranslationKeys = {
-	"errors:authenticationError":                                                     "E00001",
-	"errors:authorizationError":                                                      "E00002",
-	"errors:permissionsError":                                                        "E00003",
-	"errors:unknownError":                                                            "E00004"
+	"errors:unknown":          "E00001",
+	"errors:authenticationError":   "E00002",
+	"errors:authorizationError":    "E00003",
+	"errors:permissionsError":      "E00004",
+	"errors:weapons.list.notFound": "E00005",
 } satisfies Record<string, keyof typeof errorCodesMap>

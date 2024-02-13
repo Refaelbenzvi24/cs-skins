@@ -8,27 +8,29 @@ import errors from "./Errors"
 
 
 type TransportsType<
+	ErrorTransformer extends keyof typeof errors,
 	ErrorCodesMap extends Record<string, ReturnType<typeof buildErrorCodesMapObject>>,
-	ErrorTranslationKeys extends Record<`errors:${string}`, keyof ErrorCodesMap>,
+	ErrorTranslationKeys extends Record<string, keyof ErrorCodesMap>,
 	ErrorName extends ErrorNameOptions,
 	ErrorCode extends keyof ErrorCodesMap,
-	ExtraDetails extends Record<string, unknown> | undefined = undefined
+	ExtraDetails extends Record<string, unknown> | undefined = undefined,
 > = (logger: {
 	createTransport: (props: CreateTransportProps<
 		ErrorCodesMap,
-		ErrorTranslationKeys
+		ErrorTranslationKeys,
+		ErrorTransformer
 	>) => {
 		callback: (error: BaseError<
 			ErrorCodesMap,
 			ErrorTranslationKeys,
-			keyof Pick<ErrorTranslationKeys, `errors:${string}`>,
+			Exclude<keyof ErrorTranslationKeys, number | symbol>,
 			ErrorName,
 			ErrorCode,
 			ExtraDetails
 		> | TRPCError<
 			ErrorCodesMap,
 			ErrorTranslationKeys,
-			keyof Pick<ErrorTranslationKeys, `errors:${string}`>,
+			Exclude<keyof ErrorTranslationKeys, number | symbol>,
 			ErrorName,
 			ErrorCode,
 			ExtraDetails
@@ -39,7 +41,7 @@ type TransportsType<
 		killProcessOnFailure?: boolean
 	}
 }) => {
-	callback?: (error: unknown, extraDetails?: Record<string, unknown>) => MaybePromise<void>
+	callback: (error: unknown, extraDetails?: Record<string, unknown>) => MaybePromise<void>
 	retries?: number
 	retryDelay?: number
 	severities: typeof errorSeverity[number][]
@@ -49,12 +51,13 @@ type TransportsType<
 interface ErrorLoggerProps<
 	ErrorTransformer extends keyof typeof errors,
 	ErrorCodesMap extends Record<string, ReturnType<typeof buildErrorCodesMapObject>>,
-	ErrorTranslationKeys extends Record<`errors:${string}`, keyof ErrorCodesMap>,
+	ErrorTranslationKeys extends Record<string, keyof ErrorCodesMap>,
 	ErrorName extends ErrorNameOptions,
 	ErrorCode extends keyof ErrorCodesMap,
 	ExtraDetails extends Record<string, unknown> | undefined = undefined
 > {
 	transports: TransportsType<
+		ErrorTransformer,
 		ErrorCodesMap,
 		ErrorTranslationKeys,
 		ErrorName,
@@ -65,12 +68,13 @@ interface ErrorLoggerProps<
 }
 
 const logger = <
-	ErrorTransformer extends keyof typeof errors,
 	ErrorCodesMap extends Record<string, ReturnType<typeof buildErrorCodesMapObject>>,
-	ErrorTranslationKeys extends Record<`errors:${string}`, keyof ErrorCodesMap>,
-	ErrorBuilder extends ReturnType<ReturnType<typeof errorBuilder<ErrorCodesMap, ErrorTranslationKeys>>>,
+	ErrorTranslationKeys extends Record<string, keyof ErrorCodesMap>,
+	ErrorBuilder extends ReturnType<ReturnType<typeof errorBuilder<ErrorCodesMap, ErrorTranslationKeys>>>
 >(errorBuilderInstance: ErrorBuilder) =>
-	(errorLoggerProps: ErrorLoggerProps<
+	<
+		ErrorTransformer extends keyof typeof errors
+	>(errorLoggerProps: ErrorLoggerProps<
 		ErrorTransformer,
 		ErrorCodesMap,
 		ErrorTranslationKeys,
@@ -83,34 +87,25 @@ const logger = <
 			let retriesCounter = 0
 			await Promise.all(createdTransports.map(async (transport) => {
 				const { callback, retries = 0, retryDelay = 500, killProcessOnFailure = false } = transport
-				try {
-					if(callback){
-						return await callback(error, extraDetails)
-					}
-					retriesCounter = 0
-				} catch {
-					if(retries > retriesCounter){
-						if(retryDelay){
-							// TODO: check this - maybe it should resolve somehow the logError function in the setTimeout, check that the function really wait for the callback in the recursion
-							return setTimeout(() => {
-								logError(error, extraDetails)
-								retriesCounter++
-							}, retryDelay)
+				const withRetries                                                               = async () => {
+					try {
+						await callback(error, extraDetails)
+					} catch {
+						if(retriesCounter < retries){
+							retriesCounter++
+							await new Promise((resolve) => setTimeout(resolve, retryDelay))
+							await withRetries()
+							return;
 						}
-						retriesCounter++
-						return logError(error, extraDetails)
-					}
-					if(killProcessOnFailure){
-						process.exit(1)
+						if(killProcessOnFailure){
+							process.exit(1)
+						}
 					}
 				}
+				await withRetries()
 			}))
 		}
-
-		return {
-			logError,
-
-		}
+		return { logError }
 	}
 
 export default logger

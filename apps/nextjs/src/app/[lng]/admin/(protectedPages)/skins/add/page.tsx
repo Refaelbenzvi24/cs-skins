@@ -18,7 +18,7 @@ const Page = managedRsc(async ({ params: { lng } }: PageWithLocaleProps) => {
 	const {t} = await getTranslation(lng, ["common", "admin"])
 
 	return (
-		<main className="flex min-h-full justify-center items-center">
+		<main className="flex min-h-full w-full justify-center items-center">
 			<Col className="mx-auto items-center justify-center min-[950px]:w-[900px] py-20 px-[30px]">
 				<Row
 					className="w-full items-center justify-center px-[24px] pb-[120px] rtl:space-x-reverse">

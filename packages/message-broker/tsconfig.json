@@ -1,22 +1,26 @@
 {
-	"extends":         "@acme/tsconfig/base.json",
-	"compilerOptions": {
-		"tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
-		"types":           [
-			"./global.d.ts",
+	"extends" :         "@acme/tsconfig/base.json",
+	"compilerOptions" : {
+		"paths" :            {
+			"~/*" : [
+				"./src/*"
+			]
+		},
+		"tsBuildInfoFile" : "node_modules/.cache/tsbuildinfo.json",
+		"types" :           [
 			"node",
-			"jest"
 		]
 	},
-	"ts-node":         {
-		"compilerOptions": {
-			"module": "commonjs"
+	"ts-node" :         {
+		"compilerOptions" : {
+			"module" : "commonjs",
 		}
 	},
-	"include":         [
-		"."
+	"include" :         [
+		"src/**/*.ts",
+		"./amqplib.d.ts"
 	],
-	"exclude":         [
+	"exclude" :         [
 		"node_modules"
 	]
 }

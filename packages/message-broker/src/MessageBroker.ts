@@ -2,25 +2,12 @@ import * as amqplib from "amqplib";
 import type { Channel, Connection, ConsumeMessage, Options } from "amqplib";
 import type { Replies } from "amqplib/properties";
 
-import { buildConnectionString, type BuildConnectionStringProps } from "./connectionUtils";
+import { buildConnectionString  } from "./connectionUtils";
+import type {BuildConnectionStringProps} from "./connectionUtils";
 import type { PayloadsByQueueName, QueueNames } from "./types"
-import { createId } from "@paralleldrive/cuid2"
 import MessageLocalStorage from "./ConsumedMessageLocalStorage"
-import DefaultHeadersInjector from "./utils/DefaultHeadersInjector"
-import { errorTranslationKeys, loggerInstance } from "./logger"
-import logger from "@acme/logger"
+import GlobalHelpers from "./utils/GlobalHelpers"
 
-
-const getErrorFromUnknown = (fallbackErrorKey: keyof typeof errorTranslationKeys, error: unknown, extraDetails?: unknown) => {
-	const store = MessageLocalStorage.getStore()
-	if(error instanceof logger.errors.BaseError || error instanceof logger.errors.TRPCError){
-		return error.addSystemProcessId(store?.systemProcessId)
-	}
-	return loggerInstance({
-		initializedAtService: store?.initializedAtService ?? process.env.npm_package_name as typeof logger.servicesMap[number]["name"],
-		loggedAtService:      process.env.npm_package_name as typeof logger.servicesMap[number]["name"],
-	}).errorBuilder.BaseError(fallbackErrorKey, { cause: error, extraDetails })
-}
 
 export class Producer<QueueName extends QueueNames> {
 	static connection: Connection;
@@ -28,6 +15,7 @@ export class Producer<QueueName extends QueueNames> {
 	queue: Replies.AssertQueue | undefined;
 	queueName: QueueName;
 	options?: Options.AssertQueue;
+
 
 	constructor(queueName: QueueName, options?: Options.AssertQueue){
 		this.queueName = queueName
@@ -37,57 +25,40 @@ export class Producer<QueueName extends QueueNames> {
 	async setupConnection(connectionParameters: BuildConnectionStringProps){
 		if(!Producer.connection){
 			const connectionString = buildConnectionString(connectionParameters)
-			try {
-				Producer.connection = await amqplib.connect(connectionString);
-			} catch (error) {
-				throw getErrorFromUnknown("errors:messageBroker.producer.connect.unknown", error, { queue: this.queue })
-			}
+			Producer.connection    = await amqplib.connect(connectionString);
 		}
 	}
 
 	async createChannel(){
-		try {
-			if(!Producer.channel) Producer.channel = await Producer.connection.createChannel();
-		} catch (error) {
-			throw getErrorFromUnknown("errors:messageBroker.producer.createChannel.unknown", error, { queue: this.queue })
-		}
+		if(!Producer.channel) Producer.channel = await Producer.connection.createChannel();
 	}
 
 	async initializeProducer(connectionParameters: BuildConnectionStringProps){
 		await this.setupConnection(connectionParameters)
 		await this.createChannel()
-
-		try {
-			this.queue = await Producer.channel.assertQueue(this.queueName, this.options);
-		} catch (error) {
-			throw getErrorFromUnknown("errors:messageBroker.producer.assertQueue.unknown", error, { queue: this.queue })
-		}
+		this.queue = await Producer.channel.assertQueue(this.queueName, this.options);
+		return this.queue
 	}
 
 	async purgeQueue(){
-		try {
-			return await Producer.channel.purgeQueue(this.queueName)
-		} catch (error) {
-			throw getErrorFromUnknown("errors:messageBroker.producer.purgeQueue.unknown", error, { queue: this.queue })
-		}
+		return await Producer.channel.purgeQueue(this.queueName)
 	}
 
 	async sendMessage(message: PayloadsByQueueName[QueueName], options?: Options.Publish){
-		const { systemProcessId, initializedAtService, sentByUser } = MessageLocalStorage.getStore() ?? {}
-		try {
-			Producer.channel.sendToQueue(this.queueName, Buffer.from(JSON.stringify(message)), {
-				...options,
-				headers: {
-					initializedAtService: initializedAtService ?? process.env.npm_package_name,
-					systemProcessId:      systemProcessId ?? createId(),
-					...(await DefaultHeadersInjector.getHeaders()),
-					sentByUser: options?.headers?.sentByUser ?? (await DefaultHeadersInjector.getHeaders())?.sentByUser ?? sentByUser ?? "system",
-					...options?.headers
-				},
-			})
-		} catch (error) {
-			throw getErrorFromUnknown("errors:messageBroker.producer.publish.unknown", error, { queue: this.queue })
-		}
+		const { traceparent } = MessageLocalStorage.getStore() ?? {}
+		const transaction     = GlobalHelpers?.apm?.startTransaction(`Producer: ${this.queueName} ${message.payload}`, 'message-broker', { tracestate: traceparent })
+		transaction?.setLabel('queueName', this.queueName)
+		transaction?.setLabel('messageContent', JSON.stringify(message))
+		transaction?.setLabel('options', JSON.stringify(options))
+		Producer.channel.sendToQueue(this.queueName, Buffer.from(JSON.stringify(message)), {
+			...options,
+			headers: {
+				...options?.headers,
+				traceparent: transaction?.traceparent ?? traceparent ?? undefined,
+				sentAt:    new Date().toISOString()
+			},
+		})
+		transaction?.end()
 	}
 }
 
@@ -108,55 +79,41 @@ export class Consumer<QueueName extends QueueNames> {
 	async setupConnection(connectionParameters: BuildConnectionStringProps){
 		if(!Consumer.connection){
 			const connectionString = buildConnectionString(connectionParameters)
-			try {
-				Consumer.connection = await amqplib.connect(connectionString);
-			} catch (error) {
-				throw getErrorFromUnknown("errors:messageBroker.consumer.connect.unknown", error, { queue: this.queue })
-			}
+			Consumer.connection    = await amqplib.connect(connectionString);
 		}
 	}
 
 	async createChannel(){
-		try {
-			if(!Consumer.channel) Consumer.channel = await Consumer.connection.createChannel();
-		} catch (error) {
-			throw getErrorFromUnknown("errors:messageBroker.consumer.createChannel.unknown", error, { queue: this.queue })
-		}
+		if(!Consumer.channel) Consumer.channel = await Consumer.connection.createChannel();
 	}
 
 	async initializeConsumer(connectionParameters: BuildConnectionStringProps){
 		await this.setupConnection(connectionParameters)
 		await this.createChannel()
-
-		try {
-			this.queue = await Consumer.channel.assertQueue(this.queueName);
-		} catch (error) {
-			throw getErrorFromUnknown("errors:messageBroker.consumer.assertQueue.unknown", error, { queue: this.queue })
-		}
+		this.queue = await Consumer.channel.assertQueue(this.queueName);
+		return this.queue
 	}
 
-	async consumeMessages(messageHandler: (messageContent: PayloadsByQueueName[QueueName], msg: ConsumeMessage | null) => Promise<any>, options: ExtendedConsumeOptions = {}){
+	async consumeMessages(messageHandler: (messageContent: PayloadsByQueueName[QueueName], msg: ConsumeMessage | null) => Promise<unknown>, options: ExtendedConsumeOptions = {}){
 		const { disableAutoAck, ...restOptions } = options
 		await Consumer.channel.consume(this.queueName, async (msg) => {
 			if(!msg) return;
 			const messageContent = JSON.parse(msg.content.toString() || "{}") as PayloadsByQueueName[QueueName]
-
+			const transaction    = GlobalHelpers?.apm?.startTransaction(`Consumer: ${this.queueName} ${messageContent?.payload}`, 'message-broker', { childOf: msg.properties.headers?.traceparent })
+			transaction?.setLabel('queueName', this.queueName)
+			transaction?.setLabel('messageContent', JSON.stringify(messageContent))
 			await MessageLocalStorage.run(
 				{
-					initializedAtService: msg.properties?.headers?.initializedAtService,
-					systemProcessId:      msg.properties?.headers?.systemProcessId,
-					sentByUser:           msg.properties?.headers?.sentByUser,
+					traceparent: (transaction?.traceparent ?? msg.properties.headers?.traceparent as string | undefined) ?? undefined
 				},
 				async () => {
-					try {
-						const messageReturning = await messageHandler(messageContent, msg)
-						if(!disableAutoAck) Consumer.channel.ack(msg)
-						return messageReturning
-					} catch (error) {
-						throw getErrorFromUnknown("errors:messageBroker.consumer.consume.unknown", error, { queue: this.queue })
-					}
+					const messageReturning = await messageHandler(messageContent, msg)
+					if(!disableAutoAck) Consumer.channel.ack(msg)
+					return messageReturning
 				}
 			)
+			transaction?.end()
 		}, restOptions);
 	}
 }
+

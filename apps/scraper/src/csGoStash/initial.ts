@@ -1,5 +1,6 @@
 import { getSkinHtml, getSkinTableData, getSkinTitle } from "./shared"
 import { db, schema, dbOperators, dbHelper } from "@acme/db"
+import { newError } from "../services/logger"
 
 
 const getBasicSkinData = async (url: string) => {
@@ -51,7 +52,9 @@ const getSource = async () => {
 		.from(schema.sources)
 		.where(({ name }) => eq(name, "CS Go Stash"))
 		.execute()
-	return source!
+
+	if (!source) throw newError.BaseError("errors:sources.notFound", { extraDetails: { sourceName: "CS Go Stash" } })
+	return source
 }
 
 const getWeapon = ({ data }: { data: Parameters<typeof dbHelper.mutate.weapons.insert>[0]['data'] }) => {
@@ -60,13 +63,14 @@ const getWeapon = ({ data }: { data: Parameters<typeof dbHelper.mutate.weapons.i
 		      .select()
 		      .from(schema.weapons)
 		      .where(({ name: weaponName }) => dbOperators.eq(weaponName, data.name))
+
 	return {
 		ignoreIfNotExists: async () => await weaponQuery.execute(),
 		insertIfNotExists: async ({ connect = {} }: { connect?: Parameters<typeof dbHelper.mutate.weapons.insert>[0]['connect'] } = {}) => {
 			const [weapon] = await weaponQuery.execute()
 
 			if(weapon) return weapon
-			return dbHelper.mutate.weapons.insert({ data, connect })
+			return await dbHelper.mutate.weapons.insert({ data, connect })
 		}
 	}
 }

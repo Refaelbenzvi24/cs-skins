@@ -3,16 +3,16 @@ import { buildErrorCodesMapObject } from "@acme/logger"
 
 
 const errorCodesMap = {
-	E00001: buildErrorCodesMapObject({ severity: "ERROR", name: "MessageBroker", subName: "SendingMessage" }),
-	E00002: buildErrorCodesMapObject({ severity: "ERROR", name: "MessageBroker", subName: "MessageConsuming" }),
-	E00003: buildErrorCodesMapObject({ severity: "ERROR", name: "MessageBroker", subName: "AssertingQueue" }),
-	E00004: buildErrorCodesMapObject({ severity: "ERROR", name: "MessageBroker", subName: "AssertingQueue" }),
-	E00005: buildErrorCodesMapObject({ severity: "ERROR", name: "MessageBroker", subName: "Connection" }),
-	E00006: buildErrorCodesMapObject({ severity: "ERROR", name: "MessageBroker", subName: "Connection" }),
-	E00007: buildErrorCodesMapObject({ severity: "ERROR", name: "MessageBroker", subName: "ChannelCreation" }),
-	E00008: buildErrorCodesMapObject({ severity: "ERROR", name: "MessageBroker", subName: "ChannelCreation" }),
-	E00009: buildErrorCodesMapObject({ severity: "ERROR", name: "MessageBroker", subName: "ChannelCreation" }),
-	E00010: buildErrorCodesMapObject({ severity: "ERROR", name: "MessageBroker", subName: "PurgingQueue" }),
+	E00001: buildErrorCodesMapObject({ severity: "ERROR", type: "MessageBroker", subName: "SendingMessage" }),
+	E00002: buildErrorCodesMapObject({ severity: "ERROR", type: "MessageBroker", subName: "MessageConsuming" }),
+	E00003: buildErrorCodesMapObject({ severity: "ERROR", type: "MessageBroker", subName: "AssertingQueue" }),
+	E00004: buildErrorCodesMapObject({ severity: "ERROR", type: "MessageBroker", subName: "AssertingQueue" }),
+	E00005: buildErrorCodesMapObject({ severity: "ERROR", type: "MessageBroker", subName: "Connection" }),
+	E00006: buildErrorCodesMapObject({ severity: "ERROR", type: "MessageBroker", subName: "Connection" }),
+	E00007: buildErrorCodesMapObject({ severity: "ERROR", type: "MessageBroker", subName: "ChannelCreation" }),
+	E00008: buildErrorCodesMapObject({ severity: "ERROR", type: "MessageBroker", subName: "ChannelCreation" }),
+	E00009: buildErrorCodesMapObject({ severity: "ERROR", type: "MessageBroker", subName: "ChannelCreation" }),
+	E00010: buildErrorCodesMapObject({ severity: "ERROR", type: "MessageBroker", subName: "PurgingQueue" }),
 } as const
 
 export const errorTranslationKeys = {
@@ -28,6 +28,6 @@ export const errorTranslationKeys = {
 	"errors:messageBroker.consumer.purgeQueue.unknown":    "E00010",
 } satisfies Record<string, keyof typeof errorCodesMap>
 
-// TODO: important - fix this - use createInstance
-
 export const loggerInstance = logger.createInstance(errorCodesMap, errorTranslationKeys)
+
+// TODO: consider removing this...

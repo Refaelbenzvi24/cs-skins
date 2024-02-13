@@ -4,7 +4,7 @@ import Icons from 'unplugin-icons/webpack'
 import AutoImport from "unplugin-auto-import/webpack"
 import IconsResolver from 'unplugin-icons/resolver'
 import "./src/env.mjs";
-import "@acme/auth/env.mjs";
+import "@acme/auth/env";
 
 /**
  * @type {import('next').NextConfig}
@@ -12,12 +12,19 @@ import "@acme/auth/env.mjs";
 const config = withTwin({
 	reactStrictMode: true,
 	swcMinify: true,
+	productionBrowserSourceMaps: true,
 	experimental: {
-		serverActions: true
+		serverActions: true,
+		instrumentationHook: true,
+		esmExternals: "loose",
+		serverComponentsExternalPackages: ['elastic-apm-node']
 		// optimizeCss: true, // enabling this will enable SSR for Tailwind
 	},
 
-	webpack: (config, {webpack}) => {
+	webpack: (config, options) => {
+		const {webpack} = options
+		if (options.isServer) config.devtool = 'source-map';
+
 		config.plugins.push(
 			Icons({
 				compiler: 'jsx',
@@ -30,14 +37,14 @@ const config = withTwin({
 				resolvers: [
 					IconsResolver({
 						componentPrefix: 'Icon',
-						extension:       'jsx'
+						extension: 'jsx'
 					})
 				],
-				include:   [
+				include: [
 					/\.[tj]sx?$/, // .ts, .tsx, .js, .jsx
 					/\.md$/, // .md
 				],
-				dts:       'src/auto-imports.d.ts',
+				dts: 'src/auto-imports.d.ts',
 			})
 		)
 
@@ -70,16 +77,29 @@ const config = withTwin({
 			{
 				test: /\.svg$/i,
 				issuer: fileLoaderRule.issuer,
-				resourceQuery: { not: [...fileLoaderRule.resourceQuery.not, /url/] }, // exclude if *.svg?url
+				resourceQuery: {not: [...fileLoaderRule.resourceQuery.not, /url/]}, // exclude if *.svg?url
 				use: ['@svgr/webpack'],
 			},
 		)
 		// Modify the file loader rule to ignore *.svg, since we have it handled now.
 		fileLoaderRule.exclude = /\.svg$/i
 
-		return config
+		config.plugins.push(
+			new webpack.EnvironmentPlugin({
+				NODE_ENV: 'production',
+			})
+		)
+
+		return {
+			...config,
+			// target: 'node',
+			// externalsPresets: {
+			// 	node: true
+			// },
+			// externals: [nodeExternals()]
+		}
 	},
-	transpilePackages: ["@acme/api", "@acme/auth", "@acme/db", "@acme/logger", "@acme/ui", "@trpc/next-layout"],
+	transpilePackages: ["@acme/api", "@acme/auth", "@acme/db", "@acme/logger", "@acme/ui"],
 	eslint: {ignoreDuringBuilds: true},
 	typescript: {ignoreBuildErrors: true},
 })

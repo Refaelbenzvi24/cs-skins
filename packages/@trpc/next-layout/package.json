@@ -15,6 +15,6 @@
   },
   "devDependencies": {
     "@acme/tsconfig": "0.1.0",
-    "typescript": "5.0.3"
+    "typescript": "5.3.3"
   }
 }

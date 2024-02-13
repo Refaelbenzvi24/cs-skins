@@ -10,7 +10,7 @@ const ErrorPage = ({
 	error: ReturnType<typeof getErrorShape> | TRPCErrorWithGenerics | Error
 	reset: () => void
 }) => {
-	if('data' in error){
+	if('data' in error && typeof error.data === 'object' && 'code' in error.data){
 		const ErrorComponent = errorCodesComponentsMap[error.data.code]
 		return (
 			<ErrorComponent message={error.data.message} errorId={error.data.errorId} timestamp={error.data.timestamp} errorCode={error.data.errorCode} code={error.data.code}/>
@@ -19,11 +19,12 @@ const ErrorPage = ({
 	if(error instanceof TRPCError){
 		const ErrorComponent = errorCodesComponentsMap[error.code]
 		return (
-			<ErrorComponent message={(error as TRPCErrorWithGenerics).message} errorId={error.errorId} timestamp={error.timestamp} errorCode={(error as TRPCErrorWithGenerics).errorCode} code={error.code}/>
+			<ErrorComponent message={(error as TRPCErrorWithGenerics).message} errorId={error.errorId} timestamp={error.timestamp} errorCode={(error as TRPCErrorWithGenerics).errorCode}
+			                code={error.code}/>
 		)
 	}
+	if(process.env.NODE_ENV === 'development') console.log({ ...error, message: error.message, stack: error instanceof Error ? error?.stack?.split('\n') : null })
 	// TODO: add some error page
-	if(process.env.NODE_ENV === 'development') console.log({ ...error, message: error.message, stack: error?.stack?.split('\n') })
 	return <div>Unknown error</div>
 }
 

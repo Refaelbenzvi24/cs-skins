@@ -7,10 +7,13 @@ const createInstance = <
 	ErrorCodesMap extends Record<string, ReturnType<typeof buildErrorCodesMapObject>>,
 	ErrorTranslationKeys extends Record<string, keyof ErrorCodesMap>
 >(errorCodesMap: ErrorCodesMap, errorTranslationKeys: ErrorTranslationKeys) => (details: ErrorParams) => {
-	const errorBuilderInstance = errorBuilder(errorCodesMap, errorTranslationKeys)(details)
+	const errorBuilderInstance = errorBuilder<
+		ErrorCodesMap,
+		ErrorTranslationKeys
+	>(errorCodesMap, errorTranslationKeys)(details)
 	return {
 		errorBuilder: errorBuilderInstance,
-		logger: logger(errorBuilderInstance),
+		logger: logger<ErrorCodesMap, ErrorTranslationKeys, typeof errorBuilderInstance>(errorBuilderInstance),
 	}
 }
 

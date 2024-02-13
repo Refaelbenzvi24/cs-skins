@@ -1,4 +1,3 @@
-
 import type { InferModel, AnyTable} from "drizzle-orm";
 import { sql } from "drizzle-orm";
 import type {AnyColumn, SQL} from "drizzle-orm";

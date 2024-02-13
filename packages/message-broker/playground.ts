@@ -1,4 +1,14 @@
-import { Producer, Consumer, BuildConnectionStringProps } from "./src"
+import apm from "elastic-apm-node"
+const serviceName = process.env.APP || 'message-broker-playground'
+apm.start({
+	serviceName,
+	active: process.env.APM_IS_ACTIVE === 'true',
+	serverUrl: process.env.APM_URL || 'http://localhost:8200',
+	secretToken: process.env.APM_SECRET_TOKEN || undefined,
+	environment: process.env.ENVIRONMENT || 'development',
+})
+import { Producer, Consumer, BuildConnectionStringProps, setApmInstance } from "./src"
+setApmInstance(apm)
 import { QueueNames } from "./src/types"
 
 
@@ -24,7 +34,6 @@ const playground = async () => {
 	await consumer.initializeConsumer(connectionParams)
 	await consumer.consumeMessages(async (message, msg) => {
 		console.log(message)
-		console.log(msg)
 	})
 }
 

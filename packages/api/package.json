@@ -1,50 +1,49 @@
 {
-	"name": "@acme/api",
-	"version": "0.1.0",
-	"private": true,
-	"main": "./index.ts",
-	"types": "./index.ts",
-	"scripts": {
-		"clean": "rm -rf .turbo node_modules",
-		"lint": "eslint .",
-		"format": "prettier --check \"**/*.{mjs,ts,md,json}\"",
-		"typecheck": "tsc --noEmit"
+	"name" :            "@acme/api",
+	"version" :         "0.1.0",
+	"private" :         true,
+	"main" :            "./src/index.ts",
+	"types" :           "./src/index.ts",
+	"scripts" :         {
+		"clean" :     "rm -rf .turbo node_modules",
+		"lint" :      "eslint .",
+		"format" :    "prettier --check \"**/*.{mjs,ts,md,json}\"",
+		"typecheck" : "tsc --noEmit"
 	},
-	"dependencies": {
-		"@acme/auth": "0.1.0",
-		"@acme/db": "0.1.0",
-		"@acme/email-templates": "*",
-		"@acme/logger": "0.1.0",
-		"@acme/message-broker": "*",
-		"@acme/validations": "*",
-		"@react-email/render": "0.0.6",
-		"@trpc/client": "next",
-		"@trpc/server": "next",
-		"lodash": "4.17.21",
-		"moment": "2.29.4",
-		"nodemailer": "6.9.1",
-		"nodemailer-smtp-transport": "2.7.4",
-		"superjson": "1.13.1",
-		"zod": "3.22.2"
+	"dependencies" :    {
+		"@acme/auth" :                "0.1.0",
+		"@acme/db" :                  "0.1.0",
+		"@acme/email-templates" :     "1.0.0",
+		"@acme/logger" :              "0.1.0",
+		"@acme/message-broker" :      "0.1.0",
+		"@acme/validations" :         "0.1.0",
+		"@react-email/render" :       "0.0.6",
+		"@trpc/server" :              "11.0.0-next-beta.264",
+		"lodash" :                    "4.17.21",
+		"moment" :                    "2.29.4",
+		"nodemailer" :                "6.9.1",
+		"nodemailer-smtp-transport" : "2.7.4",
+		"superjson" :                 "1.13.1",
+		"zod" :                       "3.22.4"
 	},
-	"devDependencies": {
-		"@acme/eslint-config": "0.2.0",
-		"@acme/prettier-config": "0.1.0",
-		"@acme/tsconfig": "0.1.0",
-		"@types/nodemailer": "6.4.7",
-		"@types/nodemailer-smtp-transport": "2.7.5",
-		"@types/preview-email": "3.0.0",
-		"elastic-apm-node": "4.4.0",
-		"eslint": "8.50.0",
-		"prettier": "3.0.3",
-		"preview-email": "3.0.10",
-		"typescript": "5.2.2"
+	"devDependencies" : {
+		"@acme/eslint-config" :              "0.2.0",
+		"@acme/prettier-config" :            "0.1.0",
+		"@acme/tsconfig" :                   "0.1.0",
+		"@types/nodemailer" :                "6.4.7",
+		"@types/nodemailer-smtp-transport" : "2.7.5",
+		"@types/preview-email" :             "3.0.0",
+		"elastic-apm-node" :                 "github:elastic/apm-agent-nodejs#trentm/nextjs-usePathAsTransactionName",
+		"eslint" :                           "8.50.0",
+		"prettier" :                         "3.0.3",
+		"preview-email" :                    "3.0.10",
+		"typescript" :                       "5.3.3"
 	},
-	"eslintConfig": {
-		"root": true,
-		"extends": [
+	"eslintConfig" :    {
+		"root" :    true,
+		"extends" : [
 			"@acme/eslint-config/base"
 		]
 	},
-	"prettier": "@acme/prettier-config"
+	"prettier" :        "@acme/prettier-config"
 }

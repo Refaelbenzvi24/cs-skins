@@ -1,26 +1,42 @@
 {
-	"name": "cronjobs",
-	"version": "0.1.0",
-	"main": "src/index.ts",
-	"types": "src/index.ts",
-	"license": "MIT",
-	"scripts": {
-		"dev": "ts-node-dev -r dotenv/config src/index.ts",
-		"start": "ts-node src/index.ts"
+	"name" :            "cronjobs",
+	"version" :         "0.1.0",
+	"main" :            "src/index.ts",
+	"types" :           "src/index.ts",
+	"license" :         "MIT",
+	"scripts" :         {
+		"dev" :   "ts-node-dev -r dotenv/config src/index.ts",
+		"start" : "ts-node src/index.ts"
 	},
-	"devDependencies": {
-		"@types/cheerio": "0.22.31",
-		"@types/cron": "2.0.0",
-		"@types/node": "18.0.0",
-		"nodemon": "2.0.20",
-		"ts-node-dev": "2.0.0",
-		"typescript": "5.2.2"
+	"devDependencies" : {
+		"@acme/eslint-config" :   "0.2.0",
+		"@acme/prettier-config" : "0.1.0",
+		"@acme/tsconfig" :        "0.1.0",
+		"@types/cheerio" :        "0.22.31",
+		"@types/cron" :           "2.0.0",
+		"@types/node" :           "18.0.0",
+		"nodemon" :               "2.0.20",
+		"typescript" :            "5.3.3"
 	},
-	"dependencies": {
-		"@acme/message-broker": "0.1.0",
-		"axios": "1.5.1",
-		"cron": "2.1.0",
-		"cron-converter": "2.0.1",
-		"ts-node": "10.9.1"
-	}
+	"dependencies" :    {
+		"@acme/message-broker" : "0.1.0",
+		"@acme/logger" :         "0.1.0",
+		"axios" :                "1.5.1",
+		"cron" :                 "2.1.0",
+		"cron-converter" :       "2.0.1",
+		"elastic-apm-node" :     "4.4.1",
+		"ts-node" :              "10.9.2"
+	},
+	"eslintConfig" :    {
+		"root" :    true,
+		"extends" : [
+			"@acme/eslint-config/base",
+			"@acme/eslint-config/nextjs",
+			"@acme/eslint-config/react"
+		]
+	},
+	"browser" :         {
+		"elastic-apm-node" : false
+	},
+	"prettier" :        "@acme/prettier-config"
 }

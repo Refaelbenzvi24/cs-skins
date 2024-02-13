@@ -1,5 +1,5 @@
 import * as nextAuthJwt from "next-auth/jwt"
-import { PermissionsType } from "@acme/db/src/schema/auth"
+import type { PermissionsType } from "@acme/db/src/schema/auth"
 
 declare module "next-auth/jwt" {
 
@@ -11,7 +11,7 @@ declare module "next-auth/jwt" {
 }
 
 declare module "next-auth" {
-	import { DefaultSession } from "@auth/core/types"
+	import type { DefaultSession } from "@auth/core/types"
 
 	interface User {
 		id: string;

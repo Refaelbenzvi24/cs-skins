@@ -6,7 +6,7 @@ import Error401Illustration from "~/assets/error_401_illustration.svg"
 import ErrorInfo from "~/components/errors/ErrorInfo"
 
 
-const UnauthorizedError = ({ message, ...error }: ErrorComponentProps) => {
+const Unauthorized = ({ message, ...error }: ErrorComponentProps) => {
 	const { language } = useMain()
 	const { t }        = useTranslation(language, ['errors'])
 
@@ -62,4 +62,4 @@ const UnauthorizedError = ({ message, ...error }: ErrorComponentProps) => {
 	);
 }
 
-export default UnauthorizedError
+export default Unauthorized

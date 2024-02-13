@@ -1,5 +1,5 @@
-import { db, dbOperators, schema as schemaList } from "../../index"
-import { PaginateWithSearchParams } from "../../types/queryParams"
+import { db, dbOperators, schema as schemaList } from "../index"
+import type { PaginateWithSearchParams } from "../../types/queryParams"
 import { addOperatorByParametersNil } from "../utils"
 
 

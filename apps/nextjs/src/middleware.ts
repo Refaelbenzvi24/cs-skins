@@ -3,7 +3,6 @@ import { withLanguage } from "~/middleware/language"
 import { stackMiddlewares } from "~/middleware/stackHandler"
 import acceptLanguage from 'accept-language'
 
-
 // TODO: move to settings
 const languages = ['en', 'he']
 

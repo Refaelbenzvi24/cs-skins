@@ -1,11 +1,11 @@
 import type { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
 
-import type { AppRouter } from "./src/root";
+import type { AppRouter } from "./root";
 import { setDefaultHeadersInjector } from "@acme/message-broker"
 import { auth } from "@acme/auth"
-import { createCallerFactory } from "./src/trpc";
-import { appRouter } from "./src/root";
-import { createTRPCContext } from "./src/trpc";
+import { createCallerFactory } from "./trpc";
+import { appRouter } from "./root";
+import { createTRPCContext } from "./trpc";
 
 /**
  * Create a server-side caller for the tRPC API
@@ -18,8 +18,8 @@ const createCaller = createCallerFactory(appRouter)
 setDefaultHeadersInjector(async () => {
 	const session = await auth()
 	return {
-		userID:     session.user?.sub,
-		sentByUser: session.user?.sub ? "user" : "public"
+		userID:     session?.user?.sub,
+		sentByUser: session?.user?.sub ? "user" : "public"
 	}
 })
 

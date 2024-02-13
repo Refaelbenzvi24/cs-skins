@@ -17,5 +17,8 @@ send: שלח
 metadata:
     title: CS Skins
     appDescription: CS Skins
+    login:
+        title: התחברות
+        description: התחברות למערכת
 open: פתיחה
 close: סגירה

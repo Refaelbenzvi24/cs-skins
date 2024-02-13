@@ -1,6 +1,7 @@
 import cheerio from "cheerio";
 import axios from "axios";
 import DelayManager from "../modules/DelayManager";
+import { logError, newError } from "../services/logger"
 
 
 const delayManager = new DelayManager({
@@ -9,19 +10,14 @@ const delayManager = new DelayManager({
 
 export const getSkinHtml = async (skinUrl: string) => {
 	return await delayManager.push(async () => {
-		try {
-			return await axios.get(skinUrl)
-		} catch (error) {
-			console.error(error)
-			console.log('error in getting skin html')
-		}
+		return await axios.get(skinUrl)
 	})
 }
 
 
 export const getSkinTitle = (skinHtml: string) => {
-	const $     = cheerio.load(skinHtml)
-	const title = $(".result-box > h2").text()
+	const $                      = cheerio.load(skinHtml)
+	const title                  = $(".result-box > h2").text()
 	const [weaponName, skinName] = title.split(" | ")
 
 	return { weaponName, skinName }

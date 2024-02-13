@@ -27,7 +27,7 @@ const ContactBottomSheet = styled(Row, {
 	`,
 
 	props =>
-		(dark || props.theme.isDark) &&
+		(dark ?? props.theme.isDark) &&
 		css`
 			background-color: ${bgColorDark};
 		`

@@ -78,7 +78,6 @@ export const {
 				},
 			};
 		},
-		//
 		jwt: ({ token, user }) => {
 			return {
 				id:          user?.id,

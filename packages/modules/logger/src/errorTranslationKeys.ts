@@ -2,7 +2,7 @@ import errorCodesMap from "./errorCodesMap"
 
 
 export const errorTranslationKeys = {
-	"errors:unknownError":                                                            "E00001",
+	"errors:unknown":                                                            "E00001",
 	"errors:validationError":                                                         "E00002",
 	"errors:authenticationError":                                                     "E00003",
 	"errors:authorizationError":                                                      "E00004",
