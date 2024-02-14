@@ -4,6 +4,7 @@ import { auth } from "@acme/auth";
 import getEmailProvider from "~/utils/emailProvider";
 import { messageBrokerConnectionParams } from "~/modules/vars"
 import apm from "elastic-apm-node"
+import _ from "lodash"
 
 
 interface ErrorResponse {
@@ -37,6 +38,11 @@ export function OPTIONS(){
 }
 
 const handler = auth(async (req) => {
+	let transaction: apm.Transaction | undefined
+	if (!_.isEmpty(apm)) {
+		const traceparent = req.headers.get('traceparent')
+		transaction = apm.startTransaction(`${req.method} ${req.nextUrl.pathname}`, 'server-trpc', { childOf: traceparent })
+	}
 	const response = await fetchRequestHandler({
 		endpoint:      "/api/trpc",
 		router:        appRouter,
@@ -57,6 +63,9 @@ const handler = auth(async (req) => {
 	}
 
 	setCorsHeaders(response);
+	if(transaction){
+		transaction.end()
+	}
 	return response
 });
 

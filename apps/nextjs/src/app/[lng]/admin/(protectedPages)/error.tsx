@@ -10,6 +10,7 @@ const ErrorPage = ({
 	error: ReturnType<typeof getErrorShape> | TRPCErrorWithGenerics | Error
 	reset: () => void
 }) => {
+	// console.log({ error })
 	if('data' in error && typeof error.data === 'object' && 'code' in error.data){
 		const ErrorComponent = errorCodesComponentsMap[error.data.code]
 		return (

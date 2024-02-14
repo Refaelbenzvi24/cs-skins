@@ -6,6 +6,7 @@
 export {}
 declare global {
   const IconAntDesignSkinOutlined: typeof import('~icons/ant-design/skin-outlined.jsx')['default']
+  const IconCarbonAdd: typeof import('~icons/carbon/add.jsx')['default']
   const IconCarbonChevronLeft: typeof import('~icons/carbon/chevron-left.jsx')['default']
   const IconCarbonDashboard: typeof import('~icons/carbon/dashboard.jsx')['default']
   const IconCarbonDb2Database: typeof import('~icons/carbon/db2-database.jsx')['default']

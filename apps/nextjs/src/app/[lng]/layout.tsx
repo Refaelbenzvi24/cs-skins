@@ -17,9 +17,8 @@ import ProgressBar from "~/components/global/ProgressBar"
 import Analytics from "~/components/global/Analytics"
 import RealUserMonitoring from "~/components/global/RealUserMonitoring"
 import WebVitals from "~/components/global/WebVitals"
-import apm from "elastic-apm-node"
 import ApmProvider from "~/components/ApmProvider"
-import { getPathname } from "~/utils/serverFunctions"
+import apm from "elastic-apm-node"
 
 
 const workSans = Work_Sans({ weight: ["400", "500", "700"], subsets: ["latin"], variable: "--work-sans" })
@@ -58,7 +57,7 @@ export async function generateMetadata(props: GenerateMetadataWithLocaleProps){
 // };
 
 const getHeaders = cache(async () => headers());
-export default function Layout(props: LayoutWithLocaleProps){
+export default async function Layout(props: LayoutWithLocaleProps){
 	const { params: { lng } } = props
 	const cookieStore         = cookies()
 	const theme               = cookieStore.get("theme")?.value as ThemeOptions

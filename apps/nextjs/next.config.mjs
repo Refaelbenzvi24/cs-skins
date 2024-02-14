@@ -96,7 +96,7 @@ const config = withTwin({
 			// externalsPresets: {
 			// 	node: true
 			// },
-			// externals: [nodeExternals()]
+			...(options.isServer ? {externals: [...config.externals, { 'apm-elastic-node': 'elastic-apm-node' }]} : {})
 		}
 	},
 	transpilePackages: ["@acme/api", "@acme/auth", "@acme/db", "@acme/logger", "@acme/ui"],

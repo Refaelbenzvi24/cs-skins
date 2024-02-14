@@ -3,6 +3,7 @@ import type { MiddlewareFactory } from "~/middleware/stackHandler"
 import acceptLanguage from 'accept-language'
 import { fallbackLng, languages, cookieName } from "~/app/i18n/settings"
 export const withLanguage: MiddlewareFactory = (_next) => (request) => {
+
 	if (request.nextUrl.pathname.indexOf('icon') > -1 || request.nextUrl.pathname.indexOf('chrome') > -1) return NextResponse.next()
 	let lng: string | null | undefined
 	if (request.cookies.has(cookieName)) lng = acceptLanguage.get(request.cookies.get(cookieName)!.value)
