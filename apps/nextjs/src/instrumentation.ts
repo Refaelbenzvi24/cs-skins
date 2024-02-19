@@ -1,9 +1,9 @@
-import apm from "elastic-apm-node"
 import _ from "lodash"
 
 
-export const register = () => {
+export const register = async () => {
 	console.log(process.env)
+	const apm = await import('elastic-apm-node')
 	if(!_.isEmpty(apm) && !apm.isStarted()){
 		console.log('starting apm')
 		const serviceName = process.env.APP || 'next'
