@@ -3,7 +3,9 @@ import _ from "lodash"
 
 
 export const register = () => {
+	console.log(process.env)
 	if(!_.isEmpty(apm) && !apm.isStarted()){
+		console.log('starting apm')
 		const serviceName = process.env.APP || 'next'
 		apm.start({
 			serviceName:                `server-${serviceName}`,
@@ -18,5 +20,6 @@ export const register = () => {
 			captureErrorLogStackTraces: "always",
 			environment:                process.env.ENVIRONMENT || 'development',
 		})
+		console.log('apm started')
 	}
 }
