@@ -17,6 +17,7 @@ interface ResultResponse {
 
 type ResponseOptions = ErrorResponse | ResultResponse
 
+export const runtime = 'nodejs'
 
 /**
  * Configure basic CORS headers
