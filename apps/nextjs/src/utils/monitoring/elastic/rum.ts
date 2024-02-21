@@ -6,7 +6,7 @@ const serviceName                = process.env.APP || 'next'
 const config: AgentConfigOptions = {
 	serviceName:               `rum-${serviceName}`,
 	serverUrl:                 process.env.NEXT_PUBLIC_APM_URL || 'http://localhost:8200',
-	environment:               process.env.ENVIRONMENT || 'development',
+	environment:               process.env.NEXT_PUBLIC_ENVIRONMENT || 'development',
 	active:                    process.env.NEXT_PUBLIC_APM_IS_ACTIVE === 'true',
 	distributedTracingOrigins: [process.env.NEXT_PUBLIC_API_ENDPOINT || ''],
 }
