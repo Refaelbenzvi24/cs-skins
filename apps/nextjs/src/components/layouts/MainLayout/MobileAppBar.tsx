@@ -13,11 +13,11 @@ import {
 	useIsDark,
 	useMain
 } from "@acme/ui"
-import {useState, useEffect, ComponentProps} from "react"
+import type { ComponentProps} from "react";
+import {useState, useEffect} from "react"
 import tw from "twin.macro"
 
 import type {NavigationItemType} from "./AppBar"
-import Image from "next/image";
 import {useRouter} from "next/router"
 import SocialLinks from "~/components/SocialLinks";
 import clsx from "clsx";

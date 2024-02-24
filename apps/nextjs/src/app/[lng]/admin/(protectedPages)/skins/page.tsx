@@ -14,10 +14,10 @@ interface AdminPageProps extends TranslatedRouteProps {
 
 export async function generateMetadata(props: GenerateMetadataWithLocaleProps){
 	const { params: { lng } } = props;
-	const { t } = await getTranslation(lng, ['common', 'admin'])
+	const { t }               = await getTranslation(lng, ['common', 'admin'])
 
 	return {
-		title:       `${t('common:metadata.title')} | ${t ("admin:metadata.title.main")} - ${t ("admin:metadata.title.skins")}`,
+		title:       `${t('common:metadata.title')} | ${t("admin:metadata.title.main")} - ${t("admin:metadata.title.skins")}`,
 		description: t('common:metadata.appDescription')
 	};
 }

@@ -1,18 +1,14 @@
 import cheerio from "cheerio";
 import axios from "axios";
 import DelayManager from "../modules/DelayManager";
-import { logError, newError } from "../services/logger"
 
 
 const delayManager = new DelayManager({
-	delayInMili: 700
+	delayInMili:           100,
 })
 
-export const getSkinHtml = async (skinUrl: string) => {
-	return await delayManager.push(async () => {
-		return await axios.get(skinUrl)
-	})
-}
+export const getSkinHtml = async (skinUrl: string) =>
+	await delayManager.push(async () =>  await axios.get(skinUrl))
 
 
 export const getSkinTitle = (skinHtml: string) => {

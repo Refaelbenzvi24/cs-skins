@@ -1,12 +1,21 @@
 {
 	"extends" :         "@acme/tsconfig/base.json",
 	"compilerOptions" : {
-		"tsBuildInfoFile" : "node_modules/.cache/tsbuildinfo.json"
+		"esModuleInterop" : true,
+		"tsBuildInfoFile" : "node_modules/.cache/tsbuildinfo.json",
+		"types" :           [
+			"node",
+			"jest"
+		]
+	},
+	"ts-node" :         {
+		"compilerOptions" : {
+			"esModuleInterop" : true,
+			"module" :          "commonjs"
+		}
 	},
 	"include" :         [
-		"src",
-		"drizzle.config.ts",
-		"global.d.ts"
+		"src/**/*.ts"
 	],
 	"exclude" :         [
 		"node_modules"

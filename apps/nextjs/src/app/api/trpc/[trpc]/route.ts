@@ -3,7 +3,6 @@ import { appRouter, createTRPCContext } from "@acme/api";
 import { auth } from "@acme/auth";
 import getEmailProvider from "~/utils/emailProvider";
 import { messageBrokerConnectionParams } from "~/modules/vars"
-import apm from "elastic-apm-node"
 
 
 interface ErrorResponse {
@@ -16,13 +15,12 @@ interface ResultResponse {
 
 type ResponseOptions = ErrorResponse | ResultResponse
 
-
 /**
  * Configure basic CORS headers
  * You should extend this to match your needs
  */
 function setCorsHeaders(res: Response){
-	res.headers.set("Access-Control-Allow-Origin", `${new URL(process.env.NEXT_APP_URL!).origin}`);
+	res.headers.set("Access-Control-Allow-Origin", "*");
 	res.headers.set("Access-Control-Request-Method", "*");
 	res.headers.set("Access-Control-Allow-Methods", "OPTIONS, GET, POST");
 	res.headers.set("Access-Control-Allow-Headers", "traceparent, tracestate, *");
@@ -41,7 +39,7 @@ const handler = auth(async (req) => {
 		endpoint:      "/api/trpc",
 		router:        appRouter,
 		req,
-		createContext: async () => createTRPCContext({ session: req.auth, headers: req.headers }, { messageBrokerConnectionParams, emailProvider: await getEmailProvider(), apm, isServer: false }),
+		createContext: async () => createTRPCContext({ session: req.auth, headers: req.headers }, { messageBrokerConnectionParams, emailProvider: await getEmailProvider(), isServer: false }),
 	});
 
 	const clonedResponse = response.clone();

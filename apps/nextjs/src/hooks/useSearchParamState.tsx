@@ -28,7 +28,7 @@ export const useSearchParamState = <ValueGetterArgs extends unknown[]>(
 		debounceTimeout = 500
 	}: UseSearchParamState<ValueGetterArgs>) => {
 	const pathname = usePathname()
-	const router = useRouter ()
+	const router = useRouter()
 	const searchParams = useSearchParams ()
 	const { [key]: value } = useGetSearchParams (key)
 

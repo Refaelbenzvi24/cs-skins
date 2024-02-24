@@ -1,10 +1,11 @@
 import { getSkinHtml, getSkinTableData, getSkinTitle } from "./shared"
-import { db, schema, dbOperators, dbHelper } from "@acme/db"
+import { db, schema, dbHelper } from "@acme/db"
 import { newError } from "../services/logger"
 
 
 const getBasicSkinData = async (url: string) => {
 	const { data: skinHtml } = await getSkinHtml(url)
+	if(!skinHtml) throw newError.BaseError("errors:csGoStash.skin.notFound", { extraDetails: { url } })
 
 	const skinsData                = getSkinTableData(skinHtml)
 	const { weaponName, skinName } = getSkinTitle(skinHtml)
@@ -19,83 +20,62 @@ const getBasicSkinData = async (url: string) => {
 }
 
 const connectSkinQuality = async ({ quality, skinId }: { skinId: string, quality: string }) => {
-	const { eq }      = dbOperators
-	const [skinQuality] = await
-		db
-		.select({
-			id:   schema.qualities.id,
-			name: schema.qualities.name,
+	await db.transaction(async (tx) => {
+		const [skinQuality] = await dbHelper
+		.mutate
+		.qualities
+		.insert({ name: quality })
+		.returning({ id: schema.qualities.id })
+		.onConflictDoUpdate({
+			target: schema.qualities.name,
+			set:    { name: quality },
 		})
-		.from(schema.qualities)
-		.where(({ name }) => eq(name, quality))
 		.execute()
 
-	if (!skinQuality) throw newError.BaseError("errors:skins.notFound", { extraDetails: { quality } })
-
-	return await
-		db
+		await db
 		.insert(schema.skinsQualities)
 		.values({
-			qualityId: skinQuality.id,
+			qualityId: skinQuality!.id,
 			skinId:    skinId,
 		})
-		.returning()
-		.execute()
-}
-
-const getSource = async () => {
-	const { eq }   = dbOperators
-	const [source] = await
-		db
-		.select({
-			id:   schema.sources.id,
-			name: schema.sources.name,
-		})
-		.from(schema.sources)
-		.where(({ name }) => eq(name, "CS Go Stash"))
-		.execute()
-
-	if (!source) throw newError.BaseError("errors:sources.notFound", { extraDetails: { sourceName: "CS Go Stash" } })
-	return source
-}
-
-const getWeapon = ({ data }: { data: Parameters<typeof dbHelper.mutate.weapons.insert>[0]['data'] }) => {
-	const weaponQuery =
-		      db
-		      .select()
-		      .from(schema.weapons)
-		      .where(({ name: weaponName }) => dbOperators.eq(weaponName, data.name))
-
-	return {
-		ignoreIfNotExists: async () => await weaponQuery.execute(),
-		insertIfNotExists: async ({ connect = {} }: { connect?: Parameters<typeof dbHelper.mutate.weapons.insert>[0]['connect'] } = {}) => {
-			const [weapon] = await weaponQuery.execute()
-
-			if(weapon) return weapon
-			return await dbHelper.mutate.weapons.insert({ data, connect })
-		}
-	}
-}
-
-const insertSkin = async ({ name, url }: typeof schema.skins.$inferInsert) => {
-	const [skin] = await
-		db
-		.insert(schema.skins)
-		.values({
-			name,
-			url,
-		})
-		.returning()
 		.onConflictDoNothing()
 		.execute()
-	return skin!
+	})
 }
 
 export const initialScrapeCsGoStash = async (url: string) => {
 	const { skins, weaponName, skinName } = await getBasicSkinData(url)
-	const source = await getSource()
-	const weapon = await getWeapon({ data: { name: weaponName } })
-	.insertIfNotExists({ connect: { sourceId: source.id } })
-	const newSkin = await dbHelper.mutate.skins.insert({ data: { name: skinName, url }, connect: { weaponId: weapon.id } })
+	const newSkin                         = await db.transaction(async (tx) => {
+		const [newSkin]        = await dbHelper
+		.mutate
+		.skins
+		.insert({ name: skinName, url }, tx)
+		.returning({ id: schema.skins.id })
+		.onConflictDoUpdate({
+			target: schema.skins.name,
+			set:    { name: skinName, url },
+		})
+		.execute()
+		const [insertedWeapon] = await dbHelper
+		.mutate
+		.weapons
+		.insert({ name: skinName }, tx)
+		.returning({ id: schema.weapons.id })
+		.onConflictDoUpdate({
+			target: schema.weapons.name,
+			set:    { name: weaponName },
+		})
+		.execute()
+		await dbHelper
+		.mutate
+		.weaponsSkins
+		.insert({ weaponId: insertedWeapon!.id, skinId: newSkin!.id })
+		.onConflictDoUpdate({
+			target: [schema.weaponsSkins.weaponId, schema.weaponsSkins.skinId],
+			set:    { weaponId: insertedWeapon!.id, skinId: newSkin!.id },
+		})
+		.execute()
+		return newSkin!
+	})
 	await Promise.all(skins.map(async skin => await connectSkinQuality({ quality: skin.quality, skinId: newSkin.id })))
 }

@@ -82,25 +82,25 @@ const Page = managedRsc(async ({ params: { lng, skinId } }: AdminPageProps) => {
 	.value()
 
 	return (
-		<div className="flex min-h-full w-full">
-			<Col className="w-full h-full pb-10">
-				<Row className="min-h-[80%] w-full">
-					<Chart data={steamListings} xText="Time" yText="Steam Listing"/>
+		<div className="flex min-h-full  w-full">
+			<Col className="w-full h-fit pb-10">
+				<Row className="h-[75vh] w-full">
+					<Chart data={steamListings} xText="Steam Listing"/>
 				</Row>
-				<Row className="min-h-[80%] w-full">
-					<Chart data={bitSkinPrice} xText="Time" yText="Bit Skin Price"/>
+				<Row className="h-[75vh] w-full">
+					<Chart data={bitSkinPrice} xText="Bit Skin Price"/>
 				</Row>
-				<Row className="min-h-[80%] w-full">
-					<Chart data={percentChange} xText="Time" yText="Percent Change"/>
+				<Row className="h-[75vh] w-full">
+					<Chart data={percentChange} xText="Percent Change"/>
 				</Row>
-				<Row className="min-h-[80%] w-full">
-					<Chart data={steamMediaPrice} xText="Time" yText="Steam Median Price"/>
+				<Row className="h-[75vh] w-full">
+					<Chart data={steamMediaPrice} xText="Steam Median Price"/>
 				</Row>
-				<Row className="min-h-[80%] w-full">
-					<Chart data={bitSkinPrice} xText="Time" yText="Bit Skin Price"/>
+				<Row className="h-[75vh] w-full">
+					<Chart data={bitSkinPrice} xText="Bit Skin Price"/>
 				</Row>
-				<Row className="min-h-[80%] w-full">
-					<Chart data={steamVolume} xText="Time" yText="Steam Volume"/>
+				<Row className="h-[75vh] w-full">
+					<Chart data={steamVolume} xText="Steam Volume"/>
 				</Row>
 			</Col>
 		</div>

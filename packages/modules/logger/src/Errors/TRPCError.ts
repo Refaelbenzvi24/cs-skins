@@ -104,6 +104,7 @@ class TRPCError<
 		errorBuilderInstance: ErrorBuilderInstance,
 		errorTranslationKey: Extract<keyof ErrorTranslationKeys, string>,
 	}, error: unknown, extraDetails?: Record<string, unknown>){
+		// TODO: add BaseError support
 		if(error instanceof TRPCError){
 			const originalErrorMessage = error.cause instanceof Error ? error.cause.message : undefined
 			error.extraDetails         = _.merge(error.extraDetails, extraDetails, { originalErrorMessage })

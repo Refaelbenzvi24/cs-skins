@@ -1,16 +1,17 @@
 "use client";
-import { useRouter } from "next/navigation"
 import { useSession } from "next-auth/react"
 import { useTranslation } from "~/app/i18n/client"
 import i18next from "i18next"
 import { useEffect, useState } from "react"
-import { type SubmitHandler, useForm } from "react-hook-form"
+import {  useForm } from "react-hook-form"
+import type {SubmitHandler} from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { serverSignIn } from "~/server/actions/authServerActions"
 import { Button, Col, Divider, Row, TextField, theme, Typography } from "@acme/ui"
 import { authValidations } from "@acme/validations"
 import { z } from "zod"
 import { withTransaction } from "@elastic/apm-rum-react"
+import usePRouter from "~/hooks/usePRouter"
 
 
 const loginValidation = z.object(authValidations.loginObject)
@@ -18,7 +19,7 @@ const loginValidation = z.object(authValidations.loginObject)
 type LoginValidationSchema = z.infer<typeof loginValidation>
 
 const LoginPage = () => {
-	const router                                  = useRouter()
+	const router                                  = usePRouter()
 	const { status }                              = useSession()
 	const { t, i18n }                             = useTranslation(i18next.language, 'forms')
 	const [formHasSubmitted, setFormHasSubmitted] = useState(false)

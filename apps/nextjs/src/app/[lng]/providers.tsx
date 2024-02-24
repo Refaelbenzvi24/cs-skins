@@ -7,7 +7,6 @@ import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experime
 import { loggerLink, unstable_httpBatchStreamLink } from "@trpc/client";
 import SuperJSON from "superjson";
 import { api, getBaseUrl } from "~/trpc/api";
-import { apm } from "@elastic/apm-rum"
 
 
 export function TRPCReactProvider(props: {

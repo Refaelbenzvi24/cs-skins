@@ -60,10 +60,10 @@ const createInnerTRPCContext = (opts: CreateContextOptions) => {
 
 	const logger = loggerInstance.logger({
 		errorTransformer: 'TRPCError',
+		unknownErrorsTranslationKey: "errors:unknown",
 		transports:       [
 			({ createTransport }) => createTransport({
 				severities:                  ["CRITICAL", "ERROR", "WARNING", "INFO"],
-				unknownErrorsTranslationKey: "errors:unknown",
 				callback:                    (error) => {
 					apm?.captureError(error)
 					apm?.setSpanOutcome('failure')

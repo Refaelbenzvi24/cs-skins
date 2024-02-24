@@ -16,7 +16,7 @@ setApmInstance(apm)
 import { CronJob } from 'cron'
 import { getCronIntervalString, getIntervalInMilliseconds } from "./scheduling/scheduling"
 import { messageBrokerConnectionParams } from "./vars"
-import { logError } from "./services/logger"
+import { errorLogger } from "./services/logger"
 
 
 export const publishScrapingMessage = async (interval: number) => {
@@ -46,7 +46,7 @@ export const serviceInitializer = async () => {
 		void initialJob()
 		cronJobsInitializer()
 	} catch (error) {
-		await logError(error)
+		await errorLogger.logError(error)
 	}
 }
 

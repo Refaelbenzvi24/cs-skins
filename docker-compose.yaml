@@ -143,6 +143,13 @@ services:
             interval: 10s
             retries: 20
             test: curl --write-out 'HTTP %{http_code}' --fail --silent --output /dev/null http://localhost:5601/api/status
+    apm-server-reverse-proxy:
+        image: ngrok/ngrok
+        command: tunnel --label edge=edghts_2ceDe1Ip3nPzo8PxQXclZ8z7G9O http://localhost:8200
+        environment:
+            - NGROK_AUTHTOKEN=2bQ7JlggQZQx9WE21JBuB6qV93O_7rn3UU4GTPC44ksjiGVFx
+        tty: true
+        stdin_open: true
 
 networks:
     main_network:

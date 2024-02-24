@@ -7,18 +7,30 @@ const errorCodesMap = {
 
 
 const errorTranslationKeys = {
-	"errors:tests.error.test":                                  "E00001",
+	"errors:unknown":                                  "E00001",
 } satisfies Record<string, keyof typeof errorCodesMap>
-
-export const newError = logger.errorBuilder(errorCodesMap, errorTranslationKeys)({
-	initializedAtService: "scraper",
-	loggedAtService: "scraper",
+export const loggerInstance = logger.createInstance(errorCodesMap, errorTranslationKeys)({})
+export const newError       = loggerInstance.errorBuilder
+export const errorLogger       = loggerInstance.logger({
+	errorTransformer:            'BaseError',
+	unknownErrorsTranslationKey: 'errors:unknown',
+	transports:                  [
+		({ createTransport }) => createTransport({
+			severities: ['CRITICAL', 'ERROR', 'WARNING', 'INFO'],
+			callback:   (error) => {
+				console.log(error)
+			}
+		})
+	]
 })
 
 
 const playground = () => {
-	const error = newError.BaseError("errors:tests.error.test")
-	const error2 = newError.TRPCError("errors:tests.error.test", "UNAUTHORIZED")
+	try {
+		throw new Error('Some error')
+	} catch (error) {
+		void errorLogger.logError(error, { extraDetails: { some: 'extra' } })
+	}
 }
 
 playground ()
