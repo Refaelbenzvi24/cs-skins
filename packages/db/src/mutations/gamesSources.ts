@@ -2,13 +2,13 @@ import { db, schema as schemaList } from "../index"
 import type { DatabaseType, InferInsert } from "../../types"
 
 
-const tableName: keyof typeof schemaList = "weaponsTypes"
+const tableName: keyof typeof schemaList = 'gamesSources'
 
 const getSchema = () => schemaList[tableName]
 
-export type NewGame = InferInsert<ReturnType<typeof getSchema>>
+export type NewGameSource = InferInsert<ReturnType<typeof getSchema>>
 
-export const insert = (data: NewGame, dbInstance: DatabaseType = db) => {
+export const insert = (data: NewGameSource, dbInstance: DatabaseType = db) => {
 	const schema = getSchema()
 	return dbInstance
 	.insert(schema)

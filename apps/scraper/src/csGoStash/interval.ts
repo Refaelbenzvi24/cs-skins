@@ -63,86 +63,59 @@ const getSkinDetails = async (url: string) => {
 	}))
 }
 
-const addSkinQualityIdsToSkinsData = async (skinsData: { [key: string]: any, skinId: string, quality: string }[]) => {
-	const { inArray, and }        = dbOperators
-	const skinsDataQualitiesNames = _.map(skinsData, ({ quality }) => quality)
-	const qualities               = await
-		db
-		.select({
-			id:   schema.qualities.id,
-			name: schema.qualities.name,
-		})
-		.from(schema.qualities)
-		.where(({ name }) => inArray(name, skinsDataQualitiesNames))
-		.execute()
-	const skinsQualitiesIdsMap    = _.keyBy(qualities, ({ name }) => name)
-	const skinsQualities          = await
-		db
-		.select({
-			id:        schema.skinsQualities.id,
-			qualityId: schema.skinsQualities.qualityId,
-			skinId:    schema.skinsQualities.skinId,
-		})
-		.from(schema.skinsQualities)
-		.where(({ qualityId, skinId }) => and(
-			inArray(qualityId, _.map(skinsQualitiesIdsMap, ({ id }) => id)),
-			inArray(skinId, _.map(skinsData, ({ skinId }) => skinId))
-		))
-		.execute()
-	return Promise.all(
-		skinsData.map(async (skinData) => {
-			const skinQuality   = _.find(skinsQualities, ({ skinId, qualityId }) =>
-				skinId === skinData.skinId && qualityId === skinsQualitiesIdsMap[skinData.quality]!.id
-			)
-			const skinQualityId = skinQuality?.id ??
-				(await dbHelper.mutate.skinsQualities.insert({
-					data: {
-						qualityId: skinsQualitiesIdsMap[skinData.quality]!.id,
-						skinId:    skinData.skinId,
-					}
-				})).id
-
-			return {
-				...skinData,
-				skinQualityId: skinQualityId,
-			}
-		})
-	)
-}
-
 type SkinDetails = Awaited<ReturnType<typeof getSkinDetails>>[0]
 
 const calculatePercentChange = (
 	{ steamPrice, bitSkinsPrice, steamMedianPrice }:
 		Pick<SkinDetails, "bitSkinsPrice" | "steamPrice" | "steamMedianPrice">
 ) => {
-	if (!steamPrice || !bitSkinsPrice || !steamMedianPrice) return null
+	if(!steamPrice || !bitSkinsPrice || !steamMedianPrice) return null
 	const calculateSteamPrice = (steamPrice - steamMedianPrice) * 0.1 + steamMedianPrice
 	const difference          = calculateSteamPrice - bitSkinsPrice
 
 	return convertToNumber(((difference / calculateSteamPrice) * 100).toFixed(2))
 }
 
-const saveSkinsDetailsToDb = async (skinsData: typeof schema.skinsQualitiesData.$inferInsert[]) => {
-	return await
-		db
-		.insert(schema.skinsQualitiesData)
-		.values(skinsData)
-		.execute()
-}
-
 export const scrapeCsGoStash = async (weapon?: { url: string }[]) => {
-	if(!weapon) return;
-	const skinsList         = await getSkinsList(weapon.map(({ url }) => url))
-	const withSkinData      = (await Promise.all(
-		skinsList.map(async (skin) =>
-			(await getSkinDetails(skin.url)).map(skinData => ({
+	const skinsList = await getSkinsList(weapon?.map(({ url }) => url))
+	await Promise.all(
+		skinsList.map(async (skin) => {
+			const skinDetails = await getSkinDetails(skin.url)
+			const skinData    = skinDetails.map(skinData => ({
 				...skinData,
 				skinId:        skin.id,
 				percentChange: calculatePercentChange(skinData)
 			}))
-		)
-	)).flat()
-	const withSkinQualityId = await addSkinQualityIdsToSkinsData(withSkinData)
-	await saveSkinsDetailsToDb(withSkinQualityId)
+			await Promise.all(skinData.map(async (skinData) => {
+				await db.transaction(async (tx) => {
+					const [quality]     = await dbHelper
+					.mutate
+					.qualities
+					.insert({ name: skinData.quality }, tx)
+					.onConflictDoUpdate({
+						target: schema.qualities.name,
+						set:    { name: skinData.quality },
+					})
+					.returning({ id: schema.qualities.id })
+					.execute()
+					const [skinQuality] = await dbHelper
+					.mutate
+					.skinsQualities
+					.insert({ qualityId: quality!.id, skinId: skinData.skinId }, tx)
+					.returning({ id: schema.skinsQualities.id })
+					.onConflictDoUpdate({
+						target: [schema.skinsQualities.qualityId, schema.skinsQualities.skinId],
+						set:    { qualityId: quality!.id, skinId: skinData.skinId },
+					})
+					.execute()
+					return await dbHelper
+					.mutate
+					.skinsQualitiesData
+					.insert({ ..._.omit(skinData, ["quality", "skinId"]), skinQualityId: skinQuality!.id, }, tx)
+					.returning({ id: schema.skinsQualitiesData.id, })
+					.execute()
+				})
+			}))
+		})
+	)
 }

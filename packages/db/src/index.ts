@@ -20,7 +20,7 @@ export { extraDbOperators }
 
 const connectionString = process.env.DATABASE_URL!
 let client: ReturnType<typeof postgres>
-const globalWithClient   = global as typeof globalThis & {
+const globalWithClient = global as typeof globalThis & {
 	client: typeof client;
 };
 if(process.env.NODE_ENV === "production"){

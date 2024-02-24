@@ -3,7 +3,6 @@ import { appRouter, createTRPCContext } from "@acme/api";
 import { auth } from "@acme/auth";
 import getEmailProvider from "~/utils/emailProvider";
 import { messageBrokerConnectionParams } from "~/modules/vars"
-import apm from "elastic-apm-node"
 import _ from "lodash"
 
 
@@ -39,6 +38,7 @@ export function OPTIONS(){
 }
 
 const handler = auth(async (req) => {
+	const apm = await import("elastic-apm-node")
 	let transaction: apm.Transaction | undefined
 	if (!_.isEmpty(apm)) {
 		const traceparent = req.headers.get('traceparent')

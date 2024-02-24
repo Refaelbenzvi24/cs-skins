@@ -1,9 +1,7 @@
-import ServicesMap from "../servicesMap"
 import { buildErrorCodesMapObject } from "../errorCodesMap"
 import { createId } from "@paralleldrive/cuid2"
 import { MaybePromise } from "../../types"
 import errorBuilder from "../errorBuilder"
-import TRPCError from "./TRPCError"
 import _ from "lodash"
 
 
@@ -62,7 +60,8 @@ export const errorNames = {
 	"ValidationError":     [],
 	"AuthenticationError": [],
 	"AuthorizationError":  [],
-	"DatabaseError":       ["QueryFailed", "NotFound"],
+	"DatabaseError":       ["QueryFailed", "NotFound", "InsertFailed", "UpdateFailed", "DeleteFailed", "ConnectionFailed", "TransactionFailed", "RollbackFailed", "CommitFailed"],
+	"ExternalService":     ["Connection", "Request", "Response"],
 	"PermissionError":     [],
 	"MessageBroker":       ["Connection", "ChannelCreation", "SendingMessage", "AssertingQueue", "MessageConsuming", "PurgingQueue"]
 } as const
@@ -115,6 +114,7 @@ class BaseError<
 	public readonly cause?: Error;
 
 	constructor(options: ErrorOptionsWithGenerics<ErrorCodesMap, ErrorTranslationKeys, ErrorMessage, ErrorName, ErrorCode, ExtraDetails>){
+		const originalMessage = options.cause instanceof Error ? options.cause.message : undefined
 		const cause   = getCauseFromUnknown(options.cause);
 		const message = options.message ?? cause?.message;
 
@@ -147,6 +147,7 @@ class BaseError<
 		errorBuilderInstance: ErrorBuilderInstance,
 		errorTranslationKey: Extract<keyof ErrorTranslationKeys, string>,
 	}, error: unknown, extraDetails?: Record<string, unknown>){
+		// TODO: add TRPCError support
 		if(error instanceof BaseError){
 			const originalErrorMessage = error.cause instanceof Error ? error.cause.message : undefined
 			error.extraDetails         = _.merge(error.extraDetails, extraDetails, { originalErrorMessage })
@@ -155,7 +156,6 @@ class BaseError<
 		if(error && typeof error === 'object' && 'cause' in error && error.cause instanceof BaseError){
 			const originalMessage    = 'message' in error ? error.message : undefined
 			error.cause.extraDetails = _.merge(error.cause.extraDetails, extraDetails, { originalMessage })
-
 			return error.cause
 		}
 
@@ -170,6 +170,7 @@ class BaseError<
 
 	public async parseError(){
 		this.userId = this.userId ?? await this.userIdGetter?.()
+		this.stack = this.stack + (this.cause ? `\nCaused by: ${this.cause.stack}` : "");
 		return this
 	}
 }

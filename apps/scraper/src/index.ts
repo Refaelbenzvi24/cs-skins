@@ -16,7 +16,7 @@ setApmInstance(apm)
 import { scrapeCsGoStash } from "./csGoStash/interval";
 import { initialScrapeCsGoStash } from "./csGoStash/initial";
 import { messageBrokerConnectionParams } from "./modules/vars"
-import { logError } from "./services/logger"
+import { errorLogger } from "./services/logger"
 
 
 export const scrape = async () => {
@@ -44,11 +44,11 @@ export const main = async () => {
 					await scrape()
 				}
 			} catch (error) {
-				await logError(error)
+				await errorLogger.logError(error, { content })
 			}
 		})
 	} catch (error) {
-		await logError(error)
+		await errorLogger.logError(error)
 	}
 }
 

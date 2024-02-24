@@ -18,7 +18,6 @@ import Analytics from "~/components/global/Analytics"
 import RealUserMonitoring from "~/components/global/RealUserMonitoring"
 import WebVitals from "~/components/global/WebVitals"
 import ApmProvider from "~/components/ApmProvider"
-import apm from "elastic-apm-node"
 
 
 const workSans = Work_Sans({ weight: ["400", "500", "700"], subsets: ["latin"], variable: "--work-sans" })
@@ -58,6 +57,7 @@ export async function generateMetadata(props: GenerateMetadataWithLocaleProps){
 
 const getHeaders = cache(async () => headers());
 export default async function Layout(props: LayoutWithLocaleProps){
+	const apm = await import("elastic-apm-node")
 	const { params: { lng } } = props
 	const cookieStore         = cookies()
 	const theme               = cookieStore.get("theme")?.value as ThemeOptions

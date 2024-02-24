@@ -5,7 +5,6 @@ import { createCaller, createTRPCContext } from "@acme/api";
 import { auth } from "@acme/auth";
 import getEmailProvider from "~/utils/emailProvider"
 import { messageBrokerConnectionParams } from "~/modules/vars"
-import apm from "elastic-apm-node"
 
 
 /**
@@ -13,6 +12,7 @@ import apm from "elastic-apm-node"
  * handling a tRPC call from a React Server Component.
  */
 const createContext = cache(async () => {
+	const apm = await import("elastic-apm-node")
 	const heads = new Headers(headers());
 	heads.set("x-trpc-source", "rsc");
 

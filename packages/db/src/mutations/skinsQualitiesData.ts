@@ -1,5 +1,6 @@
 import { db, schema as schemaList } from "../index"
-import type { InferInsert } from "../../types"
+import type { DatabaseType, InferInsert } from "../../types"
+import _ from "lodash"
 
 
 const tableName: keyof typeof schemaList = 'skinsQualitiesData'
@@ -8,24 +9,9 @@ const getSchema = () => schemaList[tableName]
 
 export type NewSkinQualityData = InferInsert<ReturnType<typeof getSchema>>
 
-export const insert = async ({ data }: { data: NewSkinQualityData }) => {
-	const schema        = getSchema()
-	const [skinQualityData] = await
-		db
-		.insert(schema)
-		.values(data)
-		.returning()
-		.execute()
-
-	return skinQualityData!
-}
-
-export const insertMany = async (input: NewSkinQualityData[]) => {
+export const insert = (data: NewSkinQualityData, dbInstance: DatabaseType = db) => {
 	const schema = getSchema()
-	return await
-		db
-		.insert(schema)
-		.values(input)
-		.returning()
-		.execute()
+	return dbInstance
+	.insert(schema)
+	.values(data)
 }

@@ -13,4 +13,3 @@ const apm = require("elastic-apm-node")
 	  captureErrorLogStackTraces: "always",
 	  environment: process.env.ENVIRONMENT || 'development',
   })
-console.log({ apm })
