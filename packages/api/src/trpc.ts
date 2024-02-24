@@ -59,19 +59,26 @@ const createInnerTRPCContext = (opts: CreateContextOptions) => {
 	const { session, emailProvider, messageBrokerConnectionParams, apm } = opts
 
 	const logger = loggerInstance.logger({
-		errorTransformer: 'TRPCError',
+		errorTransformer:            'TRPCError',
 		unknownErrorsTranslationKey: "errors:unknown",
-		transports:       [
+		transports:                  [
 			({ createTransport }) => createTransport({
-				severities:                  ["CRITICAL", "ERROR", "WARNING", "INFO"],
-				callback:                    (error) => {
+				severities: ["CRITICAL", "ERROR", "WARNING", "INFO"],
+				callback:   (error) => {
 					apm?.captureError(error)
 					apm?.setSpanOutcome('failure')
 					apm?.setLabel('errorId', error.errorId)
 				}
+			}),
+			({ createTransport }) => createTransport({
+				severities: ["CRITICAL", "ERROR", "WARNING", "INFO"],
+				callback:   (error) => {
+					console.error(error)
+				}
 			})
 		]
 	})
+
 
 	return {
 		session,
@@ -102,6 +109,10 @@ export const createTRPCContext = async (opts: {
 }) => {
 	setApmInstance(apm as Parameters<typeof setApmInstance>[0])
 	const session = opts.session ?? (await auth());
+	const source  = opts.headers.get("x-trpc-source") ?? "unknown";
+
+
+	console.log(">>> tRPC Request from", source, "by", session?.user);
 
 	return createInnerTRPCContext({
 		emailProvider,
@@ -181,7 +192,7 @@ const apmMiddleware = t.middleware(async ({ ctx, next, path, type, getRawInput }
 	const response    = await next({ ctx })
 	const rawInput    = await getRawInput()
 	if(rawInput) ctx?.apm?.setLabel('input', typeof rawInput === 'object' ? JSON.stringify(rawInput) : (rawInput as number | string))
-	if(!response.ok) {
+	if(!response.ok){
 		const trpcError = TRPCError.from<
 			typeof errorCodesMap,
 			typeof errorTranslationKeys,
@@ -189,7 +200,7 @@ const apmMiddleware = t.middleware(async ({ ctx, next, path, type, getRawInput }
 		>({ errorBuilderInstance: loggerInstance.errorBuilder, errorTranslationKey: "errors:unknown" }, response.error)
 		await ctx?.logger.logError(trpcError)
 		trpcError.isLogged = true
-		response.error = trpcError
+		response.error     = trpcError
 	}
 	if(response.ok && response.data) ctx?.apm?.setLabel('responseData', typeof response.data === 'object' ? JSON.stringify(response.data) : (response.data as number | string))
 	transaction?.end()
