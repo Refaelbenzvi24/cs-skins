@@ -5,7 +5,6 @@ import { createCaller, createTRPCContext } from "@acme/api";
 import { auth } from "@acme/auth";
 import getEmailProvider from "~/utils/emailProvider"
 import { messageBrokerConnectionParams } from "~/modules/vars"
-import apm from "elastic-apm-node"
 
 
 /**
@@ -22,7 +21,6 @@ const createContext = cache(async () => {
 	}, {
 		emailProvider: await getEmailProvider(),
 		messageBrokerConnectionParams,
-		apm,
 		isServer: true
 	});
 });

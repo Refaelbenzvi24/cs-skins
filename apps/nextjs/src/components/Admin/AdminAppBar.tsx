@@ -9,9 +9,9 @@ import IconCarbonLogout from "~icons/carbon/logout"
 import IconCarbonSettings from "~icons/carbon/settings"
 import Settings from "~/components/Admin/Settings";
 import { useTranslation } from "~/app/i18n/client"
-import { useRouter } from "next/navigation"
 import type { ComponentWithLocaleProps } from "~/types"
 import { serverSignOut } from "~/server/actions/authServerActions"
+import usePRouter from "~/hooks/usePRouter"
 
 
 export interface AdminAppBarProps extends Partial<ComponentProps<typeof AppBar>>, ComponentWithLocaleProps {
@@ -31,7 +31,7 @@ const AdminAppBar = (props: AdminAppBarProps) => {
 
 	const [isSettingsModalOpen, setIsSettingsModalOpen] = useState<boolean>(false)
 
-	const router = useRouter()
+	const router = usePRouter()
 	const { t }  = useTranslation(lng, ["common"])
 
 	const handleLogout = async () => {

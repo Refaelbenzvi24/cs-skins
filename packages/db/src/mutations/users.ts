@@ -1,5 +1,5 @@
 import { db, schema as schemaList } from "../index"
-import type { InferInsert } from "../../types"
+import type { DatabaseType, InferInsert } from "../../types"
 
 
 const tableName: keyof typeof schemaList = 'users'
@@ -8,18 +8,9 @@ const getSchema = () => schemaList[tableName]
 
 export type NewUser = InferInsert<ReturnType<typeof getSchema>>
 
-export const insert = ({ data }: { data: NewUser }) => {
+export const insert = (data: NewUser, dbInstance: DatabaseType = db) => {
 	const schema = getSchema()
-	return db
+	return dbInstance
 	.insert(schema)
 	.values(data)
-	.returning()
-}
-
-export const insertMany = (input: NewUser[]) => {
-	const schema = getSchema()
-	return db
-	.insert(schema)
-	.values(input)
-	.returning()
 }

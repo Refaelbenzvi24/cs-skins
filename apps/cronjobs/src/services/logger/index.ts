@@ -9,16 +9,24 @@ export const errorCodesMap = {
 
 
 export const loggerInstance = logger.createInstance(errorCodesMap, errorTranslationKeys)({})
-export const newError       = loggerInstance.errorBuilder
-export const logError       = loggerInstance.logger({
-	errorTransformer: 'BaseError',
-	transports:       [
+export const newError    = loggerInstance.errorBuilder
+export const errorLogger = loggerInstance.logger({
+	errorTransformer:            'BaseError',
+	unknownErrorsTranslationKey: 'errors:unknown',
+	transports:                  [
 		({ createTransport }) => createTransport({
-			severities:                  ['CRITICAL', 'ERROR', 'WARNING', 'INFO'],
-			unknownErrorsTranslationKey: 'errors:unknown',
-			callback:                    (error) => {
-				apm.captureError(error)
+			severities: ['CRITICAL', 'ERROR', 'WARNING', 'INFO'],
+			callback:   (error) => {
+				apm.captureError(error, {
+					tags: {
+						severity:  error.severity,
+						type:      error.type,
+						subType:   error.subType,
+						errorCode: error.errorCode,
+						extra:     error.extraDetails
+					}
+				})
 			}
 		})
 	]
-}).logError
+})

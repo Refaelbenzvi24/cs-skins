@@ -4,6 +4,7 @@ import { createTRPCRouter, protectedProcedure, protectedProcedureWithPermissions
 import { userValidations } from "@acme/validations"
 import { getPaginationReturning } from "../apiHelpers"
 import { hashPassword } from "@acme/auth"
+import { schema } from "@acme/db"
 
 
 export const userRouter = createTRPCRouter({
@@ -32,7 +33,12 @@ export const userRouter = createTRPCRouter({
 			.dbHelper
 			.mutate
 			.users
-			.insert({ data: { email, password: hashedPassword, name } })
+			.insert({ email, password: hashedPassword, name })
+			.returning({
+				id: schema.users.id,
+				email: schema.users.email,
+				name: schema.users.name
+			})
 			.execute()
 		}),
 })

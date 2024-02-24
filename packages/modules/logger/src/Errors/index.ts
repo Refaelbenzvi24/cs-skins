@@ -8,7 +8,33 @@ const errors = {
 	TRPCError
 } as const
 
-export type ErrorByErrorType<
+interface ErrorTypes<
+	ErrorCodesMap extends Record<string, ReturnType<typeof buildErrorCodesMapObject>>,
+	ErrorTranslationKeys extends Record<string, keyof ErrorCodesMap>,
+	ErrorMessage extends Extract<keyof ErrorTranslationKeys, string>,
+	ErrorName extends ErrorNameOptions,
+	ErrorCode extends keyof ErrorCodesMap,
+	ExtraDetails extends Record<string, unknown> | undefined = undefined
+> {
+	BaseError: BaseError<
+		ErrorCodesMap,
+		ErrorTranslationKeys,
+		ErrorMessage,
+		ErrorName,
+		ErrorCode,
+		ExtraDetails
+	>
+	TRPCError: TRPCError<
+		ErrorCodesMap,
+		ErrorTranslationKeys,
+		ErrorMessage,
+		ErrorName,
+		ErrorCode,
+		ExtraDetails
+	>
+}
+
+export type ErrorByType<
 	ErrorType extends keyof typeof errors,
 	ErrorCodesMap extends Record<string, ReturnType<typeof buildErrorCodesMapObject>>,
 	ErrorTranslationKeys extends Record<string, keyof ErrorCodesMap>,
@@ -16,25 +42,12 @@ export type ErrorByErrorType<
 	ErrorName extends ErrorNameOptions,
 	ErrorCode extends keyof ErrorCodesMap,
 	ExtraDetails extends Record<string, unknown> | undefined = undefined
-> =
-	ErrorType extends "BaseError" ?
-		BaseError<
-			ErrorCodesMap,
-			ErrorTranslationKeys,
-			ErrorMessage,
-			ErrorName,
-			ErrorCode,
-			ExtraDetails
-		> :
-		ErrorType extends "TRPCError" ?
-			TRPCError<
-				ErrorCodesMap,
-				ErrorTranslationKeys,
-				ErrorMessage,
-				ErrorName,
-				ErrorCode,
-				ExtraDetails
-			> :
-			unknown
+> = ErrorTypes<
+	ErrorCodesMap,
+	ErrorTranslationKeys,
+	ErrorMessage,
+	ErrorName,
+	ErrorCode,
+	ExtraDetails>[ErrorType]
 
 export default errors

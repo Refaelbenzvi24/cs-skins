@@ -17,9 +17,6 @@ import ProgressBar from "~/components/global/ProgressBar"
 import Analytics from "~/components/global/Analytics"
 import RealUserMonitoring from "~/components/global/RealUserMonitoring"
 import WebVitals from "~/components/global/WebVitals"
-import apm from "elastic-apm-node"
-import ApmProvider from "~/components/ApmProvider"
-import { getPathname } from "~/utils/serverFunctions"
 
 
 const workSans = Work_Sans({ weight: ["400", "500", "700"], subsets: ["latin"], variable: "--work-sans" })
@@ -69,22 +66,20 @@ export default function Layout(props: LayoutWithLocaleProps){
 			lang={lng}
 			className={theme === "dark" ? "dark" : "light"}>
 		<Body className={["work-sans", workSans.variable, "heebo", heebo.variable].join(" ")}>
-			<ApmProvider traceId={apm.currentTraceIds["trace.id"]} transactionId={apm.currentTraceIds["transaction.id"]}>
-				<ProgressBar/>
+			<ProgressBar/>
 
-				<Analytics/>
-				<RealUserMonitoring/>
-				<WebVitals/>
+			<Analytics/>
+			<RealUserMonitoring/>
+			<WebVitals/>
 
-				<TRPCReactProvider headersPromise={getHeaders()}>
-					<SessionProvider>
-						<UiProviders lng={lng} theme={theme}>
-							<div id="portals-root"></div>
-							{props.children}
-						</UiProviders>
-					</SessionProvider>
-				</TRPCReactProvider>
-			</ApmProvider>
+			<TRPCReactProvider headersPromise={getHeaders()}>
+				<SessionProvider>
+					<UiProviders lng={lng} theme={theme}>
+						<div id="portals-root"></div>
+						{props.children}
+					</UiProviders>
+				</SessionProvider>
+			</TRPCReactProvider>
 		</Body>
 		</html>
 	);

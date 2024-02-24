@@ -1,5 +1,4 @@
 import { AppBar, Navigation, NavigationItem, Row, ThemeToggle, Tooltip } from "@acme/ui"
-import { useRouter } from "next/router"
 import type { ComponentProps } from "react";
 import { useEffect } from "react";
 import clsx from "clsx";

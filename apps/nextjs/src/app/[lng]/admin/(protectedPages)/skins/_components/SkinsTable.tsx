@@ -7,8 +7,8 @@ import type { trpcRsc } from "~/trpc/apiServer"
 import { useSearchParamState } from "~/hooks"
 import type { ComponentWithLocaleProps } from "~/types"
 import { useTranslation } from "~/app/i18n/client"
-import { useRouter } from "next/navigation"
 import { getNextPageParam } from "~/trpc/apiHelpers"
+import usePRouter from "~/hooks/usePRouter"
 
 
 interface SkinsTableProps extends ComponentWithLocaleProps {
@@ -30,7 +30,7 @@ const SkinsTable = ({ searchQuery, initialData, lng }: SkinsTableProps) => {
 		}
 	})
 
-	const router = useRouter()
+	const router = usePRouter()
 
 	const { t } = useTranslation(lng, ["common", "admin"])
 

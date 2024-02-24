@@ -15,9 +15,7 @@ const config = withTwin({
 	productionBrowserSourceMaps: true,
 	experimental: {
 		serverActions: true,
-		instrumentationHook: true,
 		esmExternals: "loose",
-		serverComponentsExternalPackages: ['elastic-apm-node']
 		// optimizeCss: true, // enabling this will enable SSR for Tailwind
 	},
 
@@ -90,14 +88,7 @@ const config = withTwin({
 			})
 		)
 
-		return {
-			...config,
-			// target: 'node',
-			// externalsPresets: {
-			// 	node: true
-			// },
-			// externals: [nodeExternals()]
-		}
+		return {...config}
 	},
 	transpilePackages: ["@acme/api", "@acme/auth", "@acme/db", "@acme/logger", "@acme/ui"],
 	eslint: {ignoreDuringBuilds: true},

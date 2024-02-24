@@ -13,7 +13,7 @@ const games = [
 // TODO: add static id for seeded data
 const sources = [
 	{
-		connect: { gameId: "CS GO" },
+		connect: { gameName: "CS GO" },
 		data:    {
 
 			url:  "https://csgostash.com",
@@ -21,90 +21,90 @@ const sources = [
 		}
 	},
 	{
-		connect: { gameId: "CS GO" },
+		connect: { gameName: "CS GO" },
 		data:    {
 			url:  "https://bitskins.com",
 			name: "Bit Skins",
 		},
 	},
 	{
-		connect: { gameId: "CS GO" },
+		connect: { gameName: "CS GO" },
 		data:    {
 			url:  "https://steamcommunity.com/market",
 			name: "Steam",
 		},
 	},
 	{
-		connect: { gameId: "CS GO" },
+		connect: { gameName: "CS GO" },
 		data:    {
 			url:  "https://loot.farm/",
 			name: "Loot Farm",
 		},
 	},
 	{
-		connect: { gameId: "CS GO" },
+		connect: { gameName: "CS GO" },
 		data:    {
 			url:  "https://cs.deals/",
 			name: "CS Deals",
 		},
 	},
 	{
-		connect: { gameId: "CS GO" },
+		connect: { gameName: "CS GO" },
 		data:    {
 			url:  "https://skinport.com/",
 			name: "Skin Port",
 		},
 	},
 	{
-		connect: { gameId: "CS GO" },
+		connect: { gameName: "CS GO" },
 		data:    {
 			url:  "https://cs.money/",
 			name: "CS Money",
 		},
 	},
 	{
-		connect: { gameId: "CS GO" },
+		connect: { gameName: "CS GO" },
 		data:    {
 			url:  "https://tradeit.gg/",
 			name: "Trade It",
 		},
 	},
 	{
-		connect: { gameId: "CS GO" },
+		connect: { gameName: "CS GO" },
 		data:    {
 			url:  "https://swap.gg/",
 			name: "Swap gg",
 		},
 	},
 	{
-		connect: { gameId: "CS GO" },
+		connect: { gameName: "CS GO" },
 		data:    {
 			url:  "https://skinsjar.com/",
 			name: "Skins Jar",
 		},
 	},
 	{
-		connect: { gameId: "CS GO" },
+		connect: { gameName: "CS GO" },
 		data:    {
 			url:  "https://skinbay.com/",
 			name: "Skin Bay",
 		},
 	},
 	{
-		connect: { gameId: "CS GO" },
+		connect: { gameName: "CS GO" },
 		data:    {
 			url:  "https://skinsmonkey.com/",
 			name: "Skins Monkey"
 		},
 	},
 	{
-		connect: { gameId: "CS GO" },
+		connect: { gameName: "CS GO" },
 		data:    {
 			url:  "https://waxpeer.com/",
 			name: "Waxpeer"
 		}
 	}
-] satisfies NewSource[]
+] satisfies { data: NewSource, connect: { gameName: string } }[]
 
 const quality = [
 	{ name: "Field-Tested" },
@@ -120,13 +120,39 @@ const quality = [
 ] satisfies NewQuality[]
 
 const seed = async () => {
-	const insertedGames = await db.insert(schema.games).values(games).onConflictDoNothing().returning().execute()
+	const insertedGames = await db
+	.insert(schema.games)
+	.values(games)
+	.onConflictDoNothing()
+	.returning()
+	.execute()
 	const sourcesSeed   = sources.map(source => ({
 		...source,
-		connect: { gameId: insertedGames.find(({ name }) => name === source.connect.gameId)!.id }
+		connect: { gameId: insertedGames.find(({ name }) => name === source.connect.gameName)!.id }
 	}))
-	await Promise.all(sourcesSeed.map(async source => await dbHelper.mutate.sources.insert(source)))
-	await db.insert(schema.qualities).values(quality).onConflictDoNothing().execute()
+	await Promise.all(
+		sourcesSeed.map(async ({ data, connect }) => {
+			const [source] = await dbHelper
+			.mutate
+			.sources
+			.insert(data)
+			.returning({ id: schema.sources.id })
+			.onConflictDoNothing()
+			.execute()
+			await dbHelper
+			.mutate
+			.gamesSources
+			.insert({ gameId: connect.gameId, sourceId: source!.id })
+			.onConflictDoNothing()
+			.execute()
+		})
+	)
+	await db
+	.insert(schema.qualities)
+	.values(quality)
+	.returning()
+	.onConflictDoNothing()
+	.execute()
 }
 
 void (async () => {
