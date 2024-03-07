@@ -6,16 +6,17 @@ import { useIsDark } from "../../../index"
 import clsx from "clsx"
 import { useSelect } from "./index"
 
+
 const Input = (props: ComponentProps<typeof components.Input>) => {
 	const { className, ...restProps } = props
-	const {theme} = useSelect()
-	const selectIsDark = theme.isDark
-	const isAppDark = useIsDark ()
-	const isDark = selectIsDark ?? isAppDark
+	const { theme }                   = useSelect()
+	const selectIsDark                = theme.isDark
+	const isAppDark                   = useIsDark()
+	const isDark                      = selectIsDark ?? isAppDark
 
 	return (
 		<components.Input {...restProps}
-		                  className={clsx (`${css`
+		                  className={clsx(`${css`
                             color: ${/** inputTextColor */ theme.colors.input.inputTextColor} !important;
                             font-weight: ${500};
                             font-size: 1rem;

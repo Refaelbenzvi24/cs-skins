@@ -1,7 +1,12 @@
 {
-	"extends": "@acme/tsconfig/base.json",
-	"compilerOptions": {
-		"types": ["node", "jest"]
+	"extends" : "@acme/tsconfig/base.json",
+	"compilerOptions" : {
+		"types" : [
+			"node",
+			"jest"
+		]
 	},
-	"include": ["test/**/*.ts"]
+	"include" : [
+		"test/**/*.ts"
+	]
 }

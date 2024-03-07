@@ -1,5 +1,5 @@
-import { handlePermissionsToCheck  } from "~/utils/permissionsHandler"
-import type {PermissionsToCheckType} from "~/utils/permissionsHandler";
+import { handlePermissionsToCheck } from "~/utils/permissionsHandler"
+import type { PermissionsToCheckType } from "~/utils/permissionsHandler";
 import { auth } from "@acme/auth"
 
 

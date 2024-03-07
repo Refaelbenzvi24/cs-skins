@@ -4,6 +4,7 @@ import { ResponsiveLine } from "@nivo/line"
 import { chartTheme, chartThemeDark } from "~/app/[lng]/admin/(protectedPages)/skins/[skinId]/graphs/_components/chartTheme"
 import { useIsDark } from "@acme/ui"
 
+
 interface ChartProps {
 	data: Serie[]
 	xText?: string

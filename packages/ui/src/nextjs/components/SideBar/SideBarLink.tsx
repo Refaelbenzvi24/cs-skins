@@ -4,7 +4,7 @@ import styled from "@emotion/styled"
 import clsx from "clsx"
 import { motion, HTMLMotionProps } from "framer-motion"
 import tw, { css } from "twin.macro"
-import { shouldForwardProp } from "../../Utils/StyledUtils";
+import { shouldForwardProp } from "../../utils/StyledUtils";
 import { useMain } from "../../index";
 import useDimensions from "../../hooks/useDimensions";
 import { withTheme } from "@emotion/react"

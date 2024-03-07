@@ -3,10 +3,10 @@ import styled from "@emotion/styled"
 import type { ButtonProps } from "../../Buttons/Button";
 import Button, { buttonPropsArray, ButtonStyles } from "../../Buttons/Button"
 import { motion } from "framer-motion"
-import { shouldForwardProp } from "../../../Utils/StyledUtils"
+import { shouldForwardProp } from "../../../utils/StyledUtils"
 import { css, withTheme } from "@emotion/react"
 import type { SingleColorOptions } from "../../Theme/types"
-import { getSingleColorFromPath } from "../../../Utils/colors"
+import { getSingleColorFromPath } from "../../../utils/colors"
 import type { StyledProps } from "../../../types"
 import Typography from "../../Typograpy/Typogrphy"
 

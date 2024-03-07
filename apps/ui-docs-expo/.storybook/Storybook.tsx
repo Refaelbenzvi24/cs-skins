@@ -3,11 +3,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import '../.ondevice/storybook.requires'
 
+
 const StorybookUIRoot = getStorybookUI({
 	//@ts-ignore
-	asyncStorage: AsyncStorage,
-	onDeviceUI: false,
-	disableWebsockets: true,
+	asyncStorage:           AsyncStorage,
+	onDeviceUI:             false,
+	disableWebsockets:      true,
 	shouldPersistSelection: true,
 })
 

@@ -7,8 +7,8 @@ interface AdminPageProps {
 }
 
 const Page = async ({ params: { lng, skinId } }: AdminPageProps) => {
-	const session = await auth ();
-	if (!session) return redirect (`/${lng}/admin/login`)
+	const session = await auth();
+	if(!session) return redirect(`/${lng}/admin/login`)
 	return redirect(`/${lng}/admin/skins/${skinId}/table`)
 }
 

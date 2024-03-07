@@ -8,7 +8,7 @@ import * as NProgress from "nprogress"
 
 const ProgressBar = () => {
 	const searchParams = useSearchParams()
-	const pathname = usePathname()
+	const pathname     = usePathname()
 	useEffect(() => {
 		return () => {
 			NProgress.done()

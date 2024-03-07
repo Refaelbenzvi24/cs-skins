@@ -5,12 +5,13 @@ import { components } from "react-select"
 import { css } from "@emotion/css"
 import { useSelect } from "./index"
 
+
 const Menu = (props: ComponentProps<typeof components.Menu>) => {
 	const { children, ...restProps } = props
-	const { theme } = useSelect ()
-	const selectIsDark = theme.isDark
-	const isAppDark = useIsDark ()
-	const isDark = selectIsDark ?? isAppDark
+	const { theme }                  = useSelect()
+	const selectIsDark               = theme.isDark
+	const isAppDark                  = useIsDark()
+	const isDark                     = selectIsDark ?? isAppDark
 
 	return (
 		<components.Menu {...restProps}

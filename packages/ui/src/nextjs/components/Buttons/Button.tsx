@@ -4,11 +4,11 @@ import { css, withTheme } from "@emotion/react"
 import styled from "@emotion/styled"
 import { motion } from "framer-motion"
 
-import theme from "../../Utils/theme"
+import theme from "../../utils/theme"
 import type { StyledFunction } from "../../types";
-import { shouldForwardProp } from "../../Utils/StyledUtils";
+import { shouldForwardProp } from "../../utils/StyledUtils";
 import { ColorByStateOptions, SingleColorOptions } from "../Theme/types"
-import { getColorByStateFromPath, getSingleColorFromPath } from "../../Utils/colors"
+import { getColorByStateFromPath, getSingleColorFromPath } from "../../utils/colors"
 import tw from "twin.macro"
 
 export interface ButtonProps {

@@ -23,26 +23,26 @@ export const useSearchParamState = <ValueGetterArgs extends unknown[]>(
 		key,
 		route,
 		valueGetter,
-		beforeRouteChangeParamsTransformer = (params, value) => params.set (key, value),
+		beforeRouteChangeParamsTransformer = (params, value) => params.set(key, value),
 		useDebounce = true,
 		debounceTimeout = 500
 	}: UseSearchParamState<ValueGetterArgs>) => {
-	const pathname = usePathname()
-	const router = useRouter()
-	const searchParams = useSearchParams ()
-	const { [key]: value } = useGetSearchParams (key)
+	const pathname         = usePathname()
+	const router           = useRouter()
+	const searchParams     = useSearchParams()
+	const { [key]: value } = useGetSearchParams(key)
 
 	useEffect(() => {
 		searchParamsStateHelper.currentSearchParams = new URLSearchParams(searchParams)
 	}, [searchParams])
 	const handleSearch = (...args: ValueGetterArgs) => {
-		const value = valueGetter ? valueGetter (...args) : args[0] as string
-		if (searchParamsStateHelper.currentSearchParams === null) searchParamsStateHelper.currentSearchParams = new URLSearchParams (searchParams)
-		if (beforeRouteChangeParamsTransformer) beforeRouteChangeParamsTransformer (searchParamsStateHelper?.currentSearchParams , value)
+		const value = valueGetter ? valueGetter(...args) : args[0] as string
+		if(searchParamsStateHelper.currentSearchParams === null) searchParamsStateHelper.currentSearchParams = new URLSearchParams(searchParams)
+		if(beforeRouteChangeParamsTransformer) beforeRouteChangeParamsTransformer(searchParamsStateHelper?.currentSearchParams, value)
 
-		return router.push (`${route ? `/${i18next.language}${route}` : pathname}?${(searchParamsStateHelper.currentSearchParams ?? '').toString ()}`)
+		return router.push(`${route ? `/${i18next.language}${route}` : pathname}?${(searchParamsStateHelper.currentSearchParams ?? '').toString()}`)
 	}
-	const onChange = useCallback (useDebounce ? debounce (handleSearch, debounceTimeout) : handleSearch, [pathname, searchParams])
+	const onChange     = useCallback(useDebounce ? debounce(handleSearch, debounceTimeout) : handleSearch, [pathname, searchParams])
 
 	return { value, onChange }
 }

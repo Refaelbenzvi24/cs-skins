@@ -1,11 +1,15 @@
-export const fallbackLng = 'en'
-export const languages = [fallbackLng, 'he']
-export const defaultNS = 'common'
-export const cookieName = 'i18next'
+// import type { InitOptions } from "i18next/typescript/options"
 
-export function getOptions (lng = fallbackLng, ns: string | string[] = defaultNS) {
+
+export const fallbackLng = 'en'
+export const languages   = [fallbackLng, 'he']
+export const defaultNS   = 'common'
+export const cookieName  = 'i18next'
+
+export function getOptions(lng = fallbackLng, ns: string | string[] = defaultNS){
 	return {
 		// debug: true,
+		saveMissing:   true,
 		supportedLngs: languages,
 		// preload: languages,
 		fallbackLng,
@@ -17,4 +21,5 @@ export function getOptions (lng = fallbackLng, ns: string | string[] = defaultNS
 		//   projectId: '01b2e5e8-6243-47d1-b36f-963dbb8bcae3'
 		// }
 	}
+// 	satisfies InitOptions<object>
 }

@@ -2,7 +2,7 @@
 import styled from "@emotion/styled";
 import { css, withTheme } from "@emotion/react";
 import { SingleColorOptions } from "../Theme/types"
-import { getSingleColorFromPath } from "../../Utils/colors"
+import { getSingleColorFromPath } from "../../utils/colors"
 import { StyledProps } from "../../types"
 
 interface TableDataProps extends StyledProps {

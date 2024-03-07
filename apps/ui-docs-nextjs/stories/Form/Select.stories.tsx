@@ -1,13 +1,14 @@
 import React from 'react'
-import {Main, Select} from "@acme/ui"
-import type {Story, ComponentMeta} from '@storybook/react';
-import {useState} from "react";
+import { Main, Select } from "@acme/ui"
+import type { Story, ComponentMeta } from '@storybook/react';
+import { useState } from "react";
 
-const SectionComponent = Select
+
+const SectionComponent     = Select
 const SectionComponentName = 'Select'
 
 const Meta: ComponentMeta<typeof SectionComponent> = {
-	title: SectionComponentName,
+	title:      SectionComponentName,
 	parameters: {
 		layout: 'fullscreen'
 	}
@@ -21,11 +22,11 @@ interface SelectOption {
 }
 
 const selectOptions = [
-	{label: 'First Option', value: 'First Option'},
-	{label: 'Second Option', value: 'Second Option'},
-	{label: 'Third Option', value: 'Third Option'},
-	{label: 'Fourth Option', value: 'Fourth Option'},
-	{label: 'Fifth Option', value: 'Fifth Option'}
+	{ label: 'First Option', value: 'First Option' },
+	{ label: 'Second Option', value: 'Second Option' },
+	{ label: 'Third Option', value: 'Third Option' },
+	{ label: 'Fourth Option', value: 'Fourth Option' },
+	{ label: 'Fifth Option', value: 'Fifth Option' }
 ] as const
 
 
@@ -45,27 +46,27 @@ const SectionTemplate: Story<React.ComponentProps<typeof SectionComponent>> = (a
 }
 
 export const Default = SectionTemplate.bind({})
-Default.args = {
+Default.args         = {
 	...SectionComponent.defaultProps,
-	label: 'this is a label',
+	label:       'this is a label',
 	placeholder: 'this is a placeholder',
 }
 
 export const Combobox = SectionTemplate.bind({})
-Combobox.args = {
+Combobox.args         = {
 	...SectionComponent.defaultProps,
-	label: 'this is a label',
+	label:       'this is a label',
 	placeholder: 'this is a placeholder',
-	isMulti: true,
-	creatable: true
+	isMulti:     true,
+	creatable:   true
 }
 
 export const ComboboxTextInput = SectionTemplate.bind({})
-ComboboxTextInput.args = {
+ComboboxTextInput.args         = {
 	...SectionComponent.defaultProps,
-	label: 'this is a label',
+	label:       'this is a label',
 	placeholder: 'this is a placeholder',
-	isMulti: true,
-	creatable: true,
-	textInput: true
+	isMulti:     true,
+	creatable:   true,
+	textInput:   true
 }

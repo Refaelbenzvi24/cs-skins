@@ -1,5 +1,6 @@
 import * as nextAuthJwt from "next-auth/jwt"
 
+
 declare module "next-auth/jwt" {
 	import { Permissions } from "@acme/db/src/schema/auth"
 

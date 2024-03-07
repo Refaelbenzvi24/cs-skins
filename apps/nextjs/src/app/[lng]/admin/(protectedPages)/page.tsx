@@ -8,19 +8,19 @@ interface AdminPageProps extends TranslatedRouteProps {
 	searchParams: { search?: string };
 }
 
-export async function generateMetadata(props: GenerateMetadataWithLocaleProps) {
+export async function generateMetadata(props: GenerateMetadataWithLocaleProps){
 	const { params: { lng } } = props;
-	const { t } = await getTranslation (lng, ["common", "admin"])
+	const { t }               = await getTranslation(lng, ["common", "admin"])
 
 	return {
-		title:       `${t ("common:metadata.title")} | ${t ("admin:metadata.title.main")} - ${t ("admin:metadata.title.dashboard")}`,
-		description: t ("common:metadata.appDescription")
+		title:       `${t("common:metadata.title")} | ${t("admin:metadata.title.main")} - ${t("admin:metadata.title.dashboard")}`,
+		description: t("common:metadata.appDescription")
 	};
 }
 
 const Page = async ({ params: { lng } }: AdminPageProps) => {
-	const session = await auth ();
-	if (!session) return redirect (`/${lng}/admin/login`)
+	const session = await auth();
+	if(!session) return redirect(`/${lng}/admin/login`)
 
 	return (
 		<main className="h-full">

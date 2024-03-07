@@ -1,8 +1,8 @@
 import styled from "@emotion/styled";
 import { css, withTheme } from "@emotion/react";
-import theme from "../../Utils/theme";
+import theme from "../../utils/theme";
 import { SingleColorOptions } from "../Theme/types"
-import { getSingleColorFromPath } from "../../Utils/colors"
+import { getSingleColorFromPath } from "../../utils/colors"
 import { StyledProps } from "../../types"
 
 export interface TableHeaderProps  {

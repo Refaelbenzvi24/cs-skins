@@ -1,13 +1,13 @@
 "use client";
 import styled from "@emotion/styled";
 import { css, withTheme } from "@emotion/react";
-import theme from "../../Utils/theme";
+import theme from "../../utils/theme";
 import tw from "twin.macro";
 import { HTMLMotionProps, motion } from "framer-motion";
-import { shouldForwardProp } from "../../Utils/StyledUtils";
+import { shouldForwardProp } from "../../utils/StyledUtils";
 import { useEffect, useRef, useState } from "react";
 import { ColorByStateOptions } from "../Theme/types"
-import { getColorByStateFromPath } from "../../Utils/colors"
+import { getColorByStateFromPath } from "../../utils/colors"
 import { StyledProps } from "../../types"
 
 

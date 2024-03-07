@@ -8,6 +8,7 @@ import Unauthorized from "~/components/errors/Unauthorized"
 import Forbidden from "~/components/errors/Forbidden"
 import type { ErrorInfoProps } from "~/components/errors/ErrorInfo"
 
+
 export interface ErrorComponentProps extends ErrorInfoProps {
 	message: keyof typeof errorTranslationKeys
 	code: TRPC_ERROR_CODE_KEY

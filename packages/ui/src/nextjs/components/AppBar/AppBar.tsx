@@ -2,7 +2,7 @@
 import React from "react"
 import { useEffect, useState } from "react"
 
-import theme from "../../Utils/theme"
+import theme from "../../utils/theme"
 import { useMain } from "../../index";
 import { type HTMLMotionProps } from "framer-motion"
 import useScrollPosition from "../../hooks/useScrollPosition";

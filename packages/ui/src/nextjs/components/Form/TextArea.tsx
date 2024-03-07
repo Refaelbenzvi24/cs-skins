@@ -7,11 +7,11 @@ import clsx from "clsx"
 import tw from "twin.macro"
 import { mergeRefs } from "react-merge-refs"
 
-import theme from "../../Utils/theme"
+import theme from "../../utils/theme"
 import ConditionalLabel from "./ConditionalLabel"
 import HelperText, { type HelperTextProps } from "./HelperText"
 import Label, { type LabelProps } from "./Label";
-import { shouldForwardProp } from "../../Utils/StyledUtils";
+import { shouldForwardProp } from "../../utils/StyledUtils";
 import BeforeIconWrapper from "./BeforeIconWrapper";
 import { TextAreaInput, TextAreaInputProps } from "./TextAreaInput"
 import ConditionalHelperText from "./ConditionalHelperText"

@@ -3,6 +3,7 @@ import { Tab, Tabs, Typography } from "@acme/ui"
 import { useTranslation } from "~/app/i18n/client"
 import { useSearchParams } from "next/navigation"
 
+
 interface SkinDataTabsProps {
 	skinId: string
 	lng: string
@@ -10,7 +11,7 @@ interface SkinDataTabsProps {
 }
 
 const SkinDataTabs = ({ skinId, lng, initialActiveTab }: SkinDataTabsProps) => {
-	const {t} = useTranslation(lng, ["common", "admin"])
+	const { t }        = useTranslation(lng, ["common", "admin"])
 	const searchParams = useSearchParams()
 
 	return (
@@ -19,14 +20,14 @@ const SkinDataTabs = ({ skinId, lng, initialActiveTab }: SkinDataTabsProps) => {
 			<Tab className="justify-center items-center" href={`/${lng}/admin/skins/${skinId}/table${searchParams.toString() ? `?${searchParams.toString()}` : ""}`}
 			     key="table">
 				<Typography className="text-center" variant={"body"}>
-					{t ("admin:skins.skinId.tabs.table")}
+					{t("admin:skins.skinId.tabs.table")}
 				</Typography>
 			</Tab>
 
 			<Tab className="justify-center items-center" href={`/${lng}/admin/skins/${skinId}/graphs${searchParams.toString() ? `?${searchParams.toString()}` : ""}`}
 			     key="graphs">
 				<Typography className="text-center" variant={"body"}>
-					{t ("admin:skins.skinId.tabs.charts")}
+					{t("admin:skins.skinId.tabs.charts")}
 				</Typography>
 			</Tab>
 		</Tabs>

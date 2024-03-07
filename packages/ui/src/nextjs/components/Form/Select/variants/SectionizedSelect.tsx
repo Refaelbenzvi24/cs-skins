@@ -13,8 +13,8 @@ interface SectionizedSelectProps extends Omit<SelectProps, "options"> {
 
 
 const SectionizedSelect = ({
-	                           ...restProps
-                           }: SectionizedSelectProps) => {
+	...restProps
+}: SectionizedSelectProps) => {
 	return (
 		<SelectWithLabel {...restProps}/>
 	)

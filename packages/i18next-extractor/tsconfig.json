@@ -1,0 +1,26 @@
+{
+	"extends":         "@acme/tsconfig/base.json",
+	"baseUrl":         ".",
+	"paths":           {
+		"~/*": [
+			"./src/*"
+		]
+	},
+	"compilerOptions": {
+		"tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
+		"types":           [
+			"node"
+		]
+	},
+	"ts-node":         {
+		"compilerOptions": {
+			"module": "commonjs"
+		}
+	},
+	"include":         [
+		"src"
+	],
+	"exclude":         [
+		"node_modules"
+	]
+}

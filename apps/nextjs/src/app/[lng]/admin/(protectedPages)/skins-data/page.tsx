@@ -12,23 +12,23 @@ interface AdminPageProps extends TranslatedRouteProps {
 	searchParams: { search?: string };
 }
 
-export async function generateMetadata(props: GenerateMetadataWithLocaleProps) {
+export async function generateMetadata(props: GenerateMetadataWithLocaleProps){
 	const { params: { lng } } = props;
-	const { t } = await getTranslation (lng, ["common", "admin"])
+	const { t }               = await getTranslation(lng, ["common", "admin"])
 
 	return {
-		title:       `${t ("common:metadata.title")} | ${t ("admin:metadata.title.main")} - ${t ("admin:metadata.title.skinsData")}`,
-		description: t ("common:metadata.appDescription")
+		title:       `${t("common:metadata.title")} | ${t("admin:metadata.title.main")} - ${t("admin:metadata.title.skinsData")}`,
+		description: t("common:metadata.appDescription")
 	};
 }
 
 const Page = managedRsc(async ({ params: { lng }, searchParams }: AdminPageProps) => {
-	const session = await auth ();
-	if (!session) redirect (`/${lng}/admin/login`)
+	const session = await auth();
+	if(!session) redirect(`/${lng}/admin/login`)
 
-	const skinsDataList = await trpcRsc.skinData.list ({ search: searchParams.search, limit: 20 })
+	const skinsDataList = await trpcRsc.skinData.list({ search: searchParams.search, limit: 20 })
 
-	const { t } = await getTranslation (lng, "admin")
+	const { t } = await getTranslation(lng, "admin")
 
 	return (
 		<main className="min-h-full w-full">
@@ -37,7 +37,7 @@ const Page = managedRsc(async ({ params: { lng }, searchParams }: AdminPageProps
 					<Typography variant={"h2"}
 					            color={"colorScheme.subtitle2"}
 					            colorDark={"colorScheme.body2"}>
-						{t ("admin:skinsData")}
+						{t("admin:skinsData")}
 					</Typography>
 				</Row>
 

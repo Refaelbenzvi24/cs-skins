@@ -1,10 +1,11 @@
 "use client";
-import {ToastContainer} from 'react-toastify'
+import { ToastContainer } from 'react-toastify'
 
-import {useTheme} from "@acme/ui";
+import { useTheme } from "@acme/ui";
+
 
 const ToastifyContainer = () => {
-	const {theme} = useTheme()
+	const { theme } = useTheme()
 
 	return (
 		<ToastContainer theme={theme}

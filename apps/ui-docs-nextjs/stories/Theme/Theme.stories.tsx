@@ -1,11 +1,12 @@
 import React from 'react'
-import {Card, Main, theme, Typography} from "@acme/ui"
-import type {Story, ComponentMeta} from '@storybook/react'
+import { Card, Main, theme, Typography } from "@acme/ui"
+import type { Story, ComponentMeta } from '@storybook/react'
+
 
 const SectionComponentName = 'Theme'
 
 const Meta: ComponentMeta<React.FC> = {
-	title: SectionComponentName,
+	title:      SectionComponentName,
 	parameters: {
 		layout: 'fullscreen'
 	}
@@ -39,4 +40,4 @@ const SectionTemplate: Story = () => {
 }
 
 export const Default = SectionTemplate.bind({})
-Default.args = {}
+Default.args         = {}

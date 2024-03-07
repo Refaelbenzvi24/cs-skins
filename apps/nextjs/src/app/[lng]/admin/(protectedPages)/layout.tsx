@@ -7,8 +7,8 @@ import { redirect } from "next/navigation"
 
 
 const Layout = async (props: LayoutWithLocaleProps) => {
-	const session = await auth ();
-	if (!session) redirect (`/${props.params.lng}/admin/login`)
+	const session = await auth();
+	if(!session) redirect(`/${props.params.lng}/admin/login`)
 
 	return (
 		<div className="w-full h-full">

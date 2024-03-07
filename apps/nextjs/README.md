@@ -23,7 +23,8 @@ From within the new folder, run `npm install`, then `npm run dev` to start the d
 Learn how to work with twin
 
 - [The prop styling guide](https://github.com/ben-rogerson/twin.macro/blob/master/docs/prop-styling-guide.md) - A must-read guide to level up on prop styling
-- [The styled component guide](https://github.com/ben-rogerson/twin.macro/blob/master/docs/styled-component-guide.md) - A must-read guide on getting productive with styled-components
+- [The styled component guide](https://github.com/ben-rogerson/twin.macro/blob/master/docs/styled-component-guide.md) - A must-read guide on getting productive
+  with styled-components
 
 Learn more about emotion
 

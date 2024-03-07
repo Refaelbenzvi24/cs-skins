@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation"
 
 
 const RealUserMonitoring = () => {
-	const pathname = usePathname()
+	const pathname                   = usePathname()
 	const { traceId, transactionId } = useApm()
 
 	useEffect(() => {

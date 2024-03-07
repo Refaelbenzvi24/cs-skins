@@ -13,7 +13,8 @@ import GlobalStyles from "@acme/ui/src/nextjs/styles/GlobalStyles";
 import { MainProvider, ThemeProvider } from "@acme/ui";
 import { Preview } from "@storybook/react"
 
-const cache = createCache ({
+
+const cache = createCache({
 	prepend: true,
 	key:     "sb",
 	// This disables vendor prefixing in storybook and storyshots snapshots
@@ -43,8 +44,8 @@ const preview: Preview = {
 		(Story, context) => (
 			<div id="__next">
 				<MainProvider defaults={{ isAnimationsActive: false }}>
-					<ThemeProvider initialTheme={useDarkMode () ? "dark" : "light"} defaultTheme={"dark"}>
-						{Story (context)}
+					<ThemeProvider initialTheme={useDarkMode() ? "dark" : "light"} defaultTheme={"dark"}>
+						{Story(context)}
 					</ThemeProvider>
 				</MainProvider>
 			</div>

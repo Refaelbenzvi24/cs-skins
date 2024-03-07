@@ -1,6 +1,6 @@
-import { shouldForwardProp } from "../../Utils/StyledUtils"
+import { shouldForwardProp } from "../../utils/StyledUtils"
 import { css as reactCss, withTheme } from "@emotion/react"
-import theme from "../../Utils/theme"
+import theme from "../../utils/theme"
 import { ModalWrapperProps } from "./Modal"
 import { motion } from "framer-motion"
 import styled from "@emotion/styled"

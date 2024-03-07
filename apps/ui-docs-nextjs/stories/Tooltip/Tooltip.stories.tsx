@@ -1,12 +1,13 @@
 import React from 'react'
-import {Button, Main, Tooltip} from "@acme/ui"
-import type {Story, ComponentMeta} from '@storybook/react'
+import { Button, Main, Tooltip } from "@acme/ui"
+import type { Story, ComponentMeta } from '@storybook/react'
 
-const SectionComponent = Tooltip
+
+const SectionComponent     = Tooltip
 const SectionComponentName = 'Tooltip'
 
 const Meta: ComponentMeta<typeof SectionComponent> = {
-	title: SectionComponentName,
+	title:      SectionComponentName,
 	parameters: {
 		layout: 'fullscreen'
 	}
@@ -32,4 +33,4 @@ const SectionTemplate: Story<React.ComponentProps<typeof SectionComponent>> = (a
 export const Default = SectionTemplate.bind({
 	...SectionComponent.defaultProps
 })
-Default.args = {}
+Default.args         = {}

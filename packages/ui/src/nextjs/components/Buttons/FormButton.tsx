@@ -10,7 +10,7 @@ import tw from "twin.macro"
 
 import HelperText from "../Form/HelperText"
 import Button, { type ButtonProps } from "./Button"
-import { shouldForwardProp } from "../../Utils/StyledUtils";
+import { shouldForwardProp } from "../../utils/StyledUtils";
 import { withTheme } from "@emotion/react"
 
 

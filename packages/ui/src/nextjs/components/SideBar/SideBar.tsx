@@ -8,12 +8,12 @@ import {motion, type HTMLMotionProps} from "framer-motion"
 import tw from "twin.macro"
 
 import {defaultMainData} from '../Main/MainContext'
-import theme from "../../Utils/theme"
-import {transformTransition} from "../../Utils/transitions"
-import {conditionalTranslate} from "../../Utils/utils"
+import theme from "../../utils/theme"
+import {transformTransition} from "../../utils/transitions"
+import {conditionalTranslate} from "../../utils/utils"
 import useDimensions from "../../hooks/useDimensions";
 import {useMain} from "../../index";
-import {shouldForwardProp} from "../../Utils/StyledUtils";
+import {shouldForwardProp} from "../../utils/StyledUtils";
 import StyledSideBar, { StyledSideBarProps } from "./StyledSideBar"
 
 const {sideBarOpts: defaultSideBarOptions} = defaultMainData

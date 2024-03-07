@@ -10,7 +10,7 @@ const getSchema = () => schemaList[tableName]
 const list = ({ cursor, limit, search }: PaginateWithSearchParams) => {
 	const schema                  = getSchema()
 	const { gt, desc, like, and } = dbOperators
-	return  db
+	return db
 	.select()
 	.from(schema)
 	.orderBy(({ id }) => desc(id))

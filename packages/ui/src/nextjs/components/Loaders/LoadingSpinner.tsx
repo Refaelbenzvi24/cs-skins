@@ -1,7 +1,7 @@
 "use client";
 import styled from "@emotion/styled";
 import { css, withTheme } from "@emotion/react";
-import { getSingleColorFromPath } from "../../Utils/colors"
+import { getSingleColorFromPath } from "../../utils/colors"
 import { SingleColorOptions } from "../Theme/types"
 import { StyledProps } from "../../types"
 

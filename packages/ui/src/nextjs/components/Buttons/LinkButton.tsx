@@ -2,7 +2,7 @@
 import Link from "next/link"
 import styled from "@emotion/styled"
 import {buttonPropsArray, ButtonStyles, type ButtonProps} from "./Button"
-import {shouldForwardProp} from "../../Utils/StyledUtils";
+import {shouldForwardProp} from "../../utils/StyledUtils";
 import { withTheme } from "@emotion/react"
 
 

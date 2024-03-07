@@ -1,16 +1,16 @@
-import {css} from "@emotion/css"
+import { css } from "@emotion/css"
 
 
 export type CssUnit = number | `${'-' | ''}${number}px` | `${'-' | ''}${number}%` | `${'-' | ''}${number}rem`
 
 
 export const reverseCssUnit = (cssUnit: CssUnit) => {
-	if (typeof cssUnit !== "number") {
+	if(typeof cssUnit !== "number"){
 		const units = cssUnit.match(/[%A-Za-z|]+|[\d-]+/g) as [string, string]
-		
+
 		return `${-1 * Number(units[0])}${units[1]}`
 	}
-	
+
 	return -1 * cssUnit
 }
 

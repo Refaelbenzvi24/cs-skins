@@ -17,8 +17,8 @@ const createUserValidation = z.object(userValidations.create)
 type createUserValidationSchema = z.infer<typeof createUserValidation>
 
 const CreateUserForm = ({ lng }: ComponentWithLocaleProps) => {
-	const createUserMutation = api.user.create.useMutation()
-	const { t }              = useTranslation(lng, ["admin", "forms"])
+	const createUserMutation               = api.user.create.useMutation()
+	const { t }                            = useTranslation(lng, ["admin", "forms"])
 	const { generalSuccess, generalError } = useToasts()
 
 	const [formHasSubmitted, setFormHasSubmitted] = useState(false)

@@ -3,6 +3,7 @@ import styled from "@emotion/styled"
 import { Row, theme } from "@acme/ui"
 import { shouldForwardProp } from "@acme/ui/src/nextjs/Utils/StyledUtils"
 
+
 interface ContactBottomSheetProps {
 	dark?: boolean
 	bgColor?: string
@@ -10,17 +11,17 @@ interface ContactBottomSheetProps {
 }
 
 const defaultProps = {
-	bgColor: `${theme.colorScheme.iris}cc`,
+	bgColor:     `${theme.colorScheme.iris}cc`,
 	bgColorDark: `${theme.colorScheme.overlaysDark}cc`
 } as const
 
 const ContactBottomSheet = styled(Row, {
 	shouldForwardProp: props =>
-		shouldForwardProp<ContactBottomSheetProps>([
-			"dark",
-			"bgColor",
-			"bgColorDark"
-		])(props as keyof ContactBottomSheetProps)
+		                   shouldForwardProp<ContactBottomSheetProps>([
+			                   "dark",
+			                   "bgColor",
+			                   "bgColorDark"
+		                   ])(props as keyof ContactBottomSheetProps)
 })(({ dark, bgColor, bgColorDark }: ContactBottomSheetProps) => [
 	css`
 		background-color: ${bgColor};

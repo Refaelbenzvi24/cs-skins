@@ -6,7 +6,7 @@ import { motion } from "framer-motion"
 import { default as Link, type LinkProps } from "next/link"
 import tw from "twin.macro"
 
-import theme from "../../Utils/theme"
+import theme from "../../utils/theme"
 import { type ReactNode } from "react";
 
 

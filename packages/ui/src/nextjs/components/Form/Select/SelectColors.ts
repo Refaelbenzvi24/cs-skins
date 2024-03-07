@@ -1,4 +1,4 @@
-import theme from "../../../Utils/theme"
+import theme from "../../../utils/theme"
 
 export interface SelectColors {
 	control: {

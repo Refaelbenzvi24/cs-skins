@@ -3,7 +3,8 @@ import { Button, Main, Modal, Typography } from "@acme/ui"
 import type { Story, ComponentMeta } from "@storybook/react"
 import { useState } from "react"
 
-const SectionComponent = Modal
+
+const SectionComponent     = Modal
 const SectionComponentName = "Modal"
 
 const Meta: ComponentMeta<typeof SectionComponent> = {
@@ -17,7 +18,7 @@ export default Meta
 
 
 const SectionTemplate: Story<React.ComponentProps<typeof SectionComponent>> = (args) => {
-	const [isOpen, setIsOpen] = useState<boolean> (false)
+	const [isOpen, setIsOpen] = useState<boolean>(false)
 
 	return (
 		<>
@@ -25,7 +26,7 @@ const SectionTemplate: Story<React.ComponentProps<typeof SectionComponent>> = (a
 				{...args}
 				isOpen={isOpen}
 				centered
-				onBackdropClick={() => setIsOpen (false)}>
+				onBackdropClick={() => setIsOpen(false)}>
 				<div className="flex justify-center items-center h-full w-full">
 					<Typography variant={"body"} centered>
 						{`Hello There I'm a modal! :)`}
@@ -36,7 +37,7 @@ const SectionTemplate: Story<React.ComponentProps<typeof SectionComponent>> = (a
 			<Main className="flex justify-center py-10">
 				<div className="space-x-2">
 					<Button
-						onClick={() => setIsOpen (!isOpen)}>
+						onClick={() => setIsOpen(!isOpen)}>
 						<Typography variant={"button"}>
 							Modal Toggle
 						</Typography>
@@ -47,7 +48,7 @@ const SectionTemplate: Story<React.ComponentProps<typeof SectionComponent>> = (a
 	)
 }
 
-export const Default = SectionTemplate.bind ({})
-Default.args = {
+export const Default = SectionTemplate.bind({})
+Default.args         = {
 	...SectionComponent.defaultProps,
 }

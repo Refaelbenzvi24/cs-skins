@@ -1,12 +1,12 @@
 import styled from "@emotion/styled"
 import { motion } from "framer-motion"
-import { shouldForwardProp } from "../../Utils/StyledUtils"
+import { shouldForwardProp } from "../../utils/StyledUtils"
 import { css } from "@emotion/react"
 import tw from "twin.macro"
 import { SingleColorOptions } from "../Theme/types"
 import { StyledProps } from "../../types"
-import { getSingleColorFromPath } from "../../Utils/colors"
-import theme from "../../Utils/theme"
+import { getSingleColorFromPath } from "../../utils/colors"
+import theme from "../../utils/theme"
 
 interface StyledTabsProps {
 	backgroundColor?: SingleColorOptions

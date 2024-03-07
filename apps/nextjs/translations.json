@@ -1,0 +1,145 @@
+{
+	"common":   {
+		"metadata": {
+			"title":          "",
+			"appDescription": ""
+		}
+	},
+	"toasts":   {},
+	"toast":    {},
+	"forms":    {
+		"contact":          {
+			"name":    "",
+			"email":   "",
+			"phone":   "",
+			"message": ""
+		},
+		"labels":           {
+			"name":     "",
+			"email":    "",
+			"phone":    "",
+			"message":  "",
+			"password": ""
+		},
+		"admin":            {
+			"email":    "",
+			"password": ""
+		},
+		"settings":         {
+			"email":    "",
+			"password": ""
+		},
+		"emailDestination": {
+			"email":    "",
+			"password": ""
+		}
+	},
+	"errors":   {
+		"400": {
+			"title":    "",
+			"subtitle": "",
+			"homepage": ""
+		},
+		"401": {
+			"title":    "",
+			"subtitle": "",
+			"homepage": ""
+		},
+		"403": {
+			"title":    "",
+			"subtitle": "",
+			"homepage": ""
+		},
+		"404": {
+			"title":    "",
+			"subtitle": "",
+			"homepage": ""
+		},
+		"500": {
+			"title":    "",
+			"subtitle": "",
+			"homepage": ""
+		}
+	},
+	"settings": {
+		"admin":    {
+			"title": "",
+			"email": ""
+		},
+		"sections": {
+			"email": ""
+		}
+	},
+	"admin":    {
+		"skins":          {
+			"title":             "",
+			"quality":           "",
+			"steamPrice":        "",
+			"steamListings":     "",
+			"steamMedianPrice":  "",
+			"steamVolume":       "",
+			"bitSkinsPrice":     "",
+			"percentChange":     "",
+			"skinDataCreatedAt": ""
+		},
+		"users":          {
+			"title":  "",
+			"create": ""
+		},
+		"weaponsTable":   {
+			"name":      "",
+			"createdAt": ""
+		},
+		"skinsDataTable": {
+			"weapon":           "",
+			"skin":             "",
+			"quality":          "",
+			"steamPrice":       "",
+			"steamListings":    "",
+			"steamMedianPrice": "",
+			"steamVolume":      "",
+			"bitSkinsPrice":    "",
+			"percentChange":    "",
+			"createdAt":        ""
+		},
+		"skinsTable":     {
+			"name":       "",
+			"weaponName": "",
+			"url":        "",
+			"createdAt":  ""
+		},
+		"usersTable":     {
+			"name":  "",
+			"email": ""
+		},
+		"sourcesTable":   {
+			"name":      "",
+			"url":       "",
+			"createdAt": ""
+		},
+		"qualitiesTable": {
+			"name":      "",
+			"createdAt": ""
+		},
+		"skinId":         {
+			"quality":           "",
+			"steamPrice":        "",
+			"steamListings":     "",
+			"steamMedianPrice":  "",
+			"steamVolume":       "",
+			"bitSkinsPrice":     "",
+			"percentChange":     "",
+			"skinDataCreatedAt": ""
+		},
+		"tableHeaders":   {
+			"quality":           "",
+			"steamPrice":        "",
+			"steamListings":     "",
+			"steamMedianPrice":  "",
+			"steamVolume":       "",
+			"bitSkinsPrice":     "",
+			"percentChange":     "",
+			"skinDataCreatedAt": ""
+		}
+	}
+}

@@ -1,11 +1,11 @@
-import theme from "../../Utils/theme"
-import { shouldForwardProp } from "../../Utils/StyledUtils"
+import theme from "../../utils/theme"
+import { shouldForwardProp } from "../../utils/StyledUtils"
 import { css, withTheme } from "@emotion/react"
 import styled from "@emotion/styled"
 import tw from "twin.macro"
 import { motion } from "framer-motion"
 import { SingleColorOptions, ZIndexOptions } from "../Theme/types"
-import { getSingleColorFromPath, getZIndexFromPath } from "../../Utils/colors"
+import { getSingleColorFromPath, getZIndexFromPath } from "../../utils/colors"
 import { StyledProps } from "../../types"
 
 

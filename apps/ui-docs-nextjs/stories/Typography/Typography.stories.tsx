@@ -1,12 +1,13 @@
 import React from 'react'
-import {Main, Typography} from "@acme/ui"
-import type {Story, ComponentMeta} from '@storybook/react'
+import { Main, Typography } from "@acme/ui"
+import type { Story, ComponentMeta } from '@storybook/react'
 
-const SectionComponent = Typography
+
+const SectionComponent     = Typography
 const SectionComponentName = 'Typography'
 
 const Meta: ComponentMeta<typeof SectionComponent> = {
-	title: SectionComponentName,
+	title:      SectionComponentName,
 	parameters: {
 		layout: 'fullscreen'
 	}
@@ -22,39 +23,39 @@ const SectionTemplate: Story<React.ComponentProps<typeof SectionComponent>> = (a
 				<SectionComponent variant={'h1'}>
 					H1 Text Example
 				</SectionComponent>
-				
+
 				<SectionComponent variant={'h2'}>
 					H2 Text Example
 				</SectionComponent>
-				
+
 				<SectionComponent variant={'h3'}>
 					H3 Text Example
 				</SectionComponent>
-				
+
 				<SectionComponent variant={'subtitle'}>
 					Subtitle Text Example
 				</SectionComponent>
-				
+
 				<SectionComponent variant={'preTitle'}>
 					Pre-title Text Example
 				</SectionComponent>
-				
+
 				<SectionComponent variant={'body'}>
 					Body Text Example
 				</SectionComponent>
-				
+
 				<SectionComponent variant={'small'}>
 					Small Text Example
 				</SectionComponent>
-				
+
 				<SectionComponent variant={'bold'}>
 					Bold Text Example
 				</SectionComponent>
-				
+
 				<SectionComponent variant={'button'}>
 					Button Text Example
 				</SectionComponent>
-				
+
 				<SectionComponent variant={'link'}>
 					Link Text Example
 				</SectionComponent>
@@ -64,4 +65,4 @@ const SectionTemplate: Story<React.ComponentProps<typeof SectionComponent>> = (a
 }
 
 export const Default = SectionTemplate.bind({})
-Default.args = {}
+Default.args         = {}

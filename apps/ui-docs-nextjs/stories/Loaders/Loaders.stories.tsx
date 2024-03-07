@@ -1,6 +1,7 @@
 import React from 'react'
-import {CubicProgress, ImpulseSpinner, Main, Skeleton} from "@acme/ui"
-import type {Story, ComponentMeta} from '@storybook/react'
+import { CubicProgress, ImpulseSpinner, Main, Skeleton } from "@acme/ui"
+import type { Story, ComponentMeta } from '@storybook/react'
+
 
 const SectionComponent1 = CubicProgress
 const SectionComponent2 = ImpulseSpinner
@@ -10,7 +11,7 @@ const SectionComponentName = 'Loader'
 
 
 const Meta: ComponentMeta<React.FC> = {
-	title: SectionComponentName,
+	title:      SectionComponentName,
 	parameters: {
 		layout: 'fullscreen'
 	}
@@ -30,7 +31,7 @@ const SectionTemplate1: Story<React.ComponentProps<typeof SectionComponent1>> = 
 }
 
 export const Cubic = SectionTemplate1.bind({})
-Cubic.args = {}
+Cubic.args         = {}
 
 const SectionTemplate2: Story<React.ComponentProps<typeof SectionComponent2>> = () => {
 	return (
@@ -45,7 +46,7 @@ const SectionTemplate2: Story<React.ComponentProps<typeof SectionComponent2>> = 
 }
 
 export const Impulse = SectionTemplate2.bind({})
-Impulse.args = {}
+Impulse.args         = {}
 
 
 const SectionTemplate3: Story<React.ComponentProps<typeof SectionComponent3>> = () => {
@@ -53,7 +54,7 @@ const SectionTemplate3: Story<React.ComponentProps<typeof SectionComponent3>> = 
 		<Main className="flex justify-center py-10">
 			<div className="flex flex-col w-full px-4">
 				<SectionComponent3 height={'30px'} width={'65%'}/>
-				
+
 				<div className="w-full pt-4 space-y-3">
 					<SectionComponent3 height={'14px'} width={'40%'}/>
 					<SectionComponent3 height={'14px'} width={'40%'}/>
@@ -69,4 +70,4 @@ const SectionTemplate3: Story<React.ComponentProps<typeof SectionComponent3>> = 
 export const SkeletonLoader = SectionTemplate3.bind({
 	...SectionComponent3.defaultProps
 })
-SkeletonLoader.args = {}
+SkeletonLoader.args         = {}

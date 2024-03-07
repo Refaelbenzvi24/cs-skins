@@ -1,10 +1,10 @@
-import { shouldForwardProp } from "../../Utils/StyledUtils"
+import { shouldForwardProp } from "../../utils/StyledUtils"
 import { css, withTheme } from "@emotion/react"
 import {motion} from "framer-motion"
 import tw from "twin.macro"
 import styled from "@emotion/styled"
 import { SingleColorOptions, ZIndexOptions } from "../Theme/types"
-import { getSingleColorFromPath, getZIndexFromPath } from "../../Utils/colors"
+import { getSingleColorFromPath, getZIndexFromPath } from "../../utils/colors"
 import { StyledProps } from "../../types"
 
 export interface StyledBackdropProps extends StyledProps {

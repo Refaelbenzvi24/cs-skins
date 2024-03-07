@@ -7,7 +7,7 @@ import { useIsDark } from "../../../index"
 import { useSelect } from "./index"
 import styled from "@emotion/styled"
 import { motion } from "framer-motion"
-import { shouldForwardProp } from "../../../Utils/StyledUtils"
+import { shouldForwardProp } from "../../../utils/StyledUtils"
 
 interface DropdownIndicatorProps {
 	selectTheme: ReturnType<typeof useSelect>["theme"]

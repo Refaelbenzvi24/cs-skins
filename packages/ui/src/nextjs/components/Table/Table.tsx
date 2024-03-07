@@ -3,7 +3,7 @@ import { AnimatePresence, HTMLMotionProps } from "framer-motion";
 import TableRow from "./TableRow";
 import TableHeader, { TableHeaderProps } from "./TableHeader";
 import React, { ComponentProps, ReactNode, useEffect, useRef } from "react";
-import theme from "../../Utils/theme";
+import theme from "../../utils/theme";
 import TableData from "./TableData";
 import styled from "@emotion/styled";
 import { css } from "@emotion/react";

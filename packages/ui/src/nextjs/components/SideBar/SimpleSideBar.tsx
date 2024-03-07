@@ -5,9 +5,9 @@ import styled from "@emotion/styled"
 import { SingleColorOptions, ZIndexOptions } from "../Theme/types"
 import tw from "twin.macro"
 import { css, withTheme } from "@emotion/react"
-import { getCssUnit, getSingleColorFromPath, getZIndexFromPath } from "../../Utils/colors"
+import { getCssUnit, getSingleColorFromPath, getZIndexFromPath } from "../../utils/colors"
 import { StyledProps } from "../../types"
-import { shouldForwardProp } from "../../Utils/StyledUtils"
+import { shouldForwardProp } from "../../utils/StyledUtils"
 import clsx from "clsx"
 
 

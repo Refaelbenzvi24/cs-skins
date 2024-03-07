@@ -2,10 +2,11 @@ import { dirname, join } from "path";
 import type { StorybookConfig } from "@storybook/nextjs"
 import Icons from "unplugin-icons/webpack"
 
+
 const config: StorybookConfig = {
 	webpackFinal: (config) => {
-		config.plugins.push (
-			Icons ({
+		config.plugins.push(
+			Icons({
 				compiler: "jsx",
 				jsx:      "react"
 			}),
@@ -35,7 +36,7 @@ const config: StorybookConfig = {
 	core:      {
 		disableTelemetry: true,
 	},
-	"docs":      {
+	"docs":    {
 		"autodocs": true
 	},
 
@@ -50,6 +51,6 @@ const config: StorybookConfig = {
 
 export default config
 
-function getAbsolutePath(value: string): any {
-    return dirname(require.resolve(join(value, "package.json")));
+function getAbsolutePath(value: string): any{
+	return dirname(require.resolve(join(value, "package.json")));
 }

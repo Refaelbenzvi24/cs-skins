@@ -1,34 +1,34 @@
 {
-  "version": "5",
-  "dialect": "pg",
-  "entries": [
-    {
-      "idx": 0,
-      "version": "5",
-      "when": 1699216289510,
-      "tag": "0000_oval_thor_girl",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1701534757285,
-      "tag": "0001_broad_sprite",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1703327838666,
-      "tag": "0002_opposite_mauler",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "5",
-      "when": 1703542072324,
-      "tag": "0003_natural_squirrel_girl",
-      "breakpoints": true
-    }
-  ]
+	"version" : "5",
+	"dialect" : "pg",
+	"entries" : [
+		{
+			"idx" :         0,
+			"version" :     "5",
+			"when" :        1699216289510,
+			"tag" :         "0000_oval_thor_girl",
+			"breakpoints" : true
+		},
+		{
+			"idx" :         1,
+			"version" :     "5",
+			"when" :        1701534757285,
+			"tag" :         "0001_broad_sprite",
+			"breakpoints" : true
+		},
+		{
+			"idx" :         2,
+			"version" :     "5",
+			"when" :        1703327838666,
+			"tag" :         "0002_opposite_mauler",
+			"breakpoints" : true
+		},
+		{
+			"idx" :         3,
+			"version" :     "5",
+			"when" :        1703542072324,
+			"tag" :         "0003_natural_squirrel_girl",
+			"breakpoints" : true
+		}
+	]
 }

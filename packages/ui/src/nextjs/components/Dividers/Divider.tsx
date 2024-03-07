@@ -4,9 +4,9 @@ import styled from "@emotion/styled"
 import { motion } from "framer-motion"
 import tw from "twin.macro"
 
-import theme from "../../Utils/theme"
-import { shouldForwardProp } from "../../Utils/StyledUtils";
-import { getSingleColorFromPath, getZIndexFromPath } from "../../Utils/colors"
+import theme from "../../utils/theme"
+import { shouldForwardProp } from "../../utils/StyledUtils";
+import { getSingleColorFromPath, getZIndexFromPath } from "../../utils/colors"
 import { StyledProps } from "../../types"
 import { SingleColorOptions } from "../Theme/types"
 

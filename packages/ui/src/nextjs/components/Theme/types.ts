@@ -1,4 +1,4 @@
-import theme, { ThemeColor } from "../../Utils/theme"
+import theme, { ThemeColor } from "../../utils/theme"
 import { Paths } from "../../types/helpers"
 import { CSSProperties } from "react"
 export type ThemeOptions = 'dark' | 'light'

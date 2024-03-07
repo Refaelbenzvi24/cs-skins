@@ -6,7 +6,7 @@ import { css } from "@emotion/css"
 import { useSelect } from "./index"
 import styled from "@emotion/styled"
 import { StyledProps } from "../../../types"
-import { shouldForwardProp } from "../../../Utils/StyledUtils"
+import { shouldForwardProp } from "../../../utils/StyledUtils"
 
 interface StyledSelectContainerProps extends StyledProps {
 	isFocused: boolean

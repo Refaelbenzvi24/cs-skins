@@ -1,15 +1,15 @@
 .avatar {
-  border-radius: 50%;
-  background-color: var(--color-gray-bright);
-  position: relative;
-  overflow: hidden;
-  flex-shrink: 0;
+	border-radius: 50%;
+	background-color: var(--color-gray-bright);
+	position: relative;
+	overflow: hidden;
+	flex-shrink: 0;
 }
 
 .avatarImg {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
 }
 
 // Generate avatar classes
@@ -21,8 +21,8 @@ $avatar-sizes: (
 );
 
 @each $name, $size in $avatar-sizes {
-  .avatar#{$name} {
-    width: #{$size}px;
-    height: #{$size}px;
-  }
+	.avatar#{$name} {
+		width: #{$size}px;
+		height: #{$size}px;
+	}
 }

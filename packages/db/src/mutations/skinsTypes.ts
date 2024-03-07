@@ -9,8 +9,8 @@ const getSchema = () => schemaList[tableName]
 export type NewSkinType = InferInsert<ReturnType<typeof getSchema>>
 
 export const insert = (data: NewSkinType, dbInstance: DatabaseType = db) => {
-	const schema   = getSchema()
+	const schema = getSchema()
 	return dbInstance
-		.insert(schema)
-		.values(data)
+	.insert(schema)
+	.values(data)
 }

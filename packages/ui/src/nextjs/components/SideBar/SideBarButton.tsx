@@ -6,12 +6,12 @@ import { motion } from "framer-motion"
 import tw from "twin.macro"
 
 import { Button, useMain } from "../../index"
-import theme from "../../Utils/theme"
-import { transformTransition } from "../../Utils/transitions"
-import { conditionalRotate, conditionalTranslate } from "../../Utils/utils"
+import theme from "../../utils/theme"
+import { transformTransition } from "../../utils/transitions"
+import { conditionalRotate, conditionalTranslate } from "../../utils/utils"
 import IconCarbonChevronLeft from "~icons/carbon/chevronLeft"
 import IconCarbonChevronRight from "~icons/carbon/chevronRight"
-import { shouldForwardProp } from "../../Utils/StyledUtils";
+import { shouldForwardProp } from "../../utils/StyledUtils";
 import type { ButtonProps } from "../Buttons/Button";
 
 

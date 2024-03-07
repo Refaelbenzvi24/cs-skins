@@ -21,7 +21,7 @@ const createContext = cache(async () => {
 	}, {
 		emailProvider: await getEmailProvider(),
 		messageBrokerConnectionParams,
-		isServer: true
+		isServer:      true
 	});
 });
 

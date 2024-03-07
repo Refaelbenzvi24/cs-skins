@@ -4,7 +4,7 @@ import { CSSProperties } from "react"
 import styled, { StyledTags } from "@emotion/styled"
 import tw from "twin.macro"
 import { SingleColorOptions } from "../Theme/types"
-import { getSingleColorFromPath } from "../../Utils/colors"
+import { getSingleColorFromPath } from "../../utils/colors"
 import { StyledProps } from "../../types"
 
 

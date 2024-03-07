@@ -7,12 +7,12 @@ import clsx from "clsx"
 import { motion, type HTMLMotionProps } from "framer-motion"
 
 import Backdrop, { type BackdropProps } from "../Backdrop/Backdrop"
-import theme from "../../Utils/theme"
-import { marginTransition } from "../../Utils/transitions"
+import theme from "../../utils/theme"
+import { marginTransition } from "../../utils/transitions"
 import useDimensions from "../../hooks/useDimensions"
 import { useMain } from "../../index"
 import tw from "twin.macro"
-import { CssUnit } from "../../Utils/utils";
+import { CssUnit } from "../../utils/utils";
 import { withTheme } from "@emotion/react"
 
 

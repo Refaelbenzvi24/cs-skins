@@ -5,17 +5,18 @@ import IconIcBaselineTiktok from "~icons/ic/baselineTiktok"
 import IconIcOutlineEmail from "~icons/ic/outlineEmail"
 import clsx from "clsx";
 
-import {ATagButton, Row} from "@acme/ui";
-import {type ButtonProps} from "@acme/ui/src/nextjs/components/Buttons/Button";
-import {ComponentProps} from "react";
+import { ATagButton, Row } from "@acme/ui";
+import { type ButtonProps } from "@acme/ui/src/nextjs/components/Buttons/Button";
+import { ComponentProps } from "react";
+
 
 interface SocialLinksProps extends Partial<ComponentProps<typeof Row>> {
 	linksProps?: ButtonProps
 }
 
 const SocialLinks = (props: SocialLinksProps) => {
-	const {className, linksProps, ...restProps} = props
-	
+	const { className, linksProps, ...restProps } = props
+
 	return (
 		<Row
 			{...restProps}
@@ -28,7 +29,7 @@ const SocialLinks = (props: SocialLinksProps) => {
 				{...linksProps}>
 				<IconIcBaselineFacebook/>
 			</ATagButton>
-			
+
 			<ATagButton
 				text
 				icon
@@ -37,7 +38,7 @@ const SocialLinks = (props: SocialLinksProps) => {
 				{...linksProps}>
 				<IconIcBaselineWhatsapp/>
 			</ATagButton>
-			
+
 			<ATagButton
 				text
 				icon
@@ -46,7 +47,7 @@ const SocialLinks = (props: SocialLinksProps) => {
 				{...linksProps}>
 				<IconMdiInstagram/>
 			</ATagButton>
-			
+
 			<ATagButton
 				text
 				icon
@@ -55,7 +56,7 @@ const SocialLinks = (props: SocialLinksProps) => {
 				{...linksProps}>
 				<IconIcBaselineTiktok/>
 			</ATagButton>
-			
+
 			<ATagButton
 				text
 				icon

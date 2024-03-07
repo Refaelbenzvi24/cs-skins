@@ -7,7 +7,7 @@ import GlobalStyles from "../../styles/GlobalStyles";
 import type { ThemeOptions } from "./types"
 import { getInitialTheme, getStorageTheme, ThemeContext } from "./ThemeContext";
 import { ThemeConfig } from "./types"
-import theme from "../../Utils/theme"
+import theme from "../../utils/theme"
 import _ from "lodash"
 
 

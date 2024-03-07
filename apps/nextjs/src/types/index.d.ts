@@ -1,5 +1,6 @@
 import type { ReactNode } from "react"
 
+
 export interface TranslatedRouteProps {
 	params: {
 		lng: string;
@@ -11,6 +12,7 @@ export interface LayoutWithLocaleProps extends TranslatedRouteProps {
 }
 
 export type PageWithLocaleProps = TranslatedRouteProps
+
 export interface ComponentWithLocaleProps {
 	lng: string;
 }

@@ -1,4 +1,6 @@
 {
-  "extends":         "@acme/tsconfig/base.json",
-  "include":         ["src"]
+	"extends" : "@acme/tsconfig/base.json",
+	"include" : [
+		"src"
+	]
 }

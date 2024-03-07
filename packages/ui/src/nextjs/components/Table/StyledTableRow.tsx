@@ -1,9 +1,9 @@
-import { shouldForwardProp } from "../../Utils/StyledUtils"
+import { shouldForwardProp } from "../../utils/StyledUtils"
 import { css, withTheme } from "@emotion/react"
 import styled from "@emotion/styled"
 import { motion } from "framer-motion"
 import { ColorByStateOptions } from "../Theme/types"
-import { getColorByStateFromPath } from "../../Utils/colors"
+import { getColorByStateFromPath } from "../../utils/colors"
 import { StyledProps } from "../../types"
 
 

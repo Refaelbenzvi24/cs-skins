@@ -1,13 +1,13 @@
 import { useToasts } from "~/hooks"
-import {Button, Col, Row, TextArea, TextField, theme, Typography, useDimensions} from "@acme/ui"
-import {type SubmitHandler, Controller, useForm} from "react-hook-form";
-import {zodResolver} from "@hookform/resolvers/zod"
-import {z} from "zod"
-import {leadsValidations} from "@acme/validations"
-import {useEffect, useRef, useState} from "react";
+import { Button, Col, Row, TextArea, TextField, theme, Typography, useDimensions } from "@acme/ui"
+import { type SubmitHandler, Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { z } from "zod"
+import { leadsValidations } from "@acme/validations"
+import { useEffect, useRef, useState } from "react";
 import useTranslation from "next-translate/useTranslation"
-import {api} from "~/trpc/api";
-import {mergeRefs} from "react-merge-refs";
+import { api } from "~/trpc/api";
+import { mergeRefs } from "react-merge-refs";
 
 
 const contactValidation = z.object(leadsValidations.contactObject)
@@ -16,44 +16,44 @@ type ContactValidationSchema = z.infer<typeof contactValidation>
 
 const ContactForm = () => {
 	const submitFormMutation = api.leads.create.useMutation()
-	const toasts = useToasts()
-	const {windowWidth} = useDimensions()
-	const {t} = useTranslation()
+	const toasts             = useToasts()
+	const { windowWidth }    = useDimensions()
+	const { t }              = useTranslation()
 
 	const firstInputRef = useRef<HTMLInputElement>(null)
 
 	const [formHasSubmitted, setFormHasSubmitted] = useState(false)
 
 	const {
-		handleSubmit,
-		reset,
-		control,
-		formState: {errors, isSubmitting, isDirty, isValid}
-	} = useForm<ContactValidationSchema>({
+		      handleSubmit,
+		      reset,
+		      control,
+		      formState: { errors, isSubmitting, isDirty, isValid }
+	      } = useForm<ContactValidationSchema>({
 		resolver: zodResolver(contactValidation),
-		mode: "onChange",
+		mode:     "onChange",
 	})
 
 	const onSubmit: SubmitHandler<ContactValidationSchema> = async (data) => {
 		await toasts.sendEmail(submitFormMutation.mutateAsync(data))
 		reset({
-			name: "",
-			email: "",
-			phone: "",
+			name:    "",
+			email:   "",
+			phone:   "",
 			message: ""
 		})
 		firstInputRef.current?.focus()
 	}
 
 	useEffect(() => {
-		if (firstInputRef.current) firstInputRef.current.focus({preventScroll: true})
+		if(firstInputRef.current) firstInputRef.current.focus({ preventScroll: true })
 	}, [firstInputRef])
 
 	return (
 		<Col className="h-full overflow-hidden" id="contact">
 			<Col className="justify-around h-full">
 				<form onSubmit={(event) => {
-					if (!formHasSubmitted) setFormHasSubmitted(() => true)
+					if(!formHasSubmitted) setFormHasSubmitted(() => true)
 					void handleSubmit(onSubmit)(event)
 				}}>
 					<Col className="space-y-1">
@@ -61,14 +61,14 @@ const ContactForm = () => {
 							defaultValue={""}
 							name={"name"}
 							control={control}
-							render={({field: {ref, ...restField}}) => (
+							render={({ field: { ref, ...restField } }) => (
 								<TextField
 									{...restField}
 									ref={mergeRefs([ref, firstInputRef])}
 									required
 									disabled={isSubmitting}
-									labelProps={{hasBackground: !!windowWidth && windowWidth < 1300}}
-									helperTextProps={{hasBackground: !!windowWidth && windowWidth < 1300}}
+									labelProps={{ hasBackground: !!windowWidth && windowWidth < 1300 }}
+									helperTextProps={{ hasBackground: !!windowWidth && windowWidth < 1300 }}
 									label={t('forms:contact.labels.name')}
 									error={!!errors.name}
 									helperText={errors.name?.message ? t(errors.name?.message) : ""}/>
@@ -78,13 +78,13 @@ const ContactForm = () => {
 							defaultValue={""}
 							name={"email"}
 							control={control}
-							render={({field}) => (
+							render={({ field }) => (
 								<TextField
 									{...field}
 									required
 									disabled={isSubmitting}
-									labelProps={{hasBackground: !!windowWidth && windowWidth < 1300}}
-									helperTextProps={{hasBackground: !!windowWidth && windowWidth < 1300}}
+									labelProps={{ hasBackground: !!windowWidth && windowWidth < 1300 }}
+									helperTextProps={{ hasBackground: !!windowWidth && windowWidth < 1300 }}
 									label={t('forms:contact.labels.email')}
 									error={!!errors.email}
 									helperText={errors.email?.message ? t(errors.email?.message) : ""}/>
@@ -95,13 +95,13 @@ const ContactForm = () => {
 							defaultValue={""}
 							name={"phone"}
 							control={control}
-							render={({field}) => (
+							render={({ field }) => (
 								<TextField
 									{...field}
 									required
 									disabled={isSubmitting}
-									labelProps={{hasBackground: !!windowWidth && windowWidth < 1300}}
-									helperTextProps={{hasBackground: !!windowWidth && windowWidth < 1300}}
+									labelProps={{ hasBackground: !!windowWidth && windowWidth < 1300 }}
+									helperTextProps={{ hasBackground: !!windowWidth && windowWidth < 1300 }}
 									label={t('forms:contact.labels.phone')}
 									error={!!errors.phone}
 									helperText={errors.phone?.message ? t(errors.phone?.message) : ""}/>
@@ -111,12 +111,12 @@ const ContactForm = () => {
 							defaultValue={""}
 							name={"message"}
 							control={control}
-							render={({field}) => (
+							render={({ field }) => (
 								<TextArea
 									{...field}
 									disabled={isSubmitting}
-									labelProps={{hasBackground: !!windowWidth && windowWidth < 1300}}
-									helperTextProps={{hasBackground: !!windowWidth && windowWidth < 1300}}
+									labelProps={{ hasBackground: !!windowWidth && windowWidth < 1300 }}
+									helperTextProps={{ hasBackground: !!windowWidth && windowWidth < 1300 }}
 									label={t('forms:contact.labels.message')}
 									error={!!errors.message}
 									helperText={errors.message?.message ? t(errors.message?.message) : ""}/>

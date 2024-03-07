@@ -9,8 +9,8 @@ export const errorCodesMap = {
 
 
 export const loggerInstance = logger.createInstance(errorCodesMap, errorTranslationKeys)({})
-export const newError    = loggerInstance.errorBuilder
-export const errorLogger = loggerInstance.logger({
+export const newError       = loggerInstance.errorBuilder
+export const errorLogger    = loggerInstance.logger({
 	errorTransformer:            'BaseError',
 	unknownErrorsTranslationKey: 'errors:unknown',
 	transports:                  [

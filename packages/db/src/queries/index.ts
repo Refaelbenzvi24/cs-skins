@@ -5,7 +5,8 @@ import sources from "./sources"
 import qualities from "./qualities"
 import users from "./users"
 
-export default  {
+
+export default {
 	skinsQualitiesData,
 	skins,
 	weapons,

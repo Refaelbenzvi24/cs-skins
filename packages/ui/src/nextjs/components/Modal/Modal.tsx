@@ -7,7 +7,7 @@ import { AnimatePresence } from "framer-motion"
 import Backdrop from "../Backdrop/Backdrop"
 import Card from "../Cards/Card"
 import Portal from "../Portal/Portal"
-import theme from "../../Utils/theme"
+import theme from "../../utils/theme"
 import { useMain } from "../../index";
 import { useEffect } from "react";
 import ModalWrapper from "./ModalWrapper"

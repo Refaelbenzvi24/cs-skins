@@ -1,5 +1,6 @@
 import { css } from "@emotion/react"
 
+
 export interface MarginsObject {
 	left?: string | number
 	right?: string | number
@@ -8,7 +9,7 @@ export interface MarginsObject {
 }
 
 export const getMargins = (margins?: MarginsObject) => {
-	if (!margins) return
+	if(!margins) return
 	const { left, right, top, bottom } = margins
 	return css`
       ${left && `margin-left: ${left};`}

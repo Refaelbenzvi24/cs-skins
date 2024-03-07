@@ -3,7 +3,8 @@ import { useState } from "react";
 import { AppBar, Main, Navigation, NavigationItem, Row } from "@acme/ui"
 import type { Story, ComponentMeta } from "@storybook/react";
 
-const SectionComponent = AppBar
+
+const SectionComponent     = AppBar
 const SectionComponentName = "AppBar"
 
 const Meta: ComponentMeta<typeof SectionComponent> = {
@@ -33,7 +34,7 @@ const AppBarTemplate: Story<React.ComponentProps<typeof SectionComponent>> = ({ 
 		{ label: "Contact", value: "#contact" },
 	] as const
 
-	const [currentNavigation, setCurrentNavigation] = useState<NavigationItemType> (navigationOptions[0])
+	const [currentNavigation, setCurrentNavigation] = useState<NavigationItemType>(navigationOptions[0])
 
 
 	return (
@@ -51,7 +52,7 @@ const AppBarTemplate: Story<React.ComponentProps<typeof SectionComponent>> = ({ 
 								href={value}
 								key={index}
 								selected={currentNavigation}
-								onClick={() => setCurrentNavigation ({ label, value })}/>
+								onClick={() => setCurrentNavigation({ label, value })}/>
 						)}
 					</Navigation>
 				</Row>
@@ -63,13 +64,13 @@ const AppBarTemplate: Story<React.ComponentProps<typeof SectionComponent>> = ({ 
 	)
 }
 
-export const Default = AppBarTemplate.bind ({})
-Default.args = {
+export const Default = AppBarTemplate.bind({})
+Default.args         = {
 	...SectionComponent.defaultProps
 }
 
-export const HideOnScroll = AppBarTemplate.bind ({})
-HideOnScroll.args = {
+export const HideOnScroll = AppBarTemplate.bind({})
+HideOnScroll.args         = {
 	...SectionComponent.defaultProps,
 	hideOnScroll: true
 }

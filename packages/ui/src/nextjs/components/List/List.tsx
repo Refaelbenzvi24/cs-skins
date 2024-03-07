@@ -2,12 +2,12 @@
 import styled from "@emotion/styled";
 import { css, withTheme } from "@emotion/react";
 import tw from "twin.macro";
-import theme from "../../Utils/theme";
+import theme from "../../utils/theme";
 import {HTMLMotionProps, motion} from "framer-motion";
-import {shouldForwardProp} from "../../Utils/StyledUtils";
+import {shouldForwardProp} from "../../utils/StyledUtils";
 import {useEffect, useRef} from "react";
 import { SingleColorOptions } from "../Theme/types"
-import { getSingleColorFromPath } from "../../Utils/colors"
+import { getSingleColorFromPath } from "../../utils/colors"
 import { StyledProps } from "../../types"
 
 interface ListProps extends StyledProps {

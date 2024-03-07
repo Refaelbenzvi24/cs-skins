@@ -1,6 +1,6 @@
 import styled from "@emotion/styled"
 import { motion } from "framer-motion"
-import { shouldForwardProp } from "../../../Utils/StyledUtils"
+import { shouldForwardProp } from "../../../utils/StyledUtils"
 import { css, withTheme } from "@emotion/react"
 import tw from "twin.macro"
 import { SelectOption } from "./Select"

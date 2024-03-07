@@ -10,7 +10,7 @@ import type { LongPressEvent } from "use-long-press/dist/types"
 
 import { useIsDark, Typography, useMain } from "../../index"
 import Portal from "../Portal/Portal"
-import theme from "../../Utils/theme"
+import theme from "../../utils/theme"
 import TooltipContainer, { TooltipContainerProps } from "./TooltipContainer"
 import { withTheme } from "@emotion/react"
 import { SingleColorOptions } from "../Theme/types"

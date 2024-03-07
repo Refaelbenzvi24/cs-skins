@@ -1,15 +1,16 @@
 import React from 'react'
-import {Main, Navigation, NavigationItem} from "@acme/ui"
-import type {Story, ComponentMeta} from '@storybook/react'
-import {useState} from "react"
-import type {NavigationItemType} from "../AppBar/AppBar.stories";
-import {useRouter} from "next/router"
+import { Main, Navigation, NavigationItem } from "@acme/ui"
+import type { Story, ComponentMeta } from '@storybook/react'
+import { useState } from "react"
+import type { NavigationItemType } from "../AppBar/AppBar.stories";
+import { useRouter } from "next/router"
 
-const SectionComponent = Navigation
+
+const SectionComponent     = Navigation
 const SectionComponentName = 'Navigation'
 
 const Meta: ComponentMeta<typeof SectionComponent> = {
-	title: SectionComponentName,
+	title:      SectionComponentName,
 	parameters: {
 		layout: 'fullscreen'
 	}
@@ -18,17 +19,17 @@ const Meta: ComponentMeta<typeof SectionComponent> = {
 export default Meta
 
 const navigationOptions = [
-	{label: 'Home', value: '#main'},
-	{label: 'Experience', value: '#experience'},
-	{label: 'Projects', value: '#projects'},
-	{label: 'Skills', value: '#skills'},
-	{label: 'Contact', value: '#contact'},
+	{ label: 'Home', value: '#main' },
+	{ label: 'Experience', value: '#experience' },
+	{ label: 'Projects', value: '#projects' },
+	{ label: 'Skills', value: '#skills' },
+	{ label: 'Contact', value: '#contact' },
 ] as const
 
 const SectionTemplate: Story<React.ComponentProps<typeof SectionComponent>> = (args) => {
 
 	const [currentNavigation, setCurrentNavigation] = useState<NavigationItemType>(navigationOptions[0])
-	const router = useRouter()
+	const router                                    = useRouter()
 
 	//TODO: fix initialState don't change
 	return (
@@ -38,12 +39,12 @@ const SectionTemplate: Story<React.ComponentProps<typeof SectionComponent>> = (a
 					{...args}
 					selected={currentNavigation}
 					options={navigationOptions}>
-					{({label, value}, index) => (
+					{({ label, value }, index) => (
 						<NavigationItem
-							{...{label, value}}
+							{...{ label, value }}
 							href={value}
 							key={index}
-							onClick={() => setCurrentNavigation(() => ({label, value}))}
+							onClick={() => setCurrentNavigation(() => ({ label, value }))}
 							selected={currentNavigation}/>
 					)}
 				</SectionComponent>
@@ -53,6 +54,6 @@ const SectionTemplate: Story<React.ComponentProps<typeof SectionComponent>> = (a
 }
 
 export const Default = SectionTemplate.bind({})
-Default.args = {
+Default.args         = {
 	...SectionComponent.defaultProps,
 }

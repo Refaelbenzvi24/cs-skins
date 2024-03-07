@@ -1,12 +1,13 @@
 import React from 'react'
-import {Main, Tab, Tabs, Typography} from "@acme/ui"
-import type {Story, ComponentMeta} from '@storybook/react'
+import { Main, Tab, Tabs, Typography } from "@acme/ui"
+import type { Story, ComponentMeta } from '@storybook/react'
 
-const SectionComponent = Tabs
+
+const SectionComponent     = Tabs
 const SectionComponentName = 'Tabs'
 
 const Meta: ComponentMeta<typeof SectionComponent> = {
-	title: SectionComponentName,
+	title:      SectionComponentName,
 	parameters: {
 		layout: 'fullscreen'
 	}
@@ -43,4 +44,4 @@ const SectionTemplate: Story<React.ComponentProps<typeof SectionComponent>> = (a
 }
 
 export const Default = SectionTemplate.bind({})
-Default.args = {}
+Default.args         = {}

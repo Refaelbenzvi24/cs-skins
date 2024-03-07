@@ -18,7 +18,7 @@
 	},
 	"dependencies" :    {
 		"@paralleldrive/cuid2" : "2.2.2",
-		"drizzle-orm" :          "0.29.3",
+		"drizzle-orm" :          "0.29.4",
 		"postgres" :             "3.4.0",
 		"lodash" :               "4.17.21"
 	},

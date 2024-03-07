@@ -3,7 +3,7 @@ import styled from "@emotion/styled"
 import { AnimatePresence } from "framer-motion"
 import tw from "twin.macro"
 import { css, withTheme } from "@emotion/react"
-import { shouldForwardProp } from "../../Utils/StyledUtils"
+import { shouldForwardProp } from "../../utils/StyledUtils"
 import { ReactNode } from "react"
 
 import clsx from "clsx"

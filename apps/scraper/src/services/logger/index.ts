@@ -21,7 +21,7 @@ export const errorLogger    = loggerInstance.logger({
 	transports:                  [
 		({ createTransport }) => createTransport({
 			severities: ['CRITICAL', 'ERROR', 'WARNING', 'INFO'],
-			callback: (error) => {
+			callback:   (error) => {
 				apm.captureError(error, {
 					tags: {
 						severity:  error.severity,
@@ -35,7 +35,7 @@ export const errorLogger    = loggerInstance.logger({
 		}),
 		({ createTransport }) => createTransport({
 			severities: ['CRITICAL', 'ERROR', 'WARNING', 'INFO'],
-			callback: (error) => {
+			callback:   (error) => {
 				console.error(error)
 			}
 		})

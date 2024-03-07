@@ -2,7 +2,6 @@
 import { createContext, useContext } from "react"
 
 
-
 interface ApmContextType {
 	transactionId?: string
 	traceId?: string

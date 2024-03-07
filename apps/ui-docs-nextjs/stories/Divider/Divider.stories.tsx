@@ -1,13 +1,14 @@
 import React from 'react'
-import {Divider, Main, Typography} from "@acme/ui"
-import type {Story} from "@storybook/react"
-import type {ComponentMeta} from '@storybook/react';
+import { Divider, Main, Typography } from "@acme/ui"
+import type { Story } from "@storybook/react"
+import type { ComponentMeta } from '@storybook/react';
 
-const SectionComponent = Divider
+
+const SectionComponent     = Divider
 const SectionComponentName = 'Divider'
 
 const Meta: ComponentMeta<typeof SectionComponent> = {
-	title: SectionComponentName,
+	title:      SectionComponentName,
 	parameters: {
 		layout: 'fullscreen'
 	}
@@ -28,7 +29,7 @@ const DividerTemplate: Story<React.ComponentProps<typeof SectionComponent>> = (a
 }
 
 export const Default = DividerTemplate.bind({})
-Default.args = {
+Default.args         = {
 	...SectionComponent.defaultProps,
 	thickness: '3px'
 }

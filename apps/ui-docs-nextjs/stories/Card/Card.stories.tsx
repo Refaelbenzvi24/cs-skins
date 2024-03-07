@@ -3,7 +3,8 @@ import { Card, Col, Row, theme, Typography } from "@acme/ui"
 import type { Story } from "@storybook/react"
 import type { ComponentMeta } from "@storybook/react";
 
-const SectionComponent = Card
+
+const SectionComponent     = Card
 const SectionComponentName = "Card"
 
 const Meta: ComponentMeta<typeof SectionComponent> = {
@@ -34,9 +35,9 @@ const CardTemplate: Story<React.ComponentProps<typeof SectionComponent>> = (args
 	)
 }
 
-export const Default = CardTemplate.bind ({})
-Default.args = {
+export const Default = CardTemplate.bind({})
+Default.args         = {
 	...SectionComponent.defaultProps,
 	height: '400px',
-	width: '400px'
+	width:  '400px'
 }

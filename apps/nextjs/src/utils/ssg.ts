@@ -7,11 +7,12 @@ import { db } from "@acme/db"
 import getEmailProvider from "~/utils/emailProvider"
 import { messageBrokerConnectionParams } from "~/modules/vars"
 
-export const getProxySSGHelpers = async (context: GetServerSidePropsContext) => {
-	const session = await getSession (context)
-	const emailProvider = await getEmailProvider ()
 
-	return createProxySSGHelpers ({
+export const getProxySSGHelpers = async (context: GetServerSidePropsContext) => {
+	const session       = await getSession(context)
+	const emailProvider = await getEmailProvider()
+
+	return createProxySSGHelpers({
 		router:      appRouter,
 		ctx:         {
 			session,

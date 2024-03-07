@@ -4,41 +4,41 @@ import { theme } from "@acme/ui"
 
 export const chartThemeDark: Theme = {
 	background: "transparent",
-	axis: {
+	axis:       {
 		domain: {
 			line: {
-				stroke: "transparent", // grid basis(x/y lines) color
+				stroke:      "transparent", // grid basis(x/y lines) color
 				strokeWidth: 1
 			}
 		},
 		legend: {
 			text: {
-				fontSize: 12,
-				fill: theme.colorScheme.subtitle2, // titles text color,
+				fontSize:     12,
+				fill:         theme.colorScheme.subtitle2, // titles text color,
 				outlineWidth: 0,
 				outlineColor: "transparent"
 			}
 		},
-		ticks: {
+		ticks:  {
 			line: {
-				stroke: theme.colorScheme.light, // metrics pointers color
+				stroke:      theme.colorScheme.light, // metrics pointers color
 				strokeWidth: 1
 			},
 			text: {
-				fontSize: 11,
-				fill: theme.colorScheme.light, // metrics numbers color
+				fontSize:     11,
+				fill:         theme.colorScheme.light, // metrics numbers color
 				outlineWidth: 0,
 				outlineColor: "transparent"
 			}
 		}
 	},
-	grid: {
+	grid:       {
 		line: {
-			stroke: theme.colorScheme.body2, // grid lines color
+			stroke:      theme.colorScheme.body2, // grid lines color
 			strokeWidth: 1
 		}
 	},
-	legends: {
+	legends:    {
 		// title: {
 		// 	text: {
 		// 		fontSize: 11,
@@ -48,8 +48,8 @@ export const chartThemeDark: Theme = {
 		// 	}
 		// },
 		text: {
-			fontSize: 11,
-			fill: theme.colorScheme.light, // legends text color
+			fontSize:     11,
+			fill:         theme.colorScheme.light, // legends text color
 			outlineWidth: 0,
 			outlineColor: "transparent"
 		},
@@ -93,14 +93,14 @@ export const chartThemeDark: Theme = {
 	// 	}
 	// },
 	tooltip: {
-		container: {
+		container:      {
 			background: theme.colorScheme.overlaysDark,
-			fontSize: 12
+			fontSize:   12
 		},
-		basic: {},
-		chip: {},
-		table: {},
-		tableCell: {},
+		basic:          {},
+		chip:           {},
+		table:          {},
+		tableCell:      {},
 		tableCellValue: {}
 	}
 }

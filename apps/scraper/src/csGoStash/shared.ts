@@ -4,11 +4,11 @@ import DelayManager from "../modules/DelayManager";
 
 
 const delayManager = new DelayManager({
-	delayInMili:           100,
+	delayInMili: 100,
 })
 
 export const getSkinHtml = async (skinUrl: string) =>
-	await delayManager.push(async () =>  await axios.get(skinUrl))
+	await delayManager.push(async () => await axios.get(skinUrl))
 
 
 export const getSkinTitle = (skinHtml: string) => {

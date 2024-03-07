@@ -2,10 +2,10 @@ import styled from "@emotion/styled"
 import { motion } from "framer-motion"
 import { css, withTheme } from "@emotion/react"
 import tw from "twin.macro"
-import { shouldForwardProp } from "../../Utils/StyledUtils"
+import { shouldForwardProp } from "../../utils/StyledUtils"
 import { SingleColorOptions, ZIndexOptions } from "../Theme/types"
 import { StyledProps } from "../../types"
-import { getSingleColorFromPath, getZIndexFromPath } from "../../Utils/colors"
+import { getSingleColorFromPath, getZIndexFromPath } from "../../utils/colors"
 
 
 interface ActiveTabIndicatorProps {

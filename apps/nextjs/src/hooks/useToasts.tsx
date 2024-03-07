@@ -5,9 +5,9 @@ import { useTranslation } from "~/app/i18n/client"
 
 
 export const useToasts = () => {
-	const { isTouchable }  = useMain()
-	const { windowWidth }  = useDimensions()
-	const { t, i18n }      = useTranslation()
+	const { isTouchable }                  = useMain()
+	const { windowWidth }                  = useDimensions()
+	const { t, i18n }                      = useTranslation()
 	const { generalError, generalSuccess } = libUseToasts()
 
 	const dir = i18n.language === 'he' ? 'rtl' : 'ltr'

@@ -4,13 +4,13 @@ import { db, schema } from "../src"
 
 const index = async () => {
 	const query = db
-		.insert(schema.sources)
-		.values({
-			url: '',
-			name: ''
-		})
-		.returning()
-		.toSQL()
+	.insert(schema.sources)
+	.values({
+		url:  '',
+		name: ''
+	})
+	.returning()
+	.toSQL()
 	console.log({ query })
 	// const skinId    = 'xpcmqpxah74gg79lg3252som'
 	// const search    = undefined

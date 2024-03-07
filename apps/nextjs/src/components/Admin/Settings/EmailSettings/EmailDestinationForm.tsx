@@ -1,10 +1,10 @@
-import {Button, Col, Row, TextField, Typography, useDimensions} from "@acme/ui"
-import { Controller, useForm} from "react-hook-form";
-import type {SubmitHandler} from "react-hook-form";
-import {zodResolver} from "@hookform/resolvers/zod"
-import {z} from "zod"
-import {adminSettingsValidations} from "@acme/validations"
-import {useState} from "react";
+import { Button, Col, Row, TextField, Typography, useDimensions } from "@acme/ui"
+import { Controller, useForm } from "react-hook-form";
+import type { SubmitHandler } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { z } from "zod"
+import { adminSettingsValidations } from "@acme/validations"
+import { useState } from "react";
 import { useTranslation } from "~/app/i18n/client"
 import i18next from "i18next"
 
@@ -17,24 +17,24 @@ type EmailDestinationValidationSchema = z.infer<typeof emailDestinationValidatio
 const EmailDestinationForm = () => {
 	// const submitFormMutation = api.leads.create.useMutation()
 	// const toasts = useToasts()
-	const {t} = useTranslation(i18next.language, 'forms')
+	const { t } = useTranslation(i18next.language, 'forms')
 
 	const [formHasSubmitted, setFormHasSubmitted] = useState(false)
 
 	const {
-		handleSubmit,
-		reset,
-		control,
-		formState: {errors, isSubmitting, isDirty, isValid}
-	} = useForm<EmailDestinationValidationSchema>({
+		      handleSubmit,
+		      reset,
+		      control,
+		      formState: { errors, isSubmitting, isDirty, isValid }
+	      } = useForm<EmailDestinationValidationSchema>({
 		resolver: zodResolver(emailDestinationValidation),
-		mode: "onChange",
+		mode:     "onChange",
 	})
 
 	const onSubmit: SubmitHandler<EmailDestinationValidationSchema> = async (data) => {
 		// await toasts.sendEmail(submitFormMutation.mutateAsync(data))
 		reset({
-			email: "",
+			email:    "",
 			password: ""
 		})
 	}
@@ -42,7 +42,7 @@ const EmailDestinationForm = () => {
 
 	return (
 		<form onSubmit={(event) => {
-			if (!formHasSubmitted) setFormHasSubmitted(() => true)
+			if(!formHasSubmitted) setFormHasSubmitted(() => true)
 			void handleSubmit(onSubmit)(event)
 		}}>
 			<Col className="space-y-1">
@@ -50,7 +50,7 @@ const EmailDestinationForm = () => {
 					defaultValue={""}
 					name={"email"}
 					control={control}
-					render={({field}) => (
+					render={({ field }) => (
 						<TextField
 							{...field}
 							autoFocus
@@ -67,7 +67,7 @@ const EmailDestinationForm = () => {
 					defaultValue={""}
 					name={"password"}
 					control={control}
-					render={({field}) => (
+					render={({ field }) => (
 						<TextField
 							{...field}
 							required

@@ -16,10 +16,10 @@ import {
 	IconButton,
 	useThemeValue, SideBarButton, Card,
 } from "@acme/ui"
-import type {Story, ComponentMeta} from '@storybook/react'
-import {useState} from "@storybook/addons"
-import type {NavigationItemType} from "../AppBar/AppBar.stories";
-import {css} from "@emotion/css"
+import type { Story, ComponentMeta } from '@storybook/react'
+import { useState } from "@storybook/addons"
+import type { NavigationItemType } from "../AppBar/AppBar.stories";
+import { css } from "@emotion/css"
 import tw from "twin.macro"
 import IconMdiBellOutline from "~icons/mdi/bellOutline"
 import IconMdiLogout from "~icons/mdi/logout"
@@ -28,13 +28,14 @@ import IconCarbonMoon from "~icons/carbon/moon"
 import IconCarbonLight from "~icons/carbon/light"
 import IconCarbonLanguage from "~icons/carbon/language"
 
+
 const SectionComponent1 = Hamburger
 const SectionComponent2 = UiSideBar
 
 const SectionComponentName = 'SideBar'
 
 const Meta: ComponentMeta<typeof SectionComponent1> = {
-	title: SectionComponentName,
+	title:      SectionComponentName,
 	parameters: {
 		layout: 'fullscreen'
 	}
@@ -45,14 +46,14 @@ export default Meta
 
 const SectionTemplate1: Story<React.ComponentProps<typeof SectionComponent1>> = (args) => {
 	const navigationOptions = [
-		{label: 'Home', value: '#main'},
-		{label: 'Experience', value: '#experience'},
-		{label: 'Projects', value: '#projects'},
-		{label: 'Skills', value: '#skills'},
-		{label: 'Contact', value: '#contact'},
+		{ label: 'Home', value: '#main' },
+		{ label: 'Experience', value: '#experience' },
+		{ label: 'Projects', value: '#projects' },
+		{ label: 'Skills', value: '#skills' },
+		{ label: 'Contact', value: '#contact' },
 	] as const
 
-	const [currentNavigation, setCurrentNavigation] = useState<NavigationItemType>(navigationOptions[0])
+	const [currentNavigation, setCurrentNavigation]           = useState<NavigationItemType>(navigationOptions[0])
 	const [isHamburgerSideBarOpen, setIsHamburgerSideBarOpen] = useState<boolean>(false)
 
 	return (
@@ -67,7 +68,7 @@ const SectionTemplate1: Story<React.ComponentProps<typeof SectionComponent1>> = 
 					vertical
 					options={navigationOptions}
 					selected={currentNavigation}>
-					{({label, value}, index) => (
+					{({ label, value }, index) => (
 						<Button
 							key={index}
 							width="fit-content"
@@ -76,7 +77,7 @@ const SectionTemplate1: Story<React.ComponentProps<typeof SectionComponent1>> = 
 							onClick={() => {
 								setIsHamburgerSideBarOpen(false)
 								setTimeout(() => {
-									if (setCurrentNavigation) setCurrentNavigation({label, value})
+									if(setCurrentNavigation) setCurrentNavigation({ label, value })
 								}, 800)
 							}}
 							text>
@@ -106,7 +107,7 @@ const SectionTemplate1: Story<React.ComponentProps<typeof SectionComponent1>> = 
 }
 
 export const HamburgerSideBar = SectionTemplate1.bind({})
-HamburgerSideBar.args = {
+HamburgerSideBar.args         = {
 	...SectionComponent1.defaultProps,
 }
 

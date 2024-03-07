@@ -16,9 +16,9 @@ interface LayoutProps {
 }
 
 const Layout = async ({ params: { lng, skinId }, children }: LayoutProps) => {
-	const pathname     = getPathname()
+	const pathname               = getPathname()
 	const { startDate, endDate } = getSearchParams("startDate", "endDate")
-	const skin = await trpcRsc.skin.getById(skinId)
+	const skin                   = await trpcRsc.skin.getById(skinId)
 
 	return (
 		<main className="min-h-full w-full">

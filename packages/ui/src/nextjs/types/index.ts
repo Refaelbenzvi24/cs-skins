@@ -1,6 +1,7 @@
 import type { Interpolation } from "@emotion/serialize"
 import { ThemeConfig } from "../components/Theme/types"
 
+
 export interface Theme {
 	isDark: boolean
 	config: ThemeConfig

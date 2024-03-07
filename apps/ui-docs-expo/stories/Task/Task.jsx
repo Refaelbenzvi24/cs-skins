@@ -18,16 +18,16 @@ const someStyle = css`
 
 
 export const Task = ({
-                         task: {id, title, state},
-                         onArchiveTask,
-                         onPinTask,
+	                     task: {id, title, state},
+	                     onArchiveTask,
+	                     onPinTask,
                      }) => {
 
-    return (
-        <View style={cssNative`
+	return (
+		<View style={cssNative`
     ${someStyle.styles}
     `}>
-            <TextInput value={title} editable={false}/>
-        </View>
-    );
+			<TextInput value={title} editable={false}/>
+		</View>
+	);
 };

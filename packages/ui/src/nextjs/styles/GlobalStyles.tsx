@@ -1,7 +1,7 @@
 import { Global } from "@emotion/react"
 import tw, { css, theme } from "twin.macro"
 
-import { default as uiTheme } from "../Utils/theme"
+import { default as uiTheme } from "../utils/theme"
 
 
 // const customStyles = css ({

@@ -3,7 +3,7 @@ import styled from "@emotion/styled"
 import { motion, type HTMLMotionProps } from "framer-motion"
 import tw, { css } from "twin.macro"
 
-import theme from "../../Utils/theme"
+import theme from "../../utils/theme"
 import { withTheme } from "@emotion/react"
 
 

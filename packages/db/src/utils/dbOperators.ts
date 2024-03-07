@@ -8,17 +8,17 @@ const mod: BinaryOperator = (left: SQLWrapper, right: unknown): SQL => {
 	return sql`mod(${left}, ${bindIfParam(right, left)})`
 }
 
-export function rowNumber(expression?: SQLWrapper, over?: SQLWrapper): SQL<number> {
+export function rowNumber(expression?: SQLWrapper, over?: SQLWrapper): SQL<number>{
 	const { sql } = dbOperators
 	return sql`row_number(${expression}) ${over}`.mapWith(Number);
 }
 
-export function over(expression?: SQLWrapper): SQL {
+export function over(expression?: SQLWrapper): SQL{
 	const { sql } = dbOperators
 	return sql`over(${expression ?? ''})`
 }
 
-export function avgPartitionedOverTimeStamp(expression?: SQLWrapper, timeStamp?: SQLWrapper): SQL<number> {
+export function avgPartitionedOverTimeStamp(expression?: SQLWrapper, timeStamp?: SQLWrapper): SQL<number>{
 	const { sql } = dbOperators
 	return sql`
 				AVG(${expression ?? ''})

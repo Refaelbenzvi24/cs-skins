@@ -21,7 +21,7 @@ import { errorLogger } from "./services/logger"
 
 export const publishScrapingMessage = async (interval: number) => {
 	const producer = new Producer("scraper")
-	const queue = await producer.initializeProducer(messageBrokerConnectionParams)
+	const queue    = await producer.initializeProducer(messageBrokerConnectionParams)
 	if(queue.messageCount !== 0) await producer.purgeQueue()
 	await producer.sendMessage({ payload: "interval_scrape" }, { expiration: interval });
 };

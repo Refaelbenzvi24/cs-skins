@@ -1,5 +1,5 @@
-import {AnimatePresence, motion} from "framer-motion"
-import {css} from "@emotion/css"
+import { AnimatePresence, motion } from "framer-motion"
+import { css } from "@emotion/css"
 import {
 	Button,
 	Col,
@@ -13,12 +13,12 @@ import {
 	useIsDark,
 	useMain
 } from "@acme/ui"
-import type { ComponentProps} from "react";
-import {useState, useEffect} from "react"
+import type { ComponentProps } from "react";
+import { useState, useEffect } from "react"
 import tw from "twin.macro"
 
-import type {NavigationItemType} from "./AppBar"
-import {useRouter} from "next/router"
+import type { NavigationItemType } from "./AppBar"
+import { useRouter } from "next/router"
 import SocialLinks from "~/components/SocialLinks";
 import clsx from "clsx";
 import LanguageSelector from "~/components/LanguageSelector";
@@ -31,16 +31,16 @@ export interface MainLayoutMobileAppBarProps {
 }
 
 const MainLayoutMobileAppBar = (props: MainLayoutMobileAppBarProps & ComponentProps<typeof Row>) => {
-	const router = useRouter()
-	const {t, lang} = useTranslation()
-	const dir = lang === 'he' ? 'rtl' : 'ltr'
+	const router      = useRouter()
+	const { t, lang } = useTranslation()
+	const dir         = lang === 'he' ? 'rtl' : 'ltr'
 
-	const {navigationOptions, currentNavigation, setCurrentNavigation, className, ...restProps} = props
+	const { navigationOptions, currentNavigation, setCurrentNavigation, className, ...restProps } = props
 
 	const [isHamburgerSideBarOpen, setIsHamburgerSideBarOpen] = useState<boolean>(false)
 
-	const {setAppBarState, setAppBarOpts} = useMain()
-	const isDark = useIsDark()
+	const { setAppBarState, setAppBarOpts } = useMain()
+	const isDark                            = useIsDark()
 
 
 	useEffect(() => {
@@ -72,19 +72,19 @@ const MainLayoutMobileAppBar = (props: MainLayoutMobileAppBarProps & ComponentPr
 
 			{/*<Image*/}
 			{/*	className={css`*/}
-      {/*    [dir="ltr"] & {*/}
-      {/*      margin-left: 60px;*/}
-      {/*      @media screen and (max-width: 1200px) {*/}
-      {/*        margin-left: 20px;*/}
-      {/*      }*/}
-      {/*    }*/}
+			{/*    [dir="ltr"] & {*/}
+			{/*      margin-left: 60px;*/}
+			{/*      @media screen and (max-width: 1200px) {*/}
+			{/*        margin-left: 20px;*/}
+			{/*      }*/}
+			{/*    }*/}
 
-      {/*    [dir="rtl"] & {*/}
-      {/*      margin-right: 60px;*/}
-      {/*      @media screen and (max-width: 1200px) {*/}
-      {/*        margin-right: 20px;*/}
-      {/*      }*/}
-      {/*    }*/}
+			{/*    [dir="rtl"] & {*/}
+			{/*      margin-right: 60px;*/}
+			{/*      @media screen and (max-width: 1200px) {*/}
+			{/*        margin-right: 20px;*/}
+			{/*      }*/}
+			{/*    }*/}
 			{/*	`}*/}
 			{/*	src={"/Logo.svg"}*/}
 			{/*	alt={'YAM'}*/}
@@ -92,7 +92,7 @@ const MainLayoutMobileAppBar = (props: MainLayoutMobileAppBarProps & ComponentPr
 
 			<HamburgerSideBar
 				className="overflow-hidden"
-				dir={dir }
+				dir={dir}
 				isOpen={isHamburgerSideBarOpen}
 				bgColor={theme.colorScheme.light}
 				bgColorDark={theme.colorScheme.dark}
@@ -130,14 +130,14 @@ const MainLayoutMobileAppBar = (props: MainLayoutMobileAppBarProps & ComponentPr
 								vertical
 								options={navigationOptions}
 								selected={currentNavigation}>
-								{({label, value}, index) => (
+								{({ label, value }, index) => (
 									<Button
 										key={index}
 										width="fit-content"
 										onClick={() => {
 											setIsHamburgerSideBarOpen(false)
 											setTimeout(() => {
-												if (setCurrentNavigation) setCurrentNavigation({label, value})
+												if(setCurrentNavigation) setCurrentNavigation({ label, value })
 												router.push(value)
 											}, 800)
 										}}
@@ -179,13 +179,13 @@ const MainLayoutMobileAppBar = (props: MainLayoutMobileAppBarProps & ComponentPr
 							</Col>
 
 							<div className={css`
-                position: absolute;
-                bottom: -55px;
-                left: -35px;
-                height: 300px;
-                width: 200vw;
-                rotate: 165deg;
-                background-color: ${isDark ? theme.colorScheme.overlaysDark : theme.colorScheme.light2};
+								position: absolute;
+								bottom: -55px;
+								left: -35px;
+								height: 300px;
+								width: 200vw;
+								rotate: 165deg;
+								background-color: ${isDark ? theme.colorScheme.overlaysDark: theme.colorScheme.light2};
 							`}/>
 						</motion.div>
 					)}

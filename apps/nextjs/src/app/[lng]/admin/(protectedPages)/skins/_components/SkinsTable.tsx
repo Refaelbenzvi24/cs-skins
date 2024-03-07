@@ -82,7 +82,7 @@ const SkinsTable = ({ searchQuery, initialData, lng }: SkinsTableProps) => {
 						display: "Name"
 					},
 					{
-						key: "weaponName",
+						key:     "weaponName",
 						display: "Weapon Name"
 					},
 					{

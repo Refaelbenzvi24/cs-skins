@@ -1,5 +1,6 @@
 "use client";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
+
 
 const useScrollPosition = () => {
 	const [scrollY, setScrollY] = useState<number>()
@@ -19,7 +20,7 @@ const useScrollPosition = () => {
 		}
 	}, [])
 
-	return {scrollX, scrollY}
+	return { scrollX, scrollY }
 }
 
 export default useScrollPosition

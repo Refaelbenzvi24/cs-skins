@@ -3,10 +3,10 @@ import { css, withTheme } from "@emotion/react"
 import styled from "@emotion/styled"
 import { motion } from "framer-motion"
 import tw from "twin.macro"
-import { shouldForwardProp } from "../../Utils/StyledUtils";
+import { shouldForwardProp } from "../../utils/StyledUtils";
 import { SingleColorOptions } from "../Theme/types"
 import { StyledProps } from "../../types"
-import { getSingleColorFromPath } from "../../Utils/colors"
+import { getSingleColorFromPath } from "../../utils/colors"
 
 
 export interface HelperTextProps {
