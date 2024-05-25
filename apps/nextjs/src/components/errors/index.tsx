@@ -13,6 +13,7 @@ export interface ErrorComponentProps extends ErrorInfoProps {
 	code: TRPC_ERROR_CODE_KEY
 }
 
+// TODO: maybe move this to the ui package?
 const errorCodesComponentsMap = {
 	NOT_FOUND:             NotFound,
 	BAD_REQUEST:           BadRequest,
@@ -29,6 +30,6 @@ const errorCodesComponentsMap = {
 	TOO_MANY_REQUESTS:     InternalServerError,
 	CLIENT_CLOSED_REQUEST: InternalServerError,
 	PARSE_ERROR:           InternalServerError
-} satisfies Record<TRPC_ERROR_CODE_KEY, (errorComponentProps: ErrorComponentProps) => MaybePromise<JSX.Element>>
+} as const satisfies Record<TRPC_ERROR_CODE_KEY, (errorComponentProps: ErrorComponentProps) => MaybePromise<JSX.Element>>
 
 export default errorCodesComponentsMap

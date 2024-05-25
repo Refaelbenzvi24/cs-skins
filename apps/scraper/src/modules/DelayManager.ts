@@ -30,15 +30,13 @@ export default class DelayManager {
 		if(!this.delayHandlerIsWorking) this.start()
 
 		return new Promise((resolve, reject) => {
-				this.queue.push(async () => {
-					try {
-						resolve(await callback())
-						resolve(await callback())
-					} catch (error) {
-						reject(error)
-					}
-				})
-			}
-		)
+			this.queue.push(async () => {
+				try {
+					resolve(await callback())
+				} catch (error) {
+					reject(error)
+				}
+			})
+		})
 	}
 }

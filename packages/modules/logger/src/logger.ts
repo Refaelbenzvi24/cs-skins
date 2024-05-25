@@ -86,6 +86,7 @@ const logger = <
 						return;
 					}
 					if(killProcessOnFailure){
+						console.error('Error while logging error, killing process')
 						process.exit(1)
 					}
 				}

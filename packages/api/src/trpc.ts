@@ -199,7 +199,6 @@ const apmMiddleware = t.middleware(async ({ ctx, next, path, type, getRawInput }
 			typeof loggerInstance.errorBuilder
 		>({ errorBuilderInstance: loggerInstance.errorBuilder, errorTranslationKey: "errors:unknown" }, response.error)
 		await ctx?.logger.logError(trpcError)
-		trpcError.isLogged = true
 		response.error     = trpcError
 	}
 	if(response.ok && response.data) ctx?.apm?.setLabel('responseData', typeof response.data === 'object' ? JSON.stringify(response.data) : (response.data as number | string))

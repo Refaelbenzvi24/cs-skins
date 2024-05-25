@@ -44,6 +44,7 @@ const createTransport = <
 		keyof ErrorCodesMap
 	>) => {
 		if(severities.includes(error.severity) && !error.isLogged){
+			error.isLogged = true
 			return callback(error as ErrorByType<
 				ErrorTransformer,
 				ErrorCodesMap,

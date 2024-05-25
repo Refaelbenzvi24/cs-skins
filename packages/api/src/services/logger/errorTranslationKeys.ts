@@ -7,4 +7,4 @@ export const errorTranslationKeys = {
 	"errors:authorizationError":    "E00003",
 	"errors:permissionsError":      "E00004",
 	"errors:weapons.list.notFound": "E00005",
-} satisfies Record<string, keyof typeof errorCodesMap>
+} as const satisfies Record<string, keyof typeof errorCodesMap>
